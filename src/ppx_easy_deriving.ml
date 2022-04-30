@@ -265,7 +265,10 @@ struct
       in
       [%expr fun [%p pat] -> [%e body]]
     in
-    Arg.apply_iso ~loc body f f'
+    match comps with
+    | [] | [_] -> assert false
+    | [_; _] -> body (* avoid trivial iso *)
+    | _ :: _ :: _ :: _ -> Arg.apply_iso ~loc body f f'
 
   let expr_declaration ~loc ~quoter td = match td with
     | {ptype_kind = Ptype_abstract; ptype_manifest = Some ct; _} ->
