@@ -1,7 +1,7 @@
 open Ppxlib
 open Ppx_easy_deriving
 
-module Arg: Arg =
+module LeqArg: Arg =
 struct
   let name = "leq"
   let typ ~loc t = [%type: [%t t] -> [%t t] -> bool]
@@ -11,7 +11,11 @@ struct
     [%expr fun a b -> [%e leq] ([%e f] a) ([%e f] b)]
 end
 
-module Arg2: Arg =
+module LeqDeriver = Make (LeqArg)
+let leq_deriving = LeqDeriver.register ()
+
+
+module JoinArg: Arg =
 struct
   let name = "join"
   let typ ~loc t = [%type: [%t t] -> [%t t] -> [%t t]]
@@ -21,7 +25,11 @@ struct
     [%expr fun a b -> [%e f'] ([%e join] ([%e f] a) ([%e f] b))]
 end
 
-module Arg3: Arg =
+module JoinDeriver = Make (JoinArg)
+let join_deriving = JoinDeriver.register ()
+
+
+module BotArg: Arg =
 struct
   let name = "bot"
   let typ ~loc t = [%type: unit -> [%t t]]
@@ -31,9 +39,12 @@ struct
     [%expr fun () -> [%e f'] ([%e bot] ())]
 end
 
-module Deriver = Make (Arg)
-module Deriver2 = Make (Arg2)
-module Deriver3 = Make (Arg3)
-let _ = Deriver.register ()
-let _ = Deriver2.register ()
-let _ = Deriver3.register ()
+module BotDeriver = Make (BotArg)
+let bot_deriving = BotDeriver.register ()
+
+
+let _ = Ppxlib.Deriving.add_alias "lattice" [
+    bot_deriving;
+    join_deriving;
+    leq_deriving
+  ]
