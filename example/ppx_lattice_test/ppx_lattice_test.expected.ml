@@ -5,6 +5,25 @@ module type Lattice  =
     val join : t -> t -> t
     val bot : unit -> t
   end
+module Unit : Lattice =
+  struct
+    type t = unit[@@deriving lattice]
+    include
+      struct
+        let rec (leq : t -> t -> bool) =
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
+              fun () -> fun () -> true)
+          [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+        let rec (join : t -> t -> t) =
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
+              fun () -> fun () -> ())
+          [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+        let rec (bot : unit -> t) =
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
+              fun () -> ())
+          [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+      end[@@ocaml.doc "@inline"][@@merlin.hide ]
+  end 
 module Direct(L1:Lattice) : Lattice =
   struct
     type t = L1.t[@@deriving lattice]

@@ -5,7 +5,7 @@ module type Arg =
 sig
   val name: string
   val typ: loc:location -> core_type -> core_type
-  (* val unit: loc:location -> expression *)
+  val unit: loc:location -> expression
   val both: loc:location -> expression -> expression -> expression
   val apply_iso: loc:location -> expression -> expression -> expression -> expression
 end
@@ -48,6 +48,8 @@ struct
   let rec expr ~loc ~quoter ct =
     let expr = expr ~quoter in
     match ct with
+    | [%type: unit] ->
+      Arg.unit ~loc
     (* | [%type: string] ->
       [%expr Hashtbl.hash]
     | [%type: char] ->
