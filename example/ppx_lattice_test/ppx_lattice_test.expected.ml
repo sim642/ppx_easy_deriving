@@ -4,6 +4,7 @@ module type Lattice  =
     val leq : t -> t -> bool
     val join : t -> t -> t
     val bot : unit -> t
+    val is_bot : t -> bool
   end
 module Unit : Lattice =
   struct
@@ -22,6 +23,10 @@ module Unit : Lattice =
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun () -> ())
           [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+        let rec (is_bot : t -> bool) =
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
+              fun () -> true)
+          [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
 module Direct(L1:Lattice) : Lattice =
@@ -39,6 +44,10 @@ module Direct(L1:Lattice) : Lattice =
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (bot : unit -> t) =
           let __0 () = L1.bot in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in __0 ())
+            [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+        let rec (is_bot : t -> bool) =
+          let __0 () = L1.is_bot in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in __0 ())
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
@@ -78,6 +87,14 @@ module Tuple2(L1:Lattice)(L2:Lattice) : Lattice =
               fun () ->
                 (fun (x0, x1) -> (x0, x1))
                   ((fun () -> (((__0 ()) ()), ((__1 ()) ()))) ()))
+            [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+        let rec (is_bot : t -> bool) =
+          let __1 () = L2.is_bot
+          and __0 () = L1.is_bot in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
+              fun a ->
+                (fun (a, b) -> ((__0 ()) a) && ((__1 ()) b))
+                  ((fun (x0, x1) -> (x0, x1)) a))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
@@ -129,6 +146,17 @@ module Tuple3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
                   ((fun () ->
                       (((__0 ()) ()),
                         ((fun () -> (((__1 ()) ()), ((__2 ()) ()))) ()))) ()))
+            [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+        let rec (is_bot : t -> bool) =
+          let __2 () = L3.is_bot
+          and __1 () = L2.is_bot
+          and __0 () = L1.is_bot in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
+              fun a ->
+                (fun (a, b) ->
+                   ((__0 ()) a) &&
+                     ((fun (a, b) -> ((__1 ()) a) && ((__2 ()) b)) b))
+                  ((fun (x0, x1, x2) -> (x0, (x1, x2))) a))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 

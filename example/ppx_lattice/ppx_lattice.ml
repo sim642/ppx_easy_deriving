@@ -43,8 +43,23 @@ module BotDeriver = Make (BotArg)
 let bot_deriving = BotDeriver.register ()
 
 
+module IsBotArg: Arg =
+struct
+  let name = "is_bot"
+  let typ ~loc t = [%type: [%t t] -> bool]
+  let unit ~loc = [%expr fun () -> true]
+  let both ~loc e1 e2 = [%expr fun (a, b) -> [%e e1] a && [%e e2] b]
+  let apply_iso ~loc is_bot f _ =
+    [%expr fun a -> [%e is_bot] ([%e f] a)]
+end
+
+module IsBotDeriver = Make (IsBotArg)
+let is_bot_deriving = IsBotDeriver.register ()
+
+
 let _ = Ppxlib.Deriving.add_alias "lattice" [
+    is_bot_deriving;
     bot_deriving;
     join_deriving;
-    leq_deriving
+    leq_deriving;
   ]

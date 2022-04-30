@@ -4,6 +4,7 @@ sig
   val leq: t -> t -> bool
   val join: t -> t -> t
   val bot: unit -> t
+  val is_bot: t -> bool
 end
 
 module Unit: Lattice =
