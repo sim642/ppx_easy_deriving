@@ -5,9 +5,9 @@ module type Arg =
 sig
   val name: string
   val typ: loc:location -> core_type -> core_type
-  val unit: loc:location -> expression
+  (* val unit: loc:location -> expression *)
   val both: loc:location -> expression -> expression -> expression
-  val apply_iso: loc:location -> expression -> expression -> expression
+  val apply_iso: loc:location -> expression -> expression -> expression -> expression
 end
 
 module type S =
@@ -239,7 +239,31 @@ struct
       in
       [%expr fun [%p pat "x"] -> [%e body]]
     in
-    Arg.apply_iso ~loc body f
+    let f' =
+      let pat =
+        comps
+        |> List.mapi (fun i _ ->
+            let name = "x" ^ string_of_int i in
+            ppat_var ~loc {loc; txt = name}
+          )
+        |> List.rev
+        |> (function
+          | (last::others) -> List.fold_left (fun acc field ->
+            [%pat? ([%p field], [%p acc])]
+          ) last others
+          | [] -> assert false
+        )
+      in
+      let body =
+        comps
+        |> List.mapi (fun i _ ->
+            label_field ~loc "x" i
+          )
+        |> pexp_tuple ~loc
+      in
+      [%expr fun [%p pat] -> [%e body]]
+    in
+    Arg.apply_iso ~loc body f f'
 
   let expr_declaration ~loc ~quoter td = match td with
     | {ptype_kind = Ptype_abstract; ptype_manifest = Some ct; _} ->
