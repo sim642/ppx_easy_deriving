@@ -5,6 +5,25 @@ module type Lattice  =
     val join : t -> t -> t
     val bot : unit -> t
   end
+module Direct(L1:Lattice) : Lattice =
+  struct
+    type t = L1.t[@@deriving lattice]
+    include
+      struct
+        let rec (leq : t -> t -> bool) =
+          let __0 () = L1.leq in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in __0 ())
+            [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+        let rec (join : t -> t -> t) =
+          let __0 () = L1.join in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in __0 ())
+            [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+        let rec (bot : unit -> t) =
+          let __0 () = L1.bot in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in __0 ())
+            [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+      end[@@ocaml.doc "@inline"][@@merlin.hide ]
+  end 
 module Tuple2(L1:Lattice)(L2:Lattice) : Lattice =
   struct
     type t = (L1.t * L2.t)[@@deriving lattice]

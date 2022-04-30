@@ -6,6 +6,11 @@ sig
   val bot: unit -> t
 end
 
+module Direct (L1: Lattice): Lattice =
+struct
+  type t = L1.t [@@deriving lattice]
+end
+
 module Tuple2 (L1: Lattice) (L2: Lattice): Lattice =
 struct
   type t = L1.t * L2.t [@@deriving lattice]
