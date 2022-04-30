@@ -1,0 +1,3 @@
+(executable
+ (name ppx_lattice_test)
+ (preprocess (pps ppx_lattice)))
