@@ -21,7 +21,19 @@ struct
     [%expr fun a b -> [%e f'] ([%e join] ([%e f] a) ([%e f] b))]
 end
 
+module Arg3: Arg =
+struct
+  let name = "bot"
+  let typ ~loc t = [%type: unit -> [%t t]]
+  (* let unit ~loc = [%expr fun () () -> ()] *)
+  let both ~loc e1 e2 = [%expr fun () -> ([%e e1] (), [%e e2] ())]
+  let apply_iso ~loc bot _ f' =
+    [%expr fun () -> [%e f'] ([%e bot] ())]
+end
+
 module Deriver = Make (Arg)
 module Deriver2 = Make (Arg2)
+module Deriver3 = Make (Arg3)
 let _ = Deriver.register ()
 let _ = Deriver2.register ()
+let _ = Deriver3.register ()
