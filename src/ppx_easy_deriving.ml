@@ -191,7 +191,7 @@ struct
     [%expr fun x -> [%e body [%expr x]]] *)
 
   and expr_record ~loc ~quoter (lds: label_declaration list) =
-    (* let label_field ~loc record_expr label =
+    let label_field ~loc record_expr label =
       pexp_field ~loc record_expr {loc; txt = Lident label}
     in
     let body =
@@ -200,7 +200,7 @@ struct
           expr ~loc ~quoter pld_type
         )
       |> hash_reduce' ~loc
-    in *)
+    in
     (* let pat prefix =
       lds
       |> List.mapi (fun i _ ->
@@ -209,7 +209,7 @@ struct
         )
       |> ppat_tuple ~loc
     in *)
-    (* let f =
+    let f =
       let body x_expr =
         lds
         |> List.map (fun {pld_name = {txt = label; loc}; _} ->
@@ -250,14 +250,14 @@ struct
       in
       [%expr fun [%p pat] -> [%e body]]
     in
-    Arg.apply_iso ~loc body f f' *)
-    Arg.product ~loc (lds
+    Arg.apply_iso ~loc body f f'
+    (* Arg.product ~loc (lds
        |> List.map (fun {pld_name = {txt = label; _}; _} ->
         Lident label
       )) (lds
       |> List.map (fun {pld_type; _} ->
           expr ~loc ~quoter pld_type
-        ))
+        )) *)
 
   and expr_tuple ~loc ~quoter comps =
     let label_field ~loc prefix i =
