@@ -24,6 +24,11 @@ struct
   type t = Int.t * String.t [@@deriving eq, easy_equal, ppx_type_directed_equal]
 end
 
+module IntStringPpxCompare =
+struct
+  type t = Int.t * String.t [@@deriving equal]
+end
+
 let () =
   register (
     "pair" @>>> [
@@ -33,6 +38,7 @@ let () =
               ("ppx_deriving", uncurry IntString.equal, args);
               ("ppx_easy_deriving", uncurry IntString.easy_equal, args);
               ("ppx_type_directed_equal", uncurry IntString.ppx_type_directed_equal, args);
+              ("ppx_compare", uncurry IntStringPpxCompare.equal, args);
             ]
           );
         "fst" @> lazy (
@@ -41,6 +47,7 @@ let () =
               ("ppx_deriving", uncurry IntString.equal, args);
               ("ppx_easy_deriving", uncurry IntString.easy_equal, args);
               ("ppx_type_directed_equal", uncurry IntString.ppx_type_directed_equal, args);
+              ("ppx_compare", uncurry IntStringPpxCompare.equal, args);
             ]
           );
       ]
@@ -179,6 +186,136 @@ module M = struct
   [@@deriving eq, easy_equal, ppx_type_directed_equal]
 end
 
+module MPpxCompare = struct
+  type rec_6 = M.rec_6 =
+    { f1 : String.t
+    ; f2 : String.t
+    ; f3 : String.t
+    ; g1 : Int.t
+    ; g2 : Int.t
+    ; g3 : Int.t
+    }
+  [@@deriving equal]
+
+  type rec_16 = M.rec_16 =
+    { f1 : String.t
+    ; f2 : String.t
+    ; f3 : String.t
+    ; f4 : String.t
+    ; f5 : String.t
+    ; f6 : String.t
+    ; f7 : String.t
+    ; f8 : String.t
+    ; g1 : Int.t
+    ; g2 : Int.t
+    ; g3 : Int.t
+    ; g4 : Int.t
+    ; g5 : Int.t
+    ; g6 : Int.t
+    ; g7 : Int.t
+    ; g8 : Int.t
+    }
+  [@@deriving equal]
+
+  type rec_30 = M.rec_30 =
+    { f1  : String.t
+    ; f2  : String.t
+    ; f3  : String.t
+    ; f4  : String.t
+    ; f5  : String.t
+    ; f6  : String.t
+    ; f7  : String.t
+    ; f8  : String.t
+    ; f9  : String.t
+    ; f10 : String.t
+    ; f11 : String.t
+    ; f12 : String.t
+    ; f13 : String.t
+    ; f14 : String.t
+    ; f15 : String.t
+    ; g1  : Int.t
+    ; g2  : Int.t
+    ; g3  : Int.t
+    ; g4  : Int.t
+    ; g5  : Int.t
+    ; g6  : Int.t
+    ; g7  : Int.t
+    ; g8  : Int.t
+    ; g9  : Int.t
+    ; g10 : Int.t
+    ; g11 : Int.t
+    ; g12 : Int.t
+    ; g13 : Int.t
+    ; g14 : Int.t
+    ; g15 : Int.t
+    }
+  [@@deriving equal]
+
+  type rec_60 = M.rec_60 =
+    { f1  : String.t
+    ; f2  : String.t
+    ; f3  : String.t
+    ; f4  : String.t
+    ; f5  : String.t
+    ; f6  : String.t
+    ; f7  : String.t
+    ; f8  : String.t
+    ; f9  : String.t
+    ; f10 : String.t
+    ; f11 : String.t
+    ; f12 : String.t
+    ; f13 : String.t
+    ; f14 : String.t
+    ; f15 : String.t
+    ; f16 : String.t
+    ; f17 : String.t
+    ; f18 : String.t
+    ; f19 : String.t
+    ; f20 : String.t
+    ; f21 : String.t
+    ; f22 : String.t
+    ; f23 : String.t
+    ; f24 : String.t
+    ; f25 : String.t
+    ; f26 : String.t
+    ; f27 : String.t
+    ; f28 : String.t
+    ; f29 : String.t
+    ; f30 : String.t
+    ; g1  : Int.t
+    ; g2  : Int.t
+    ; g3  : Int.t
+    ; g4  : Int.t
+    ; g5  : Int.t
+    ; g6  : Int.t
+    ; g7  : Int.t
+    ; g8  : Int.t
+    ; g9  : Int.t
+    ; g10 : Int.t
+    ; g11 : Int.t
+    ; g12 : Int.t
+    ; g13 : Int.t
+    ; g14 : Int.t
+    ; g15 : Int.t
+    ; g16 : Int.t
+    ; g17 : Int.t
+    ; g18 : Int.t
+    ; g19 : Int.t
+    ; g20 : Int.t
+    ; g21 : Int.t
+    ; g22 : Int.t
+    ; g23 : Int.t
+    ; g24 : Int.t
+    ; g25 : Int.t
+    ; g26 : Int.t
+    ; g27 : Int.t
+    ; g28 : Int.t
+    ; g29 : Int.t
+    ; g30 : Int.t
+    }
+  [@@deriving equal]
+end
+
 let rec_6 = { M.f1 = "hello"; f2 = "hello"; f3 = "hello"; g1 = 10; g2 = 10; g3 = 10 }
 
 let rec_16 =
@@ -307,6 +444,7 @@ let () =
               ("ppx_deriving", uncurry M.equal_rec_6, args);
               ("ppx_easy_deriving", uncurry M.easy_equal_rec_6, args);
               ("ppx_type_directed_equal", uncurry M.ppx_type_directed_equal_rec_6, args);
+              ("ppx_compare", uncurry MPpxCompare.equal_rec_6, args);
             ]
           );
         "16" @> lazy (
@@ -315,6 +453,7 @@ let () =
               ("ppx_deriving", uncurry M.equal_rec_16, args);
               ("ppx_easy_deriving", uncurry M.easy_equal_rec_16, args);
               ("ppx_type_directed_equal", uncurry M.ppx_type_directed_equal_rec_16, args);
+              ("ppx_compare", uncurry MPpxCompare.equal_rec_16, args);
             ]
           );
         "30" @> lazy (
@@ -323,6 +462,7 @@ let () =
               ("ppx_deriving", uncurry M.equal_rec_30, args);
               ("ppx_easy_deriving", uncurry M.easy_equal_rec_30, args);
               ("ppx_type_directed_equal", uncurry M.ppx_type_directed_equal_rec_30, args);
+              ("ppx_compare", uncurry MPpxCompare.equal_rec_30, args);
             ]
           );
         "60" @> lazy (
@@ -331,6 +471,7 @@ let () =
               ("ppx_deriving", uncurry M.equal_rec_60, args);
               ("ppx_easy_deriving", uncurry M.easy_equal_rec_60, args);
               ("ppx_type_directed_equal", uncurry M.ppx_type_directed_equal_rec_60, args);
+              ("ppx_compare", uncurry MPpxCompare.equal_rec_60, args);
             ]
           );
       ]
