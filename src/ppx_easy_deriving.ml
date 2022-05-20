@@ -1,6 +1,8 @@
 open Ppxlib
 open Ast_builder.Default
 
+module PatExp = PatExp
+
 module type Arg =
 sig
   val name: string

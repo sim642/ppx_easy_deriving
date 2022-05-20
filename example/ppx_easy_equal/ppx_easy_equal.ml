@@ -1,25 +1,6 @@
 open Ppxlib
 open Ppx_easy_deriving
 
-module PatExp =
-struct
-  type t = Record of (longident * string) list
-  let create_record ~prefix ls =
-    Record (List.mapi (fun i l -> (l, prefix ^ string_of_int i)) ls)
-  let to_pat ~loc = function
-    | Record xs ->
-      let open Ppxlib in
-      let open Ast_builder.Default in
-      ppat_record ~loc (List.map (fun (l, x) ->
-          (Located.mk ~loc l, ppat_var ~loc (Located.mk ~loc x))
-        ) xs) Closed
-  let to_exps ~loc = function
-    | Record xs ->
-      let open Ppxlib in
-      let open Ast_builder.Default in
-      List.map (fun (_, x) -> pexp_ident ~loc {loc; txt = Lident x}) xs
-end
-
 module EasyEqualArg: Arg =
 struct
   let name = "easy_equal"
