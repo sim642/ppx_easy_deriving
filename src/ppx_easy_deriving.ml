@@ -3,34 +3,29 @@ open Ast_builder.Default
 
 module PatExp = PatExp
 
-module type Arg2 =
+module type ArgBase =
 sig
   val name: string
   val typ: loc:location -> core_type -> core_type
   val unit: loc:location -> expression
+end
+
+module type Arg2 =
+sig
+  include ArgBase
   val both: loc:location -> expression -> expression -> expression
   val apply_iso: loc:location -> expression -> expression -> expression -> expression
 end
 
 module type ArgProduct =
 sig
-  val name: string
-  val typ: loc:location -> core_type -> core_type
-  val unit: loc:location -> expression
-  val both: loc:location -> expression -> expression -> expression
-  val apply_iso: loc:location -> expression -> expression -> expression -> expression
-
+  include ArgBase
   val product: loc:location -> pe_create:(prefix:string -> PatExp.t) -> expression list -> expression
 end
 
 module type Arg =
 sig
-  val name: string
-  val typ: loc:location -> core_type -> core_type
-  val unit: loc:location -> expression
-  val both: loc:location -> expression -> expression -> expression
-  val apply_iso: loc:location -> expression -> expression -> expression -> expression
-
+  include ArgBase
   val record: loc:location -> longident list -> expression list -> expression
   val tuple: loc:location -> int -> expression list -> expression
 end
@@ -163,13 +158,13 @@ end
 
 module Make (Arg: Arg): S =
 struct
-  let hash_reduce2 ~loc a b =
+  (* let hash_reduce2 ~loc a b =
     Arg.both ~loc a b
 
   let hash_fold ~loc i =
     List.fold_left (hash_reduce2 ~loc) i
 
-  let hash_variant ~loc i = eint ~loc i
+  let hash_variant ~loc i = eint ~loc i *)
 
   let rec expr ~loc ~quoter ct =
     let expr = expr ~quoter in
@@ -188,14 +183,14 @@ struct
       pexp_apply ~loc ident apply_args
     | {ptyp_desc = Ptyp_tuple comps; _} ->
       expr_tuple ~loc ~quoter comps
-    | {ptyp_desc = Ptyp_variant (rows, Closed, None); _} ->
-      expr_poly_variant ~loc ~quoter rows
+    (* | {ptyp_desc = Ptyp_variant (rows, Closed, None); _} ->
+      expr_poly_variant ~loc ~quoter rows *)
     | {ptyp_desc = Ptyp_var name; _} ->
       evar ~loc ("poly_" ^ name)
     | _ ->
       Location.raise_errorf ~loc "other"
 
-  and expr_poly_variant ~loc ~quoter rows =
+  (* and expr_poly_variant ~loc ~quoter rows =
     rows
     |> List.map (fun {prf_desc; _} ->
         match prf_desc with
@@ -274,7 +269,7 @@ struct
         | _ ->
           Location.raise_errorf ~loc "other variant"
       )
-    |> pexp_function ~loc
+    |> pexp_function ~loc *)
 
   and expr_record ~loc ~quoter (lds: label_declaration list) =
     Arg.record ~loc (lds
@@ -296,8 +291,10 @@ struct
       expr ~loc ~quoter ct
     | {ptype_kind = Ptype_abstract; _} ->
       Location.raise_errorf ~loc "Cannot derive accessors for abstract types"
-    | {ptype_kind = Ptype_variant constrs; _} ->
-      expr_variant ~loc ~quoter constrs
+    (* | {ptype_kind = Ptype_variant constrs; _} ->
+      expr_variant ~loc ~quoter constrs *)
+    | {ptype_kind = Ptype_variant _; _} ->
+      Location.raise_errorf ~loc "Cannot derive accessors for variant types"
     | {ptype_kind = Ptype_open; _} ->
       Location.raise_errorf ~loc "Cannot derive accessors for open types"
     | {ptype_kind = Ptype_record fields; _} ->
