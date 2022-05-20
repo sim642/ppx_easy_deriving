@@ -9,6 +9,8 @@ struct
   let both ~loc e1 e2 = [%expr fun (a1, b1) (a2, b2) -> [%e e1] a1 a2 && [%e e2] b1 b2]
   let apply_iso ~loc leq f _ =
     [%expr fun a b -> [%e leq] ([%e f] a) ([%e f] b)]
+
+  let product ~loc:_loc _ls _es = failwith "TODO"
 end
 
 module LeqDeriver = Make (LeqArg)
@@ -23,6 +25,8 @@ struct
   let both ~loc e1 e2 = [%expr fun (a1, b1) (a2, b2) -> ([%e e1] a1 a2, [%e e2] b1 b2)]
   let apply_iso ~loc join f f' =
     [%expr fun a b -> [%e f'] ([%e join] ([%e f] a) ([%e f] b))]
+
+  let product ~loc:_loc _ls _es = failwith "TODO"
 end
 
 module JoinDeriver = Make (JoinArg)
@@ -37,6 +41,8 @@ struct
   let both ~loc e1 e2 = [%expr fun () -> ([%e e1] (), [%e e2] ())]
   let apply_iso ~loc bot _ f' =
     [%expr fun () -> [%e f'] ([%e bot] ())]
+
+  let product ~loc:_loc _ls _es = failwith "TODO"
 end
 
 module BotDeriver = Make (BotArg)
@@ -51,6 +57,8 @@ struct
   let both ~loc e1 e2 = [%expr fun (a, b) -> [%e e1] a && [%e e2] b]
   let apply_iso ~loc is_bot f _ =
     [%expr fun a -> [%e is_bot] ([%e f] a)]
+
+  let product ~loc:_loc _ls _es = failwith "TODO"
 end
 
 module IsBotDeriver = Make (IsBotArg)
