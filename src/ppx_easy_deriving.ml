@@ -20,7 +20,7 @@ sig
   val both: loc:location -> expression -> expression -> expression
   val apply_iso: loc:location -> expression -> expression -> expression -> expression
 
-  val product: loc:location -> longident list -> expression list -> expression
+  val record: loc:location -> longident list -> expression list -> expression
 end
 
 module MakeArg2 (Arg2: Arg2): Arg =
@@ -50,7 +50,7 @@ struct
         hash_fold' ~loc x (List.rev xs) (* omits hash_empty *)
       | [] -> assert false
 
-  let product ~loc ls es =
+  let record ~loc ls es =
     (* let label_field ~loc record_expr label =
       pexp_field ~loc record_expr {loc; txt = Lident label}
     in *)
@@ -340,7 +340,7 @@ struct
       [%expr fun [%p pat] -> [%e body]]
     in
     Arg.apply_iso ~loc body f f' *)
-    Arg.product ~loc (lds
+    Arg.record ~loc (lds
        |> List.map (fun {pld_name = {txt = label; _}; _} ->
         Lident label
       )) (lds

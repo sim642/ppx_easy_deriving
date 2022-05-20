@@ -10,7 +10,7 @@ struct
   let apply_iso ~loc leq f _ =
     [%expr fun a b -> [%e leq] ([%e f] a) ([%e f] b)]
 
-  let product ~loc ls es =
+  let record ~loc ls es =
     let pea = PatExp.create_record ~prefix:"a" ls in
     let peb = PatExp.create_record ~prefix:"b" ls in
     let pa = PatExp.to_pat ~loc pea in
