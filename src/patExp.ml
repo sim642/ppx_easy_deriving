@@ -9,6 +9,14 @@ let to_pat ~loc = function
     ppat_record ~loc (List.map (fun (l, x) ->
         (Located.mk ~loc l, ppat_var ~loc (Located.mk ~loc x))
       ) xs) Closed
+let to_pats ~loc = function
+  | Record xs ->
+    List.map (fun (_, x) -> ppat_var ~loc (Located.mk ~loc x)) xs
 let to_exps ~loc = function
   | Record xs ->
     List.map (fun (_, x) -> pexp_ident ~loc {loc; txt = Lident x}) xs
+let to_exp ~loc = function
+  | Record xs ->
+    pexp_record ~loc (List.map (fun (l, x) ->
+        (Located.mk ~loc l, pexp_ident ~loc {loc; txt = Lident x})
+      ) xs) None
