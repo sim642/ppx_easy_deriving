@@ -1,0 +1,3 @@
+(library
+ (name ppx_type_directed_equal)
+ (preprocess (pps ppx_type_directed_value)))

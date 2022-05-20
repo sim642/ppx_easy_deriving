@@ -1,0 +1,4 @@
+(executable
+ (name bench)
+ (libraries benchmark ppx_type_directed_equal)
+ (preprocess (pps ppx_easy_equal ppx_deriving.eq ppx_type_directed_value -module -Ppx_type_directed_equal)))
