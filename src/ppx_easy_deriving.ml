@@ -52,21 +52,10 @@ struct
       | [] -> assert false
 
   let record ~loc ls es =
-    (* let label_field ~loc record_expr label =
-      pexp_field ~loc record_expr {loc; txt = Lident label}
-    in *)
     let body =
       es
       |> hash_reduce' ~loc
     in
-    (* let pat prefix =
-      lds
-      |> List.mapi (fun i _ ->
-          let name = prefix ^ string_of_int i in
-          ppat_var ~loc {loc; txt = name}
-        )
-      |> ppat_tuple ~loc
-    in *)
     let f =
       let pe = PatExp.create_record ~prefix:"f" ls in
       let body =
@@ -101,39 +90,10 @@ struct
     Arg2.apply_iso ~loc body f f'
 
   let tuple ~loc n es =
-    (* let label_field ~loc prefix i =
-      let name = prefix ^ string_of_int i in
-      pexp_ident ~loc {loc; txt = Lident name}
-    in *)
     let body =
-      (* comps
-      |> List.mapi (fun i comp_type ->
-          (i, expr ~loc ~quoter comp_type)
-        )
-      |> List.map (fun (i, label_fun) ->
-          [%expr [%e label_fun] [%e label_field ~loc "x" i]]
-        )
-      |> hash_reduce ~loc *)
-      (* comps
-      |> List.mapi (fun i _ ->
-          label_field ~loc "x" i
-        )
-      |> List.rev
-      |> List.fold_left (fun acc field ->
-          [%expr ([%e field], [%e acc])]
-        ) [%expr ()] *)
       es
       |> hash_reduce' ~loc
     in
-    (* let pat prefix =
-      comps
-      |> List.mapi (fun i _ ->
-          let name = prefix ^ string_of_int i in
-          ppat_var ~loc {loc; txt = name}
-        )
-      |> ppat_tuple ~loc
-    in *)
-    (* [%expr fun [%p pat "x"] -> [%e body]] *)
     let f =
       let pe = PatExp.create_tuple ~prefix:"f" n in
       let body =
@@ -185,26 +145,6 @@ struct
   let hash_fold ~loc i =
     List.fold_left (hash_reduce2 ~loc) i
 
-  (* let hash_fold' ~loc i xs =
-    List.fold_right ((hash_reduce2 ~loc)) xs i *)
-
-  (* let hash_empty ~loc = [%expr 0] *)
-
-  (* let hash_reduce ~loc = function
-    | [] -> hash_empty ~loc
-    | [x] -> x
-    | x :: xs -> hash_fold ~loc x xs (* omits hash_empty *) *)
-
-  (* let hash_reduce' ~loc = function
-    | [] -> hash_empty ~loc
-    | [x] -> x
-    | xs ->
-      let xs = List.rev xs in
-      match xs with
-      | x :: xs ->
-        hash_fold' ~loc x (List.rev xs) (* omits hash_empty *)
-      | [] -> assert false *)
-
   let hash_variant ~loc i = eint ~loc i
 
   let rec expr ~loc ~quoter ct =
@@ -212,28 +152,6 @@ struct
     match ct with
     | [%type: unit] ->
       Arg.unit ~loc
-    (* | [%type: string] ->
-      [%expr Hashtbl.hash]
-    | [%type: char] ->
-      [%expr Char.code]
-    | [%type: bool] ->
-      [%expr Bool.to_int]
-    | [%type: int32] ->
-      [%expr Int32.to_int]
-    | [%type: int64] ->
-      [%expr Int64.to_int]
-    | [%type: int] ->
-      [%expr fun (x: int) -> x]
-    | [%type: unit] ->
-      [%expr fun () -> [%e hash_empty ~loc]]
-    | [%type: [%t? a] option] ->
-      [%expr function
-        (* like variants *)
-        | None -> [%e hash_variant ~loc 0]
-        | Some x -> [%e hash_reduce2 ~loc (hash_variant ~loc 1) [%expr [%e expr ~loc a] x]]
-      ]
-    | [%type: [%t? a] list] ->
-      [%expr List.fold_left (fun a b -> [%e hash_reduce2 ~loc [%expr a] [%expr [%e expr ~loc a] b]]) [%e hash_empty ~loc]] *)
     | {ptyp_desc = Ptyp_constr ({txt = lid; loc}, args); _} ->
       let ident = pexp_ident ~loc {loc; txt = Ppx_deriving.mangle_lid (`Prefix Arg.name) lid} in
       let ident = Ppx_deriving.quote ~quoter ident in
@@ -334,83 +252,7 @@ struct
       )
     |> pexp_function ~loc
 
-  (* and expr_record ~loc ~quoter lds =
-    let label_field ~loc record_expr label =
-      pexp_field ~loc record_expr {loc; txt = Lident label}
-    in
-    let body x_expr =
-      lds
-      |> List.map (fun {pld_name = {txt = label; loc}; pld_type; _} ->
-          (label, expr ~loc ~quoter pld_type)
-        )
-      |> List.map (fun (label, label_fun) ->
-          [%expr [%e label_fun] [%e label_field ~loc x_expr label]]
-        )
-      |> hash_reduce ~loc
-    in
-    [%expr fun x -> [%e body [%expr x]]] *)
-
   and expr_record ~loc ~quoter (lds: label_declaration list) =
-    (* let label_field ~loc record_expr label =
-      pexp_field ~loc record_expr {loc; txt = Lident label}
-    in
-    let body =
-      lds
-      |> List.map (fun {pld_type; _} ->
-          expr ~loc ~quoter pld_type
-        )
-      |> hash_reduce' ~loc
-    in *)
-    (* let pat prefix =
-      lds
-      |> List.mapi (fun i _ ->
-          let name = prefix ^ string_of_int i in
-          ppat_var ~loc {loc; txt = name}
-        )
-      |> ppat_tuple ~loc
-    in *)
-    (* let f =
-      let body x_expr =
-        lds
-        |> List.map (fun {pld_name = {txt = label; loc}; _} ->
-            label_field ~loc x_expr label
-          )
-        |> List.rev
-        |> (function
-          | (last::others) -> List.fold_left (fun acc field ->
-            [%expr ([%e field], [%e acc])]
-          ) last others
-          | [] -> assert false
-        )
-      in
-      [%expr fun x -> [%e body [%expr x]]]
-    in
-    let f' =
-      let pat =
-        lds
-        |> List.mapi (fun i _ ->
-            let name = "x" ^ string_of_int i in
-            ppat_var ~loc {loc; txt = name}
-          )
-        |> List.rev
-        |> (function
-          | (last::others) -> List.fold_left (fun acc field ->
-            [%pat? ([%p field], [%p acc])]
-          ) last others
-          | [] -> assert false
-        )
-      in
-      let body =
-        lds
-        |> List.mapi (fun i {pld_name = {txt = label; loc}; _} ->
-            let name = "x" ^ string_of_int i in
-            ({loc; txt = Lident label}, pexp_ident ~loc {loc; txt = Lident name})
-          )
-        |> (fun l -> pexp_record ~loc l None)
-      in
-      [%expr fun [%p pat] -> [%e body]]
-    in
-    Arg.apply_iso ~loc body f f' *)
     Arg.record ~loc (lds
        |> List.map (fun {pld_name = {txt = label; _}; _} ->
         Lident label
@@ -420,86 +262,6 @@ struct
         ))
 
   and expr_tuple ~loc ~quoter comps =
-    (* let label_field ~loc prefix i =
-      let name = prefix ^ string_of_int i in
-      pexp_ident ~loc {loc; txt = Lident name}
-    in
-    let body =
-      (* comps
-      |> List.mapi (fun i comp_type ->
-          (i, expr ~loc ~quoter comp_type)
-        )
-      |> List.map (fun (i, label_fun) ->
-          [%expr [%e label_fun] [%e label_field ~loc "x" i]]
-        )
-      |> hash_reduce ~loc *)
-      (* comps
-      |> List.mapi (fun i _ ->
-          label_field ~loc "x" i
-        )
-      |> List.rev
-      |> List.fold_left (fun acc field ->
-          [%expr ([%e field], [%e acc])]
-        ) [%expr ()] *)
-      comps
-      |> List.map (fun comp_type ->
-          expr ~loc ~quoter comp_type
-        )
-      |> hash_reduce' ~loc
-    in
-    let pat prefix =
-      comps
-      |> List.mapi (fun i _ ->
-          let name = prefix ^ string_of_int i in
-          ppat_var ~loc {loc; txt = name}
-        )
-      |> ppat_tuple ~loc
-    in
-    (* [%expr fun [%p pat "x"] -> [%e body]] *)
-    let f =
-      let body =
-        comps
-        |> List.mapi (fun i _ ->
-            label_field ~loc "x" i
-          )
-        |> List.rev
-        |> (function
-          | (last::others) -> List.fold_left (fun acc field ->
-            [%expr ([%e field], [%e acc])]
-          ) last others
-          | [] -> assert false
-        )
-      in
-      [%expr fun [%p pat "x"] -> [%e body]]
-    in
-    let f' =
-      let pat =
-        comps
-        |> List.mapi (fun i _ ->
-            let name = "x" ^ string_of_int i in
-            ppat_var ~loc {loc; txt = name}
-          )
-        |> List.rev
-        |> (function
-          | (last::others) -> List.fold_left (fun acc field ->
-            [%pat? ([%p field], [%p acc])]
-          ) last others
-          | [] -> assert false
-        )
-      in
-      let body =
-        comps
-        |> List.mapi (fun i _ ->
-            label_field ~loc "x" i
-          )
-        |> pexp_tuple ~loc
-      in
-      [%expr fun [%p pat] -> [%e body]]
-    in
-    match comps with
-    | [] | [_] -> assert false
-    | [_; _] -> body (* avoid trivial iso *)
-    | _ :: _ :: _ :: _ -> Arg.apply_iso ~loc body f f' *)
     Arg.tuple ~loc (List.length comps) (comps
       |> List.map (fun pld_type ->
           expr ~loc ~quoter pld_type
