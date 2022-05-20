@@ -35,20 +35,20 @@ module Direct(L1:Lattice) : Lattice =
     include
       struct
         let rec (leq : t -> t -> bool) =
-          let __0 () = L1.leq in
-          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in __0 ())
+          let __0 = L1.leq in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in __0)
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (join : t -> t -> t) =
-          let __0 () = L1.join in
-          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in __0 ())
+          let __0 = L1.join in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in __0)
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (bot : unit -> t) =
-          let __0 () = L1.bot in
-          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in __0 ())
+          let __0 = L1.bot in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in __0)
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (is_bot : t -> bool) =
-          let __0 () = L1.is_bot in
-          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in __0 ())
+          let __0 = L1.is_bot in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in __0)
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
@@ -58,30 +58,28 @@ module Tuple2(L1:Lattice)(L2:Lattice) : Lattice =
     include
       struct
         let rec (leq : t -> t -> bool) =
-          let __1 () = L2.leq
-          and __0 () = L1.leq in
+          let __1 = L2.leq
+          and __0 = L1.leq in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun (a1, b1) ->
-                fun (a2, b2) -> ((__0 ()) a1 a2) && ((__1 ()) b1 b2))
+              fun (a1, b1) -> fun (a2, b2) -> (__0 a1 a2) && (__1 b1 b2))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (join : t -> t -> t) =
-          let __1 () = L2.join
-          and __0 () = L1.join in
+          let __1 = L2.join
+          and __0 = L1.join in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun (a1, b1) ->
-                fun (a2, b2) -> (((__0 ()) a1 a2), ((__1 ()) b1 b2)))
+              fun (a1, b1) -> fun (a2, b2) -> ((__0 a1 a2), (__1 b1 b2)))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (bot : unit -> t) =
-          let __1 () = L2.bot
-          and __0 () = L1.bot in
+          let __1 = L2.bot
+          and __0 = L1.bot in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun () -> (((__0 ()) ()), ((__1 ()) ())))
+              fun () -> ((__0 ()), (__1 ())))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (is_bot : t -> bool) =
-          let __1 () = L2.is_bot
-          and __0 () = L1.is_bot in
+          let __1 = L2.is_bot
+          and __0 = L1.is_bot in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun (a, b) -> ((__0 ()) a) && ((__1 ()) b))
+              fun (a, b) -> (__0 a) && (__1 b))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
@@ -91,58 +89,55 @@ module Tuple3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
     include
       struct
         let rec (leq : t -> t -> bool) =
-          let __2 () = L3.leq
-          and __1 () = L2.leq
-          and __0 () = L1.leq in
+          let __2 = L3.leq
+          and __1 = L2.leq
+          and __0 = L1.leq in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun a ->
                 fun b ->
                   (fun (a1, b1) ->
                      fun (a2, b2) ->
-                       ((__0 ()) a1 a2) &&
+                       (__0 a1 a2) &&
                          ((fun (a1, b1) ->
-                             fun (a2, b2) ->
-                               ((__1 ()) a1 a2) && ((__2 ()) b1 b2)) b1 b2))
-                    ((fun (x0, x1, x2) -> (x0, (x1, x2))) a)
+                             fun (a2, b2) -> (__1 a1 a2) && (__2 b1 b2)) b1
+                            b2)) ((fun (x0, x1, x2) -> (x0, (x1, x2))) a)
                     ((fun (x0, x1, x2) -> (x0, (x1, x2))) b))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (join : t -> t -> t) =
-          let __2 () = L3.join
-          and __1 () = L2.join
-          and __0 () = L1.join in
+          let __2 = L3.join
+          and __1 = L2.join
+          and __0 = L1.join in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun a ->
                 fun b ->
                   (fun (x0, (x1, x2)) -> (x0, x1, x2))
                     ((fun (a1, b1) ->
                         fun (a2, b2) ->
-                          (((__0 ()) a1 a2),
+                          ((__0 a1 a2),
                             ((fun (a1, b1) ->
-                                fun (a2, b2) ->
-                                  (((__1 ()) a1 a2), ((__2 ()) b1 b2))) b1 b2)))
+                                fun (a2, b2) -> ((__1 a1 a2), (__2 b1 b2)))
+                               b1 b2)))
                        ((fun (x0, x1, x2) -> (x0, (x1, x2))) a)
                        ((fun (x0, x1, x2) -> (x0, (x1, x2))) b)))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (bot : unit -> t) =
-          let __2 () = L3.bot
-          and __1 () = L2.bot
-          and __0 () = L1.bot in
+          let __2 = L3.bot
+          and __1 = L2.bot
+          and __0 = L1.bot in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun () ->
                 (fun (x0, (x1, x2)) -> (x0, x1, x2))
                   ((fun () ->
-                      (((__0 ()) ()),
-                        ((fun () -> (((__1 ()) ()), ((__2 ()) ()))) ()))) ()))
+                      ((__0 ()), ((fun () -> ((__1 ()), (__2 ()))) ()))) ()))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (is_bot : t -> bool) =
-          let __2 () = L3.is_bot
-          and __1 () = L2.is_bot
-          and __0 () = L1.is_bot in
+          let __2 = L3.is_bot
+          and __1 = L2.is_bot
+          and __0 = L1.is_bot in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun a ->
                 (fun (a, b) ->
-                   ((__0 ()) a) &&
-                     ((fun (a, b) -> ((__1 ()) a) && ((__2 ()) b)) b))
+                   (__0 a) && ((fun (a, b) -> (__1 a) && (__2 b)) b))
                   ((fun (x0, x1, x2) -> (x0, (x1, x2))) a))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
@@ -154,28 +149,30 @@ module Record1(L1:Lattice) : Lattice =
     include
       struct
         let rec (leq : t -> t -> bool) =
-          let __0 () = L1.leq in
-          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun a ->
-                fun b -> (__0 ()) ((fun x -> x.f1) a) ((fun x -> x.f1) b))
-            [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
-        let rec (join : t -> t -> t) =
-          let __0 () = L1.join in
+          let __0 = L1.leq in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun a ->
                 fun b ->
-                  (fun x0 -> { f1 = x0 })
-                    ((__0 ()) ((fun x -> x.f1) a) ((fun x -> x.f1) b)))
+                  __0 ((fun { f1 = f0 } -> f0) a) ((fun { f1 = f0 } -> f0) b))
+            [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+        let rec (join : t -> t -> t) =
+          let __0 = L1.join in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
+              fun a ->
+                fun b ->
+                  (fun f'0 -> { f1 = f'0 })
+                    (__0 ((fun { f1 = f0 } -> f0) a)
+                       ((fun { f1 = f0 } -> f0) b)))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (bot : unit -> t) =
-          let __0 () = L1.bot in
+          let __0 = L1.bot in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun () -> (fun x0 -> { f1 = x0 }) ((__0 ()) ()))
+              fun () -> (fun f'0 -> { f1 = f'0 }) (__0 ()))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (is_bot : t -> bool) =
-          let __0 () = L1.is_bot in
+          let __0 = L1.is_bot in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun a -> (__0 ()) ((fun x -> x.f1) a))
+              fun a -> __0 ((fun { f1 = f0 } -> f0) a))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
@@ -187,43 +184,42 @@ module Record2(L1:Lattice)(L2:Lattice) : Lattice =
     include
       struct
         let rec (leq : t -> t -> bool) =
-          let __1 () = L2.leq
-          and __0 () = L1.leq in
+          let __1 = L2.leq
+          and __0 = L1.leq in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun a ->
                 fun b ->
-                  (fun (a1, b1) ->
-                     fun (a2, b2) -> ((__0 ()) a1 a2) && ((__1 ()) b1 b2))
-                    ((fun x -> ((x.f1), (x.f2))) a)
-                    ((fun x -> ((x.f1), (x.f2))) b))
+                  (fun (a1, b1) -> fun (a2, b2) -> (__0 a1 a2) && (__1 b1 b2))
+                    ((fun { f1 = f0; f2 = f1 } -> (f0, f1)) a)
+                    ((fun { f1 = f0; f2 = f1 } -> (f0, f1)) b))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (join : t -> t -> t) =
-          let __1 () = L2.join
-          and __0 () = L1.join in
+          let __1 = L2.join
+          and __0 = L1.join in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun a ->
                 fun b ->
-                  (fun (x0, x1) -> { f1 = x0; f2 = x1 })
+                  (fun (f'0, f'1) -> { f1 = f'0; f2 = f'1 })
                     ((fun (a1, b1) ->
-                        fun (a2, b2) -> (((__0 ()) a1 a2), ((__1 ()) b1 b2)))
-                       ((fun x -> ((x.f1), (x.f2))) a)
-                       ((fun x -> ((x.f1), (x.f2))) b)))
+                        fun (a2, b2) -> ((__0 a1 a2), (__1 b1 b2)))
+                       ((fun { f1 = f0; f2 = f1 } -> (f0, f1)) a)
+                       ((fun { f1 = f0; f2 = f1 } -> (f0, f1)) b)))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (bot : unit -> t) =
-          let __1 () = L2.bot
-          and __0 () = L1.bot in
+          let __1 = L2.bot
+          and __0 = L1.bot in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun () ->
-                (fun (x0, x1) -> { f1 = x0; f2 = x1 })
-                  ((fun () -> (((__0 ()) ()), ((__1 ()) ()))) ()))
+                (fun (f'0, f'1) -> { f1 = f'0; f2 = f'1 })
+                  ((fun () -> ((__0 ()), (__1 ()))) ()))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (is_bot : t -> bool) =
-          let __1 () = L2.is_bot
-          and __0 () = L1.is_bot in
+          let __1 = L2.is_bot
+          and __0 = L1.is_bot in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun a ->
-                (fun (a, b) -> ((__0 ()) a) && ((__1 ()) b))
-                  ((fun x -> ((x.f1), (x.f2))) a))
+                (fun (a, b) -> (__0 a) && (__1 b))
+                  ((fun { f1 = f0; f2 = f1 } -> (f0, f1)) a))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
@@ -236,59 +232,59 @@ module Record3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
     include
       struct
         let rec (leq : t -> t -> bool) =
-          let __2 () = L3.leq
-          and __1 () = L2.leq
-          and __0 () = L1.leq in
+          let __2 = L3.leq
+          and __1 = L2.leq
+          and __0 = L1.leq in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun a ->
                 fun b ->
                   (fun (a1, b1) ->
                      fun (a2, b2) ->
-                       ((__0 ()) a1 a2) &&
+                       (__0 a1 a2) &&
                          ((fun (a1, b1) ->
-                             fun (a2, b2) ->
-                               ((__1 ()) a1 a2) && ((__2 ()) b1 b2)) b1 b2))
-                    ((fun x -> ((x.f1), ((x.f2), (x.f3)))) a)
-                    ((fun x -> ((x.f1), ((x.f2), (x.f3)))) b))
+                             fun (a2, b2) -> (__1 a1 a2) && (__2 b1 b2)) b1
+                            b2))
+                    ((fun { f1 = f0; f2 = f1; f3 = f2 } -> (f0, (f1, f2))) a)
+                    ((fun { f1 = f0; f2 = f1; f3 = f2 } -> (f0, (f1, f2))) b))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (join : t -> t -> t) =
-          let __2 () = L3.join
-          and __1 () = L2.join
-          and __0 () = L1.join in
+          let __2 = L3.join
+          and __1 = L2.join
+          and __0 = L1.join in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun a ->
                 fun b ->
-                  (fun (x0, (x1, x2)) -> { f1 = x0; f2 = x1; f3 = x2 })
+                  (fun (f'0, (f'1, f'2)) -> { f1 = f'0; f2 = f'1; f3 = f'2 })
                     ((fun (a1, b1) ->
                         fun (a2, b2) ->
-                          (((__0 ()) a1 a2),
+                          ((__0 a1 a2),
                             ((fun (a1, b1) ->
-                                fun (a2, b2) ->
-                                  (((__1 ()) a1 a2), ((__2 ()) b1 b2))) b1 b2)))
-                       ((fun x -> ((x.f1), ((x.f2), (x.f3)))) a)
-                       ((fun x -> ((x.f1), ((x.f2), (x.f3)))) b)))
+                                fun (a2, b2) -> ((__1 a1 a2), (__2 b1 b2)))
+                               b1 b2)))
+                       ((fun { f1 = f0; f2 = f1; f3 = f2 } -> (f0, (f1, f2)))
+                          a)
+                       ((fun { f1 = f0; f2 = f1; f3 = f2 } -> (f0, (f1, f2)))
+                          b)))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (bot : unit -> t) =
-          let __2 () = L3.bot
-          and __1 () = L2.bot
-          and __0 () = L1.bot in
+          let __2 = L3.bot
+          and __1 = L2.bot
+          and __0 = L1.bot in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun () ->
-                (fun (x0, (x1, x2)) -> { f1 = x0; f2 = x1; f3 = x2 })
+                (fun (f'0, (f'1, f'2)) -> { f1 = f'0; f2 = f'1; f3 = f'2 })
                   ((fun () ->
-                      (((__0 ()) ()),
-                        ((fun () -> (((__1 ()) ()), ((__2 ()) ()))) ()))) ()))
+                      ((__0 ()), ((fun () -> ((__1 ()), (__2 ()))) ()))) ()))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (is_bot : t -> bool) =
-          let __2 () = L3.is_bot
-          and __1 () = L2.is_bot
-          and __0 () = L1.is_bot in
+          let __2 = L3.is_bot
+          and __1 = L2.is_bot
+          and __0 = L1.is_bot in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun a ->
                 (fun (a, b) ->
-                   ((__0 ()) a) &&
-                     ((fun (a, b) -> ((__1 ()) a) && ((__2 ()) b)) b))
-                  ((fun x -> ((x.f1), ((x.f2), (x.f3)))) a))
+                   (__0 a) && ((fun (a, b) -> (__1 a) && (__2 b)) b))
+                  ((fun { f1 = f0; f2 = f1; f3 = f2 } -> (f0, (f1, f2))) a))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
