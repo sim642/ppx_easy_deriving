@@ -48,137 +48,133 @@ let () =
 
 
 (* copied from ppx_type_directed_value examples *)
-let ppx_type_directed_equal_int    = Int.equal
-let ppx_type_directed_equal_string = String.equal
-let easy_equal_int    = Int.equal
-let easy_equal_string = String.equal
 
 module M = struct
   type rec_6 =
-    { f1 : string
-    ; f2 : string
-    ; f3 : string
-    ; g1 : int
-    ; g2 : int
-    ; g3 : int
+    { f1 : String.t
+    ; f2 : String.t
+    ; f3 : String.t
+    ; g1 : Int.t
+    ; g2 : Int.t
+    ; g3 : Int.t
     }
   [@@deriving eq, easy_equal, ppx_type_directed_equal]
 
   type rec_16 =
-    { f1 : string
-    ; f2 : string
-    ; f3 : string
-    ; f4 : string
-    ; f5 : string
-    ; f6 : string
-    ; f7 : string
-    ; f8 : string
-    ; g1 : int
-    ; g2 : int
-    ; g3 : int
-    ; g4 : int
-    ; g5 : int
-    ; g6 : int
-    ; g7 : int
-    ; g8 : int
+    { f1 : String.t
+    ; f2 : String.t
+    ; f3 : String.t
+    ; f4 : String.t
+    ; f5 : String.t
+    ; f6 : String.t
+    ; f7 : String.t
+    ; f8 : String.t
+    ; g1 : Int.t
+    ; g2 : Int.t
+    ; g3 : Int.t
+    ; g4 : Int.t
+    ; g5 : Int.t
+    ; g6 : Int.t
+    ; g7 : Int.t
+    ; g8 : Int.t
     }
   [@@deriving eq, easy_equal, ppx_type_directed_equal]
 
   type rec_30 =
-    { f1  : string
-    ; f2  : string
-    ; f3  : string
-    ; f4  : string
-    ; f5  : string
-    ; f6  : string
-    ; f7  : string
-    ; f8  : string
-    ; f9  : string
-    ; f10 : string
-    ; f11 : string
-    ; f12 : string
-    ; f13 : string
-    ; f14 : string
-    ; f15 : string
-    ; g1  : int
-    ; g2  : int
-    ; g3  : int
-    ; g4  : int
-    ; g5  : int
-    ; g6  : int
-    ; g7  : int
-    ; g8  : int
-    ; g9  : int
-    ; g10 : int
-    ; g11 : int
-    ; g12 : int
-    ; g13 : int
-    ; g14 : int
-    ; g15 : int
+    { f1  : String.t
+    ; f2  : String.t
+    ; f3  : String.t
+    ; f4  : String.t
+    ; f5  : String.t
+    ; f6  : String.t
+    ; f7  : String.t
+    ; f8  : String.t
+    ; f9  : String.t
+    ; f10 : String.t
+    ; f11 : String.t
+    ; f12 : String.t
+    ; f13 : String.t
+    ; f14 : String.t
+    ; f15 : String.t
+    ; g1  : Int.t
+    ; g2  : Int.t
+    ; g3  : Int.t
+    ; g4  : Int.t
+    ; g5  : Int.t
+    ; g6  : Int.t
+    ; g7  : Int.t
+    ; g8  : Int.t
+    ; g9  : Int.t
+    ; g10 : Int.t
+    ; g11 : Int.t
+    ; g12 : Int.t
+    ; g13 : Int.t
+    ; g14 : Int.t
+    ; g15 : Int.t
     }
   [@@deriving eq, easy_equal, ppx_type_directed_equal]
 
   type rec_60 =
-    { f1  : string
-    ; f2  : string
-    ; f3  : string
-    ; f4  : string
-    ; f5  : string
-    ; f6  : string
-    ; f7  : string
-    ; f8  : string
-    ; f9  : string
-    ; f10 : string
-    ; f11 : string
-    ; f12 : string
-    ; f13 : string
-    ; f14 : string
-    ; f15 : string
-    ; f16 : string
-    ; f17 : string
-    ; f18 : string
-    ; f19 : string
-    ; f20 : string
-    ; f21 : string
-    ; f22 : string
-    ; f23 : string
-    ; f24 : string
-    ; f25 : string
-    ; f26 : string
-    ; f27 : string
-    ; f28 : string
-    ; f29 : string
-    ; f30 : string
-    ; g1  : int
-    ; g2  : int
-    ; g3  : int
-    ; g4  : int
-    ; g5  : int
-    ; g6  : int
-    ; g7  : int
-    ; g8  : int
-    ; g9  : int
-    ; g10 : int
-    ; g11 : int
-    ; g12 : int
-    ; g13 : int
-    ; g14 : int
-    ; g15 : int
-    ; g16 : int
-    ; g17 : int
-    ; g18 : int
-    ; g19 : int
-    ; g20 : int
-    ; g21 : int
-    ; g22 : int
-    ; g23 : int
-    ; g24 : int
-    ; g25 : int
-    ; g26 : int
-    ; g27 : int
-    ; g28 : int
-    ; g29 : int
-    ; g30 : int
+    { f1  : String.t
+    ; f2  : String.t
+    ; f3  : String.t
+    ; f4  : String.t
+    ; f5  : String.t
+    ; f6  : String.t
+    ; f7  : String.t
+    ; f8  : String.t
+    ; f9  : String.t
+    ; f10 : String.t
+    ; f11 : String.t
+    ; f12 : String.t
+    ; f13 : String.t
+    ; f14 : String.t
+    ; f15 : String.t
+    ; f16 : String.t
+    ; f17 : String.t
+    ; f18 : String.t
+    ; f19 : String.t
+    ; f20 : String.t
+    ; f21 : String.t
+    ; f22 : String.t
+    ; f23 : String.t
+    ; f24 : String.t
+    ; f25 : String.t
+    ; f26 : String.t
+    ; f27 : String.t
+    ; f28 : String.t
+    ; f29 : String.t
+    ; f30 : String.t
+    ; g1  : Int.t
+    ; g2  : Int.t
+    ; g3  : Int.t
+    ; g4  : Int.t
+    ; g5  : Int.t
+    ; g6  : Int.t
+    ; g7  : Int.t
+    ; g8  : Int.t
+    ; g9  : Int.t
+    ; g10 : Int.t
+    ; g11 : Int.t
+    ; g12 : Int.t
+    ; g13 : Int.t
+    ; g14 : Int.t
+    ; g15 : Int.t
+    ; g16 : Int.t
+    ; g17 : Int.t
+    ; g18 : Int.t
+    ; g19 : Int.t
+    ; g20 : Int.t
+    ; g21 : Int.t
+    ; g22 : Int.t
+    ; g23 : Int.t
+    ; g24 : Int.t
+    ; g25 : Int.t
+    ; g26 : Int.t
+    ; g27 : Int.t
+    ; g28 : Int.t
+    ; g29 : Int.t
+    ; g30 : Int.t
     }
   [@@deriving eq, easy_equal, ppx_type_directed_equal]
 end
