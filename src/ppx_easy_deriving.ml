@@ -12,6 +12,17 @@ sig
   val apply_iso: loc:location -> expression -> expression -> expression -> expression
 end
 
+module type ArgProduct =
+sig
+  val name: string
+  val typ: loc:location -> core_type -> core_type
+  val unit: loc:location -> expression
+  val both: loc:location -> expression -> expression -> expression
+  val apply_iso: loc:location -> expression -> expression -> expression -> expression
+
+  val product: loc:location -> pe_create:(prefix:string -> PatExp.t) -> expression list -> expression
+end
+
 module type Arg =
 sig
   val name: string
@@ -129,6 +140,19 @@ struct
     | [] | [_] -> assert false
     | [_; _] -> body (* avoid trivial iso *)
     | _ :: _ :: _ :: _ -> Arg2.apply_iso ~loc body f f'
+end
+
+module MakeArgProduct (ArgProduct: ArgProduct): Arg =
+struct
+  include ArgProduct
+
+  let record ~loc ls es =
+    let pe_create ~prefix = PatExp.create_record ~prefix ls in
+    ArgProduct.product ~loc ~pe_create es
+
+  let tuple ~loc n es =
+    let pe_create ~prefix = PatExp.create_tuple ~prefix n in
+    ArgProduct.product ~loc ~pe_create es
 end
 
 
