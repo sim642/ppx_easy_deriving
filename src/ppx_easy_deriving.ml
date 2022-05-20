@@ -21,6 +21,7 @@ sig
   val apply_iso: loc:location -> expression -> expression -> expression -> expression
 
   val record: loc:location -> longident list -> expression list -> expression
+  val tuple: loc:location -> int -> expression list -> expression
 end
 
 module MakeArg2 (Arg2: Arg2): Arg =
@@ -98,6 +99,76 @@ struct
       [%expr fun [%p pat] -> [%e body]]
     in
     Arg2.apply_iso ~loc body f f'
+
+  let tuple ~loc n es =
+    (* let label_field ~loc prefix i =
+      let name = prefix ^ string_of_int i in
+      pexp_ident ~loc {loc; txt = Lident name}
+    in *)
+    let body =
+      (* comps
+      |> List.mapi (fun i comp_type ->
+          (i, expr ~loc ~quoter comp_type)
+        )
+      |> List.map (fun (i, label_fun) ->
+          [%expr [%e label_fun] [%e label_field ~loc "x" i]]
+        )
+      |> hash_reduce ~loc *)
+      (* comps
+      |> List.mapi (fun i _ ->
+          label_field ~loc "x" i
+        )
+      |> List.rev
+      |> List.fold_left (fun acc field ->
+          [%expr ([%e field], [%e acc])]
+        ) [%expr ()] *)
+      es
+      |> hash_reduce' ~loc
+    in
+    (* let pat prefix =
+      comps
+      |> List.mapi (fun i _ ->
+          let name = prefix ^ string_of_int i in
+          ppat_var ~loc {loc; txt = name}
+        )
+      |> ppat_tuple ~loc
+    in *)
+    (* [%expr fun [%p pat "x"] -> [%e body]] *)
+    let f =
+      let pe = PatExp.create_tuple ~prefix:"f" n in
+      let body =
+        PatExp.to_exps ~loc pe
+        |> List.rev
+        |> (function
+          | (last::others) -> List.fold_left (fun acc field ->
+            [%expr ([%e field], [%e acc])]
+          ) last others
+          | [] -> assert false
+        )
+      in
+      [%expr fun [%p PatExp.to_pat ~loc pe] -> [%e body]]
+    in
+    let f' =
+      let pe = PatExp.create_tuple ~prefix:"f'" n in
+      let pat =
+        PatExp.to_pats ~loc pe
+        |> List.rev
+        |> (function
+          | (last::others) -> List.fold_left (fun acc field ->
+            [%pat? ([%p field], [%p acc])]
+          ) last others
+          | [] -> assert false
+        )
+      in
+      let body =
+        PatExp.to_exp ~loc pe
+      in
+      [%expr fun [%p pat] -> [%e body]]
+    in
+    match es with
+    | [] | [_] -> assert false
+    | [_; _] -> body (* avoid trivial iso *)
+    | _ :: _ :: _ :: _ -> Arg2.apply_iso ~loc body f f'
 end
 
 
@@ -114,17 +185,17 @@ struct
   let hash_fold ~loc i =
     List.fold_left (hash_reduce2 ~loc) i
 
-  let hash_fold' ~loc i xs =
-    List.fold_right ((hash_reduce2 ~loc)) xs i
+  (* let hash_fold' ~loc i xs =
+    List.fold_right ((hash_reduce2 ~loc)) xs i *)
 
-  let hash_empty ~loc = [%expr 0]
+  (* let hash_empty ~loc = [%expr 0] *)
 
   (* let hash_reduce ~loc = function
     | [] -> hash_empty ~loc
     | [x] -> x
     | x :: xs -> hash_fold ~loc x xs (* omits hash_empty *) *)
 
-  let hash_reduce' ~loc = function
+  (* let hash_reduce' ~loc = function
     | [] -> hash_empty ~loc
     | [x] -> x
     | xs ->
@@ -132,7 +203,7 @@ struct
       match xs with
       | x :: xs ->
         hash_fold' ~loc x (List.rev xs) (* omits hash_empty *)
-      | [] -> assert false
+      | [] -> assert false *)
 
   let hash_variant ~loc i = eint ~loc i
 
@@ -349,7 +420,7 @@ struct
         ))
 
   and expr_tuple ~loc ~quoter comps =
-    let label_field ~loc prefix i =
+    (* let label_field ~loc prefix i =
       let name = prefix ^ string_of_int i in
       pexp_ident ~loc {loc; txt = Lident name}
     in
@@ -428,7 +499,11 @@ struct
     match comps with
     | [] | [_] -> assert false
     | [_; _] -> body (* avoid trivial iso *)
-    | _ :: _ :: _ :: _ -> Arg.apply_iso ~loc body f f'
+    | _ :: _ :: _ :: _ -> Arg.apply_iso ~loc body f f' *)
+    Arg.tuple ~loc (List.length comps) (comps
+      |> List.map (fun pld_type ->
+          expr ~loc ~quoter pld_type
+        ))
 
   let expr_declaration ~loc ~quoter td = match td with
     | {ptype_kind = Ptype_abstract; ptype_manifest = Some ct; _} ->

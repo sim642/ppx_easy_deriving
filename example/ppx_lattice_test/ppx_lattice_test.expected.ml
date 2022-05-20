@@ -94,7 +94,8 @@ module Tuple2(L1:Lattice)(L2:Lattice) : Lattice =
           let __1 = L2.easy_equal
           and __0 = L1.easy_equal in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun (a1, b1) -> fun (a2, b2) -> (__0 a1 a2) && (__1 b1 b2))
+              fun (a0, a1) ->
+                fun (b0, b1) -> (true && (__0 a0 b0)) && (__1 a1 b1))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
@@ -115,8 +116,8 @@ module Tuple3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
                        (__0 a1 a2) &&
                          ((fun (a1, b1) ->
                              fun (a2, b2) -> (__1 a1 a2) && (__2 b1 b2)) b1
-                            b2)) ((fun (x0, x1, x2) -> (x0, (x1, x2))) a)
-                    ((fun (x0, x1, x2) -> (x0, (x1, x2))) b))
+                            b2)) ((fun (f0, f1, f2) -> (f0, (f1, f2))) a)
+                    ((fun (f0, f1, f2) -> (f0, (f1, f2))) b))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (join : t -> t -> t) =
           let __2 = L3.join
@@ -125,15 +126,15 @@ module Tuple3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun a ->
                 fun b ->
-                  (fun (x0, (x1, x2)) -> (x0, x1, x2))
+                  (fun (f'0, (f'1, f'2)) -> (f'0, f'1, f'2))
                     ((fun (a1, b1) ->
                         fun (a2, b2) ->
                           ((__0 a1 a2),
                             ((fun (a1, b1) ->
                                 fun (a2, b2) -> ((__1 a1 a2), (__2 b1 b2)))
                                b1 b2)))
-                       ((fun (x0, x1, x2) -> (x0, (x1, x2))) a)
-                       ((fun (x0, x1, x2) -> (x0, (x1, x2))) b)))
+                       ((fun (f0, f1, f2) -> (f0, (f1, f2))) a)
+                       ((fun (f0, f1, f2) -> (f0, (f1, f2))) b)))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (bot : unit -> t) =
           let __2 = L3.bot
@@ -141,7 +142,7 @@ module Tuple3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
           and __0 = L1.bot in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun () ->
-                (fun (x0, (x1, x2)) -> (x0, x1, x2))
+                (fun (f'0, (f'1, f'2)) -> (f'0, f'1, f'2))
                   ((fun () ->
                       ((__0 ()), ((fun () -> ((__1 ()), (__2 ()))) ()))) ()))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
@@ -153,22 +154,16 @@ module Tuple3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
               fun a ->
                 (fun (a, b) ->
                    (__0 a) && ((fun (a, b) -> (__1 a) && (__2 b)) b))
-                  ((fun (x0, x1, x2) -> (x0, (x1, x2))) a))
+                  ((fun (f0, f1, f2) -> (f0, (f1, f2))) a))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (easy_equal : t -> t -> bool) =
           let __2 = L3.easy_equal
           and __1 = L2.easy_equal
           and __0 = L1.easy_equal in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun a ->
-                fun b ->
-                  (fun (a1, b1) ->
-                     fun (a2, b2) ->
-                       (__0 a1 a2) &&
-                         ((fun (a1, b1) ->
-                             fun (a2, b2) -> (__1 a1 a2) && (__2 b1 b2)) b1
-                            b2)) ((fun (x0, x1, x2) -> (x0, (x1, x2))) a)
-                    ((fun (x0, x1, x2) -> (x0, (x1, x2))) b))
+              fun (a0, a1, a2) ->
+                fun (b0, b1, b2) ->
+                  ((true && (__0 a0 b0)) && (__1 a1 b1)) && (__2 a2 b2))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
