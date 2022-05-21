@@ -168,34 +168,25 @@ struct
       pexp_apply ~loc ident apply_args
     | {ptyp_desc = Ptyp_tuple comps; _} ->
       expr_tuple ~loc ~quoter comps
-    (* | {ptyp_desc = Ptyp_variant (rows, Closed, None); _} ->
-      expr_poly_variant ~loc ~quoter rows *)
+    | {ptyp_desc = Ptyp_variant (rows, Closed, None); _} ->
+      expr_poly_variant ~loc ~quoter rows
     | {ptyp_desc = Ptyp_var name; _} ->
       evar ~loc ("poly_" ^ name)
     | _ ->
       Location.raise_errorf ~loc "other"
 
-  (* and expr_poly_variant ~loc ~quoter rows =
+  and expr_poly_variant ~loc ~quoter rows =
     rows
     |> List.map (fun {prf_desc; _} ->
         match prf_desc with
         | Rtag ({txt = label; loc}, true, []) ->
-          let variant_i = Ppx_deriving.hash_variant label in
-          let variant_const = hash_variant ~loc variant_i in
-          case ~lhs:(ppat_variant ~loc label None)
-            ~guard:None
-            ~rhs:variant_const
+          ((fun ~prefix:_ -> PatExp.PolyConstructor (label, None)), (fun ~prefix:_ -> PatExp.Unit), Arg.unit ~loc)
         | Rtag ({txt = label; loc}, false, [ct]) ->
-          let variant_i = Ppx_deriving.hash_variant label in
-          let variant_const = hash_variant ~loc variant_i in
-          let label_fun = expr ~loc ~quoter ct in
-          case ~lhs:(ppat_variant ~loc label (Some [%pat? x]))
-            ~guard:None
-            ~rhs:(hash_reduce2 ~loc variant_const [%expr [%e label_fun] x])
+          ((fun ~prefix -> PatExp.PolyConstructor (label, Some (PatExp.Base prefix))), (fun ~prefix -> PatExp.Base prefix), expr ~loc ~quoter ct)
         | _ ->
           Location.raise_errorf ~loc "other variant"
       )
-    |> pexp_function ~loc *)
+    |> Arg.variant ~loc
 
   and expr_variant ~loc ~quoter constrs =
     constrs

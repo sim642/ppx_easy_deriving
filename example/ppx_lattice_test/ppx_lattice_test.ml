@@ -63,3 +63,12 @@ struct
     | C4 of L5.t
   [@@deriving easy_equal]
 end
+
+module PolyVariant (L1: Lattice) (L2: Lattice) (L5: Lattice) =
+struct
+  type t = [
+    | `C1
+    | `C2 of L1.t * L2.t
+    | `C4 of L5.t
+  ] [@@deriving easy_equal]
+end
