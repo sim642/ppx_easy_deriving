@@ -21,9 +21,9 @@ struct
         [%expr [%e e] [%e ea] [%e eb]]
       ) es (List.combine esa esb)
     in
-    let body = List.fold_left (fun acc x ->
+    let body = reduce ~unit:(unit ~loc) ~both:(fun acc x ->
         [%expr [%e acc] && [%e x]]
-      ) [%expr true] body
+      ) body
     in
     [%expr fun [%p pa] [%p pb] -> [%e body]]
 end

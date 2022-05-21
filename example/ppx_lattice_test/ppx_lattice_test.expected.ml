@@ -94,8 +94,7 @@ module Tuple2(L1:Lattice)(L2:Lattice) : Lattice =
           let __1 = L2.easy_equal
           and __0 = L1.easy_equal in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun (a0, a1) ->
-                fun (b0, b1) -> (true && (__0 a0 b0)) && (__1 a1 b1))
+              fun (a0, a1) -> fun (b0, b1) -> (__0 a0 b0) && (__1 a1 b1))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
@@ -163,7 +162,7 @@ module Tuple3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun (a0, a1, a2) ->
                 fun (b0, b1, b2) ->
-                  ((true && (__0 a0 b0)) && (__1 a1 b1)) && (__2 a2 b2))
+                  (__0 a0 b0) && ((__1 a1 b1) && (__2 a2 b2)))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
@@ -202,7 +201,7 @@ module Record1(L1:Lattice) : Lattice =
         let rec (easy_equal : t -> t -> bool) =
           let __0 = L1.easy_equal in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun { f1 = a0 } -> fun { f1 = b0 } -> true && (__0 a0 b0))
+              fun { f1 = a0 } -> fun { f1 = b0 } -> __0 a0 b0)
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
@@ -256,8 +255,7 @@ module Record2(L1:Lattice)(L2:Lattice) : Lattice =
           and __0 = L1.easy_equal in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun { f1 = a0; f2 = a1 } ->
-                fun { f1 = b0; f2 = b1 } ->
-                  (true && (__0 a0 b0)) && (__1 a1 b1))
+                fun { f1 = b0; f2 = b1 } -> (__0 a0 b0) && (__1 a1 b1))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
@@ -331,7 +329,7 @@ module Record3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun { f1 = a0; f2 = a1; f3 = a2 } ->
                 fun { f1 = b0; f2 = b1; f3 = b2 } ->
-                  ((true && (__0 a0 b0)) && (__1 a1 b1)) && (__2 a2 b2))
+                  (__0 a0 b0) && ((__1 a1 b1) && (__2 a2 b2)))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 

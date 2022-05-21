@@ -3,6 +3,16 @@ open Ast_builder.Default
 
 module PatExp = PatExp
 
+let reduce ~unit ~both = function
+  | [] -> unit
+  | [x] -> x
+  | xs ->
+    let xs = List.rev xs in
+    match xs with
+    | x :: xs ->
+      List.fold_right both (List.rev xs) x (* omits hash_empty *)
+    | [] -> assert false
+
 module type ArgBase =
 sig
   val name: string
@@ -34,33 +44,10 @@ module MakeArg2 (Arg2: Arg2): Arg =
 struct
   include Arg2
 
-  let hash_reduce2 ~loc a b =
-    Arg2.both ~loc a b
-
-  let hash_fold' ~loc i xs =
-    List.fold_right ((hash_reduce2 ~loc)) xs i
-
-  let hash_empty ~loc = [%expr 0]
-
-  (* let hash_reduce ~loc = function
-    | [] -> hash_empty ~loc
-    | [x] -> x
-    | x :: xs -> hash_fold ~loc x xs (* omits hash_empty *) *)
-
-  let hash_reduce' ~loc = function
-    | [] -> hash_empty ~loc
-    | [x] -> x
-    | xs ->
-      let xs = List.rev xs in
-      match xs with
-      | x :: xs ->
-        hash_fold' ~loc x (List.rev xs) (* omits hash_empty *)
-      | [] -> assert false
-
   let record ~loc ls es =
     let body =
       es
-      |> hash_reduce' ~loc
+      |> reduce ~unit:(Arg2.unit ~loc) ~both:(Arg2.both ~loc)
     in
     let f =
       let pe = PatExp.create_record ~prefix:"f" ls in
@@ -98,7 +85,7 @@ struct
   let tuple ~loc n es =
     let body =
       es
-      |> hash_reduce' ~loc
+      |> reduce ~unit:(Arg2.unit ~loc) ~both:(Arg2.both ~loc)
     in
     let f =
       let pe = PatExp.create_tuple ~prefix:"f" n in
@@ -158,14 +145,6 @@ end
 
 module Make (Arg: Arg): S =
 struct
-  (* let hash_reduce2 ~loc a b =
-    Arg.both ~loc a b
-
-  let hash_fold ~loc i =
-    List.fold_left (hash_reduce2 ~loc) i
-
-  let hash_variant ~loc i = eint ~loc i *)
-
   let rec expr ~loc ~quoter ct =
     let expr = expr ~quoter in
     match ct with
