@@ -31,6 +31,7 @@ module type ArgProduct =
 sig
   include ArgBase
   val product: loc:location -> pe_create:(prefix:string -> PatExp.t) -> expression list -> expression
+  val variant: loc:location -> ((prefix:string -> PatExp.t) * (prefix:string -> PatExp.t) * expression) list -> expression (* TODO: extract *)
 end
 
 module type Arg =
@@ -38,6 +39,7 @@ sig
   include ArgBase
   val record: loc:location -> longident list -> expression list -> expression
   val tuple: loc:location -> int -> expression list -> expression
+  val variant: loc:location -> ((prefix:string -> PatExp.t) * (prefix:string -> PatExp.t) * expression) list -> expression
 end
 
 module MakeArg2 (Arg2: Arg2): Arg =
@@ -122,6 +124,8 @@ struct
     | [] | [_] -> assert false
     | [_; _] -> body (* avoid trivial iso *)
     | _ :: _ :: _ :: _ -> Arg2.apply_iso ~loc body f f'
+
+  let variant ~loc:_ _ = failwith "TODO"
 end
 
 module MakeArgProduct (ArgProduct: ArgProduct): Arg =
@@ -135,6 +139,8 @@ struct
   let tuple ~loc n es =
     let pe_create ~prefix = PatExp.create_tuple ~prefix n in
     ArgProduct.product ~loc ~pe_create es
+
+  let variant = ArgProduct.variant
 end
 
 
@@ -189,66 +195,40 @@ struct
         | _ ->
           Location.raise_errorf ~loc "other variant"
       )
-    |> pexp_function ~loc
+    |> pexp_function ~loc *)
 
   and expr_variant ~loc ~quoter constrs =
     constrs
-    |> List.mapi (fun variant_i {pcd_name = {txt = label; loc}; pcd_args; pcd_res; _} ->
-        let variant_const = hash_variant ~loc variant_i in
+    |> List.map (fun {pcd_name = {txt = label; loc}; pcd_args; pcd_res; _} ->
         match pcd_res, pcd_args with
         | None, Pcstr_tuple [] ->
-          case ~lhs:(ppat_construct ~loc {loc; txt = Lident label} None)
-            ~guard:None
-            ~rhs:variant_const
+          ((fun ~prefix:_ -> PatExp.Constructor (Lident label, None)), (fun ~prefix:_ -> PatExp.Unit), Arg.unit ~loc)
         | None, Pcstr_tuple cts ->
-          let label_field ~loc prefix i =
-            let name = prefix ^ string_of_int i in
-            pexp_ident ~loc {loc; txt = Lident name}
+          ((fun ~prefix -> PatExp.Constructor (Lident label, Some (PatExp.create_tuple ~prefix (List.length cts)))), PatExp.create_tuple (List.length cts), expr_tuple ~loc ~quoter cts)
+        (* TODO: can do with record? *)
+        (* | None, Pcstr_record lds ->
+          let ls = lds
+            |> List.map (fun {pld_name = {txt = label; _}; _} ->
+            Lident label
+          )
           in
-          let body =
-            cts
-            |> List.mapi (fun i comp_type ->
-                (i, expr ~loc ~quoter comp_type)
-              )
-            |> List.map (fun (i, label_fun) ->
-                [%expr [%e label_fun] [%e label_field ~loc "x" i]]
-              )
-            |> hash_fold ~loc variant_const
-          in
-          let pat prefix =
-            cts
-            |> List.mapi (fun i _ ->
-                let name = prefix ^ string_of_int i in
-                ppat_var ~loc {loc; txt = name}
-              )
-            |> ppat_tuple ~loc
-            |> fun x -> ppat_construct ~loc {loc; txt = Lident label} (Some x)
-          in
-          case ~lhs:(pat "x")
-            ~guard:None
-            ~rhs:body
+          ((fun ~prefix -> PatExp.Constructor (Lident label, Some (PatExp.create_record ~prefix ls))), PatExp.create_record ls, expr_record ~loc ~quoter lds) *)
         | None, Pcstr_record lds ->
-          let label_field ~loc record_expr label =
-            pexp_field ~loc record_expr {loc; txt = Lident label}
+          let ls = lds
+            |> List.map (fun {pld_name = {txt = label; _}; _} ->
+            Lident label
+          )
           in
-          let body x_expr =
-            lds
-            |> List.map (fun {pld_name = {txt = label; loc}; pld_type; _} ->
-                (label, expr ~loc ~quoter pld_type)
-              )
-            |> List.map (fun (label, label_fun) ->
-                [%expr [%e label_fun] [%e label_field ~loc x_expr label]]
-              )
-            |> hash_fold ~loc variant_const
+          let cts = lds
+            |> List.map (fun {pld_type; _} ->
+            pld_type
+          )
           in
-          let pat = ppat_construct ~loc {loc; txt = Lident label} (Some [%pat? x]) in
-          case ~lhs:pat
-            ~guard:None
-            ~rhs:(body [%expr x])
+          ((fun ~prefix -> PatExp.Constructor (Lident label, Some (PatExp.create_record ~prefix ls))), PatExp.create_tuple (List.length ls), expr_tuple ~loc ~quoter cts)
         | _ ->
           Location.raise_errorf ~loc "other variant"
       )
-    |> pexp_function ~loc *)
+    |> Arg.variant ~loc
 
   and expr_record ~loc ~quoter (lds: label_declaration list) =
     Arg.record ~loc (lds
@@ -270,10 +250,8 @@ struct
       expr ~loc ~quoter ct
     | {ptype_kind = Ptype_abstract; _} ->
       Location.raise_errorf ~loc "Cannot derive accessors for abstract types"
-    (* | {ptype_kind = Ptype_variant constrs; _} ->
-      expr_variant ~loc ~quoter constrs *)
-    | {ptype_kind = Ptype_variant _; _} ->
-      Location.raise_errorf ~loc "Cannot derive accessors for variant types"
+    | {ptype_kind = Ptype_variant constrs; _} ->
+      expr_variant ~loc ~quoter constrs
     | {ptype_kind = Ptype_open; _} ->
       Location.raise_errorf ~loc "Cannot derive accessors for open types"
     | {ptype_kind = Ptype_record fields; _} ->

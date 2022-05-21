@@ -26,6 +26,24 @@ struct
       ) body
     in
     [%expr fun [%p pa] [%p pb] -> [%e body]]
+
+  let variant ~loc ces =
+    let open Ast_builder.Default in
+    ces
+    |> List.map (fun (c, c2, es) ->
+        let pea = c ~prefix:"a" in
+        let peb = c ~prefix:"b" in
+        let pea2 = c2 ~prefix:"a" in
+        let peb2 = c2 ~prefix:"b" in
+        let pa = PatExp.to_pat ~loc pea in
+        let pb = PatExp.to_pat ~loc peb in
+        let ea = PatExp.to_exp ~loc pea2 in
+        let eb = PatExp.to_exp ~loc peb2 in
+        case ~lhs:[%pat? [%p pa], [%p pb]]
+          ~guard:None
+          ~rhs:[%expr [%e es] [%e ea] [%e eb]]
+      )
+    |> (fun cases -> [%expr fun x y -> [%e pexp_match ~loc [%expr x, y] (cases @ [case ~lhs:[%pat? _, _] ~guard:None ~rhs:[%expr false]])]])
 end
 
 module EasyEqualDeriver = Make (MakeArgProduct (EasyEqualArg))

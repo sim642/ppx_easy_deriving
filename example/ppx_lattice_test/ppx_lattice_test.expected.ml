@@ -333,3 +333,38 @@ module Record3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
+module Variant(L1:Lattice)(L2:Lattice)(L3:Lattice)(L4:Lattice)(L5:Lattice) =
+  struct
+    type t =
+      | C1 
+      | C2 of L1.t * L2.t 
+      | C3 of {
+      f1: L3.t ;
+      f2: L4.t } 
+      | C4 of L5.t [@@deriving easy_equal]
+    include
+      struct
+        let rec (easy_equal : t -> t -> bool) =
+          let __4 = L5.easy_equal
+          and __3 = L4.easy_equal
+          and __2 = L3.easy_equal
+          and __1 = L2.easy_equal
+          and __0 = L1.easy_equal in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
+              fun x ->
+                fun y ->
+                  match (x, y) with
+                  | (C1, C1) -> ((fun () -> fun () -> true)) () ()
+                  | (C2 (a0, a1), C2 (b0, b1)) ->
+                      ((fun (a0, a1) ->
+                          fun (b0, b1) -> (__0 a0 b0) && (__1 a1 b1)))
+                        (a0, a1) (b0, b1)
+                  | (C3 { f1 = a0; f2 = a1 }, C3 { f1 = b0; f2 = b1 }) ->
+                      ((fun (a0, a1) ->
+                          fun (b0, b1) -> (__2 a0 b0) && (__3 a1 b1)))
+                        (a0, a1) (b0, b1)
+                  | (C4 a0, C4 b0) -> ((fun a0 -> fun b0 -> __4 a0 b0)) a0 b0
+                  | (_, _) -> false)
+            [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+      end[@@ocaml.doc "@inline"][@@merlin.hide ]
+  end

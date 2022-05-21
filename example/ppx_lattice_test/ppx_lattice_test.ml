@@ -52,3 +52,14 @@ struct
     f3: L3.t;
   } [@@deriving lattice, easy_equal]
 end
+
+(* TODO: move out of ppx_lattice_test *)
+module Variant (L1: Lattice) (L2: Lattice) (L3: Lattice) (L4: Lattice) (L5: Lattice) =
+struct
+  type t =
+    | C1
+    | C2 of L1.t * L2.t
+    | C3 of {f1: L3.t; f2: L4.t}
+    | C4 of L5.t
+  [@@deriving easy_equal]
+end
