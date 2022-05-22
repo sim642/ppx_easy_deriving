@@ -1,4 +1,6 @@
 (executable
  (name bench)
  (libraries benchmark ppx_type_directed_equal)
+ (optional) ; does nothing...
+ (enabled_if (>= %{ocaml_version} 4.08)) ; work around https://github.com/ocaml/dune/issues/4065 and https://github.com/ocaml/dune/issues/5621
  (preprocess (pps ppx_easy_equal ppx_deriving.eq ppx_type_directed_value -module -Ppx_type_directed_equal ppx_compare)))
