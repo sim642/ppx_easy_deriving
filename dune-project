@@ -9,7 +9,8 @@
  (name ppx_easy_deriving)
  (depends
   ppxlib
-  ppx_deriving
+  ppx_deriving)
+ (depopts
   (ppx_type_directed_value :with-test)
   (benchmark :with-test)
   (ppx_compare :with-test)))
