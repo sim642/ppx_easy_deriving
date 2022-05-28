@@ -31,7 +31,7 @@ module type ArgProduct =
 sig
   include ArgBase
   val product: loc:location -> pe_create:(prefix:string -> PatExp.t) -> expression list -> expression
-  val variant: loc:location -> ((prefix:string -> PatExp.t) * (prefix:string -> PatExp.t) * expression) list -> expression (* TODO: extract *)
+  val variant: loc:location -> ((prefix:string -> PatExp.t) * (prefix:string -> PatExp.t) * expression * expression list) list -> expression (* TODO: extract *)
 end
 
 module type Arg =
@@ -39,7 +39,7 @@ sig
   include ArgBase
   val record: loc:location -> longident list -> expression list -> expression
   val tuple: loc:location -> int -> expression list -> expression
-  val variant: loc:location -> ((prefix:string -> PatExp.t) * (prefix:string -> PatExp.t) * expression) list -> expression
+  val variant: loc:location -> ((prefix:string -> PatExp.t) * (prefix:string -> PatExp.t) * expression * expression list) list -> expression
 end
 
 module MakeArg2 (Arg2: Arg2): Arg =
@@ -180,9 +180,9 @@ struct
     |> List.map (fun {prf_desc; _} ->
         match prf_desc with
         | Rtag ({txt = label; loc}, true, []) ->
-          ((fun ~prefix:_ -> PatExp.PolyConstructor (label, None)), (fun ~prefix:_ -> PatExp.Unit), Arg.unit ~loc)
+          ((fun ~prefix:_ -> PatExp.PolyConstructor (label, None)), (fun ~prefix:_ -> PatExp.Unit), Arg.unit ~loc, [])
         | Rtag ({txt = label; loc}, false, [ct]) ->
-          ((fun ~prefix -> PatExp.PolyConstructor (label, Some (PatExp.Base prefix))), (fun ~prefix -> PatExp.Base prefix), expr ~loc ~quoter ct)
+          ((fun ~prefix -> PatExp.PolyConstructor (label, Some (PatExp.Base prefix))), (fun ~prefix -> PatExp.Base prefix), expr ~loc ~quoter ct, [expr ~loc ~quoter ct])
         | _ ->
           Location.raise_errorf ~loc "other variant"
       )
@@ -193,9 +193,12 @@ struct
     |> List.map (fun {pcd_name = {txt = label; loc}; pcd_args; pcd_res; _} ->
         match pcd_res, pcd_args with
         | None, Pcstr_tuple [] ->
-          ((fun ~prefix:_ -> PatExp.Constructor (Lident label, None)), (fun ~prefix:_ -> PatExp.Unit), Arg.unit ~loc)
+          ((fun ~prefix:_ -> PatExp.Constructor (Lident label, None)), (fun ~prefix:_ -> PatExp.Unit), Arg.unit ~loc, [])
         | None, Pcstr_tuple cts ->
-          ((fun ~prefix -> PatExp.Constructor (Lident label, Some (PatExp.create_tuple ~prefix (List.length cts)))), PatExp.create_tuple (List.length cts), expr_tuple ~loc ~quoter cts)
+          ((fun ~prefix -> PatExp.Constructor (Lident label, Some (PatExp.create_tuple ~prefix (List.length cts)))), PatExp.create_tuple (List.length cts), expr_tuple ~loc ~quoter cts, (cts
+          |> List.map (fun pld_type ->
+              expr ~loc ~quoter pld_type
+            )))
         (* TODO: can do with record? *)
         (* | None, Pcstr_record lds ->
           let ls = lds
@@ -215,7 +218,10 @@ struct
             pld_type
           )
           in
-          ((fun ~prefix -> PatExp.Constructor (Lident label, Some (PatExp.create_record ~prefix ls))), PatExp.create_tuple (List.length ls), expr_tuple ~loc ~quoter cts)
+          ((fun ~prefix -> PatExp.Constructor (Lident label, Some (PatExp.create_record ~prefix ls))), PatExp.create_tuple (List.length ls), expr_tuple ~loc ~quoter cts, (lds
+          |> List.map (fun {pld_type; _} ->
+              expr ~loc ~quoter pld_type
+            )))
         | _ ->
           Location.raise_errorf ~loc "other variant"
       )

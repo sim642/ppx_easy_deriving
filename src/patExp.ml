@@ -38,15 +38,23 @@ let to_pats ~loc = function
     List.map (fun (_, x) -> ppat_var ~loc (Located.mk ~loc x)) xs
   | Tuple xs ->
     List.map (fun x -> ppat_var ~loc (Located.mk ~loc x)) xs
-  | Constructor _ | Unit | PolyConstructor _ | Base _ ->
-    failwith "TODO"
+  | Unit ->
+    []
+  | Base s ->
+    [ppat_var ~loc (Located.mk ~loc s)]
+  | Constructor _ | PolyConstructor _ ->
+    failwith "to_pats: TODO"
 let to_exps ~loc = function
   | Record xs ->
     List.map (fun (_, x) -> pexp_ident ~loc {loc; txt = Lident x}) xs
   | Tuple xs ->
     List.map (fun x -> pexp_ident ~loc {loc; txt = Lident x}) xs
-  | Constructor _ | Unit | PolyConstructor _ | Base _ ->
-    failwith "TODO"
+  | Unit ->
+    []
+  | Base s ->
+    [pexp_ident ~loc {loc; txt = Lident s}]
+  | Constructor _ | PolyConstructor _ ->
+    failwith "to_exps: TODO"
 let rec to_exp ~loc = function
   | Record xs ->
     pexp_record ~loc (List.map (fun (l, x) ->
