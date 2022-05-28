@@ -37,8 +37,8 @@ end
 module type Arg =
 sig
   include ArgBase
-  val record: loc:location -> longident list -> expression list -> expression
-  val tuple: loc:location -> int -> expression list -> expression
+  val record: loc:location -> (longident * expression) list -> expression
+  val tuple: loc:location -> expression list -> expression
   val variant: loc:location -> ((prefix:string -> PatExp.t) * (prefix:string -> PatExp.t) * expression * expression list) list -> expression
 end
 
@@ -46,7 +46,9 @@ module MakeArg2 (Arg2: Arg2): Arg =
 struct
   include Arg2
 
-  let record ~loc ls es =
+  let record ~loc les =
+    let ls = List.map fst les in
+    let es = List.map snd les in
     let body =
       es
       |> reduce ~unit:(Arg2.unit ~loc) ~both:(Arg2.both ~loc)
@@ -84,7 +86,8 @@ struct
     in
     Arg2.apply_iso ~loc body f f'
 
-  let tuple ~loc n es =
+  let tuple ~loc es =
+    let n = List.length es in
     let body =
       es
       |> reduce ~unit:(Arg2.unit ~loc) ~both:(Arg2.both ~loc)
@@ -132,11 +135,14 @@ module MakeArgProduct (ArgProduct: ArgProduct): Arg =
 struct
   include ArgProduct
 
-  let record ~loc ls es =
+  let record ~loc les =
+    let ls = List.map fst les in
+    let es = List.map snd les in
     let pe_create ~prefix = PatExp.create_record ~prefix ls in
     ArgProduct.product ~loc ~pe_create es
 
-  let tuple ~loc n es =
+  let tuple ~loc es =
+    let n = List.length es in
     let pe_create ~prefix = PatExp.create_tuple ~prefix n in
     ArgProduct.product ~loc ~pe_create es
 
@@ -229,15 +235,12 @@ struct
 
   and expr_record ~loc ~quoter (lds: label_declaration list) =
     Arg.record ~loc (lds
-       |> List.map (fun {pld_name = {txt = label; _}; _} ->
-        Lident label
-      )) (lds
-      |> List.map (fun {pld_type; _} ->
-          expr ~loc ~quoter pld_type
-        ))
+       |> List.map (fun {pld_name = {txt = label; _}; pld_type; _} ->
+        (Lident label, expr ~loc ~quoter pld_type)
+      ))
 
   and expr_tuple ~loc ~quoter comps =
-    Arg.tuple ~loc (List.length comps) (comps
+    Arg.tuple ~loc (comps
       |> List.map (fun pld_type ->
           expr ~loc ~quoter pld_type
         ))
