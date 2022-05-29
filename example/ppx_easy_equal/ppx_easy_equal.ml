@@ -1,7 +1,7 @@
 open Ppxlib
 open Ppx_easy_deriving
 
-module EasyEqualArg: ArgProduct =
+module EasyEqualArg: Convert.ArgProduct =
 struct
   let name = "easy_equal"
   let typ ~loc t = [%type: [%t t] -> [%t t] -> bool]
@@ -17,7 +17,7 @@ struct
         [%expr [%e e] [%e ea] [%e eb]]
       ) es (List.combine esa esb)
     in
-    reduce ~unit:[%expr true] ~both:(fun acc x ->
+    Util.reduce ~unit:[%expr true] ~both:(fun acc x ->
         [%expr [%e acc] && [%e x]]
       ) body
 
@@ -47,5 +47,5 @@ struct
     |> (fun cases -> [%expr fun x y -> [%e pexp_match ~loc [%expr x, y] (cases @ [case ~lhs:[%pat? _, _] ~guard:None ~rhs:[%expr false]])]])
 end
 
-module EasyEqualDeriver = Make (MakeArgProduct (EasyEqualArg))
+module EasyEqualDeriver = Make (Convert.MakeArgProduct (EasyEqualArg))
 let _ = EasyEqualDeriver.register ()

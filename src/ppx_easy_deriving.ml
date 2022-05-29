@@ -2,152 +2,8 @@ open Ppxlib
 open Ast_builder.Default
 
 module PatExp = PatExp
-
-let reduce ~unit ~both = function
-  | [] -> unit
-  | [x] -> x
-  | xs ->
-    let xs = List.rev xs in
-    match xs with
-    | x :: xs ->
-      List.fold_right both (List.rev xs) x (* omits hash_empty *)
-    | [] -> assert false
-
-module type ArgBase =
-sig
-  val name: string
-  val typ: loc:location -> core_type -> core_type
-  val unit: loc:location -> expression
-end
-
-module type Arg2 =
-sig
-  include ArgBase
-  val both: loc:location -> expression -> expression -> expression
-  val apply_iso: loc:location -> expression -> expression -> expression -> expression
-end
-
-module type ArgProduct =
-sig
-  include ArgBase
-  val product: loc:location -> pe_create:(prefix:string -> PatExp.t) -> expression list -> expression
-  val variant: loc:location -> ((prefix:string -> PatExp.t) * (prefix:string -> PatExp.t) * expression * expression list) list -> expression (* TODO: extract *)
-end
-
-module type Arg =
-sig
-  include ArgBase
-  val record: loc:location -> (longident * expression) list -> expression
-  val tuple: loc:location -> expression list -> expression
-  val variant: loc:location -> ((prefix:string -> PatExp.t) * (prefix:string -> PatExp.t) * expression * expression list) list -> expression
-end
-
-module MakeArg2 (Arg2: Arg2): Arg =
-struct
-  include Arg2
-
-  let record ~loc les =
-    let ls = List.map fst les in
-    let es = List.map snd les in
-    let body =
-      es
-      |> reduce ~unit:(Arg2.unit ~loc) ~both:(Arg2.both ~loc)
-    in
-    let f =
-      let pe = PatExp.create_record ~prefix:"f" ls in
-      let body =
-        PatExp.to_exps ~loc pe
-        |> List.rev
-        |> (function
-          | (last::others) -> List.fold_left (fun acc field ->
-            [%expr ([%e field], [%e acc])]
-          ) last others
-          | [] -> assert false
-        )
-      in
-      [%expr fun [%p PatExp.to_pat ~loc pe] -> [%e body]]
-    in
-    let f' =
-      let pe = PatExp.create_record ~prefix:"f'" ls in
-      let pat =
-        PatExp.to_pats ~loc pe
-        |> List.rev
-        |> (function
-          | (last::others) -> List.fold_left (fun acc field ->
-            [%pat? ([%p field], [%p acc])]
-          ) last others
-          | [] -> assert false
-        )
-      in
-      let body =
-        PatExp.to_exp ~loc pe
-      in
-      [%expr fun [%p pat] -> [%e body]]
-    in
-    Arg2.apply_iso ~loc body f f'
-
-  let tuple ~loc es =
-    let n = List.length es in
-    let body =
-      es
-      |> reduce ~unit:(Arg2.unit ~loc) ~both:(Arg2.both ~loc)
-    in
-    let f =
-      let pe = PatExp.create_tuple ~prefix:"f" n in
-      let body =
-        PatExp.to_exps ~loc pe
-        |> List.rev
-        |> (function
-          | (last::others) -> List.fold_left (fun acc field ->
-            [%expr ([%e field], [%e acc])]
-          ) last others
-          | [] -> assert false
-        )
-      in
-      [%expr fun [%p PatExp.to_pat ~loc pe] -> [%e body]]
-    in
-    let f' =
-      let pe = PatExp.create_tuple ~prefix:"f'" n in
-      let pat =
-        PatExp.to_pats ~loc pe
-        |> List.rev
-        |> (function
-          | (last::others) -> List.fold_left (fun acc field ->
-            [%pat? ([%p field], [%p acc])]
-          ) last others
-          | [] -> assert false
-        )
-      in
-      let body =
-        PatExp.to_exp ~loc pe
-      in
-      [%expr fun [%p pat] -> [%e body]]
-    in
-    match es with
-    | [] | [_] -> assert false
-    | [_; _] -> body (* avoid trivial iso *)
-    | _ :: _ :: _ :: _ -> Arg2.apply_iso ~loc body f f'
-
-  let variant ~loc:_ _ = failwith "TODO"
-end
-
-module MakeArgProduct (ArgProduct: ArgProduct): Arg =
-struct
-  include ArgProduct
-
-  let record ~loc les =
-    let ls = List.map fst les in
-    let es = List.map snd les in
-    let pe_create ~prefix = PatExp.create_record ~prefix ls in
-    ArgProduct.product ~loc ~pe_create es
-
-  let tuple ~loc es =
-    let n = List.length es in
-    let pe_create ~prefix = PatExp.create_tuple ~prefix n in
-    ArgProduct.product ~loc ~pe_create es
-
-  let variant = ArgProduct.variant
-end
+module Convert = Convert
+module Util = Util
 
 
 module type S =
@@ -155,7 +11,7 @@ sig
   val register: unit -> Deriving.t
 end
 
-module Make (Arg: Arg): S =
+module Make (Arg: Intf.S): S =
 struct
   let rec expr ~loc ~quoter ct =
     let expr = expr ~quoter in
