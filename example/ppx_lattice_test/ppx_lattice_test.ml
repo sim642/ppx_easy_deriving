@@ -62,7 +62,7 @@ struct
     | C2 of L1.t * L2.t
     | C3 of {f1: L3.t; f2: L4.t}
     | C4 of L5.t
-  [@@deriving easy_equal]
+  [@@deriving easy_equal, easy_equal2]
 end
 
 module PolyVariant (L1: Lattice) (L2: Lattice) (L5: Lattice) =
@@ -71,5 +71,5 @@ struct
     | `C1
     | `C2 of L1.t * L2.t
     | `C4 of L5.t
-  ] [@@deriving easy_equal]
+  ] [@@deriving easy_equal, easy_equal2]
 end

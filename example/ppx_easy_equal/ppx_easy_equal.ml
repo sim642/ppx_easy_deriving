@@ -48,15 +48,23 @@ module EasyEqualDeriver = Make (Convert.MakeArgProduct (EasyEqualArg))
 let _ = EasyEqualDeriver.register ()
 
 
-module EasyEqual2Arg: Convert.Arg2 =
+module EasyEqual2Arg: Convert.Arg22 =
 struct
   let name = "easy_equal2"
   let typ ~loc t = [%type: [%t t] -> [%t t] -> bool]
   let unit ~loc = [%expr fun () () -> true]
   let both ~loc e1 e2 = [%expr fun (a1, b1) (a2, b2) -> [%e e1] a1 a2 && [%e e2] b1 b2]
+  let empty ~loc = [%expr fun _ _ -> true]
+  let sum ~loc e1 e2 =
+    [%expr fun a1 a2 ->
+      match a1, a2 with
+      | Either.Left a1, Either.Left a2 -> [%e e1] a1 a2
+      | Either.Right b1, Either.Right b2 -> [%e e2] b1 b2
+      | _, _ -> false
+    ]
   let apply_iso ~loc leq f _ =
     [%expr fun a b -> [%e leq] ([%e f] a) ([%e f] b)]
 end
 
-module EasyEqual2Deriver = Make (Convert.MakeArg2 (EasyEqual2Arg))
+module EasyEqual2Deriver = Make (Convert.MakeArg22 (EasyEqual2Arg))
 let _ = EasyEqual2Deriver.register ()
