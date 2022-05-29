@@ -6,10 +6,11 @@ module type Lattice  =
     val bot : unit -> t
     val is_bot : t -> bool
     val easy_equal : t -> t -> bool
+    val easy_equal2 : t -> t -> bool
   end
 module Unit : Lattice =
   struct
-    type t = unit[@@deriving (lattice, easy_equal)]
+    type t = unit[@@deriving (lattice, easy_equal, easy_equal2)]
     include
       struct
         let rec (leq : t -> t -> bool) =
@@ -32,11 +33,15 @@ module Unit : Lattice =
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun () -> fun () -> true)
           [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+        let rec (easy_equal2 : t -> t -> bool) =
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
+              fun () -> fun () -> true)
+          [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
 module Direct(L1:Lattice) : Lattice =
   struct
-    type t = L1.t[@@deriving (lattice, easy_equal)]
+    type t = L1.t[@@deriving (lattice, easy_equal, easy_equal2)]
     include
       struct
         let rec (leq : t -> t -> bool) =
@@ -59,11 +64,15 @@ module Direct(L1:Lattice) : Lattice =
           let __0 = L1.easy_equal in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in __0)
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+        let rec (easy_equal2 : t -> t -> bool) =
+          let __0 = L1.easy_equal2 in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in __0)
+            [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
 module Tuple2(L1:Lattice)(L2:Lattice) : Lattice =
   struct
-    type t = (L1.t * L2.t)[@@deriving (lattice, easy_equal)]
+    type t = (L1.t * L2.t)[@@deriving (lattice, easy_equal, easy_equal2)]
     include
       struct
         let rec (leq : t -> t -> bool) =
@@ -96,11 +105,18 @@ module Tuple2(L1:Lattice)(L2:Lattice) : Lattice =
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun (a0, a1) -> fun (b0, b1) -> (__0 a0 b0) && (__1 a1 b1))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+        let rec (easy_equal2 : t -> t -> bool) =
+          let __1 = L2.easy_equal2
+          and __0 = L1.easy_equal2 in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
+              fun (a1, b1) -> fun (a2, b2) -> (__0 a1 a2) && (__1 b1 b2))
+            [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
 module Tuple3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
   struct
-    type t = (L1.t * L2.t * L3.t)[@@deriving (lattice, easy_equal)]
+    type t = (L1.t * L2.t * L3.t)[@@deriving
+                                   (lattice, easy_equal, easy_equal2)]
     include
       struct
         let rec (leq : t -> t -> bool) =
@@ -164,12 +180,27 @@ module Tuple3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
                 fun (b0, b1, b2) ->
                   (__0 a0 b0) && ((__1 a1 b1) && (__2 a2 b2)))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+        let rec (easy_equal2 : t -> t -> bool) =
+          let __2 = L3.easy_equal2
+          and __1 = L2.easy_equal2
+          and __0 = L1.easy_equal2 in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
+              fun a ->
+                fun b ->
+                  (fun (a1, b1) ->
+                     fun (a2, b2) ->
+                       (__0 a1 a2) &&
+                         ((fun (a1, b1) ->
+                             fun (a2, b2) -> (__1 a1 a2) && (__2 b1 b2)) b1
+                            b2)) ((fun (f0, f1, f2) -> (f0, (f1, f2))) a)
+                    ((fun (f0, f1, f2) -> (f0, (f1, f2))) b))
+            [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
 module Record1(L1:Lattice) : Lattice =
   struct
     type t = {
-      f1: L1.t }[@@deriving (lattice, easy_equal)]
+      f1: L1.t }[@@deriving (lattice, easy_equal, easy_equal2)]
     include
       struct
         let rec (leq : t -> t -> bool) =
@@ -203,13 +234,20 @@ module Record1(L1:Lattice) : Lattice =
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun { f1 = a0 } -> fun { f1 = b0 } -> __0 a0 b0)
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+        let rec (easy_equal2 : t -> t -> bool) =
+          let __0 = L1.easy_equal2 in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
+              fun a ->
+                fun b ->
+                  __0 ((fun { f1 = f0 } -> f0) a) ((fun { f1 = f0 } -> f0) b))
+            [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
 module Record2(L1:Lattice)(L2:Lattice) : Lattice =
   struct
     type t = {
       f1: L1.t ;
-      f2: L2.t }[@@deriving (lattice, easy_equal)]
+      f2: L2.t }[@@deriving (lattice, easy_equal, easy_equal2)]
     include
       struct
         let rec (leq : t -> t -> bool) =
@@ -257,6 +295,16 @@ module Record2(L1:Lattice)(L2:Lattice) : Lattice =
               fun { f1 = a0; f2 = a1 } ->
                 fun { f1 = b0; f2 = b1 } -> (__0 a0 b0) && (__1 a1 b1))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+        let rec (easy_equal2 : t -> t -> bool) =
+          let __1 = L2.easy_equal2
+          and __0 = L1.easy_equal2 in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
+              fun a ->
+                fun b ->
+                  (fun (a1, b1) -> fun (a2, b2) -> (__0 a1 a2) && (__1 b1 b2))
+                    ((fun { f1 = f0; f2 = f1 } -> (f0, f1)) a)
+                    ((fun { f1 = f0; f2 = f1 } -> (f0, f1)) b))
+            [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
 module Record3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
@@ -264,7 +312,7 @@ module Record3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
     type t = {
       f1: L1.t ;
       f2: L2.t ;
-      f3: L3.t }[@@deriving (lattice, easy_equal)]
+      f3: L3.t }[@@deriving (lattice, easy_equal, easy_equal2)]
     include
       struct
         let rec (leq : t -> t -> bool) =
@@ -330,6 +378,22 @@ module Record3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
               fun { f1 = a0; f2 = a1; f3 = a2 } ->
                 fun { f1 = b0; f2 = b1; f3 = b2 } ->
                   (__0 a0 b0) && ((__1 a1 b1) && (__2 a2 b2)))
+            [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+        let rec (easy_equal2 : t -> t -> bool) =
+          let __2 = L3.easy_equal2
+          and __1 = L2.easy_equal2
+          and __0 = L1.easy_equal2 in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
+              fun a ->
+                fun b ->
+                  (fun (a1, b1) ->
+                     fun (a2, b2) ->
+                       (__0 a1 a2) &&
+                         ((fun (a1, b1) ->
+                             fun (a2, b2) -> (__1 a1 a2) && (__2 b1 b2)) b1
+                            b2))
+                    ((fun { f1 = f0; f2 = f1; f3 = f2 } -> (f0, (f1, f2))) a)
+                    ((fun { f1 = f0; f2 = f1; f3 = f2 } -> (f0, (f1, f2))) b))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
