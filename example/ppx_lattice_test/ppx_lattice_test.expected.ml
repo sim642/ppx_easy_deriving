@@ -8,6 +8,21 @@ module type Lattice  =
     val easy_equal : t -> t -> bool
     val easy_equal2 : t -> t -> bool
   end
+module type Lattice_derived  =
+  sig
+    type t[@@deriving (lattice, easy_equal, easy_equal2)]
+    include
+      sig
+        val leq : t -> t -> bool
+        val join : t -> t -> t
+        val bot : unit -> t
+        val is_bot : t -> bool
+        val easy_equal : t -> t -> bool
+        val easy_equal2 : t -> t -> bool
+      end[@@ocaml.doc "@inline"][@@merlin.hide ]
+  end
+module Lattice_derived_test1(L:Lattice) : Lattice_derived = L 
+module Lattice_derived_test2(L:Lattice_derived) : Lattice = L 
 module Unit : Lattice =
   struct
     type t = unit[@@deriving (lattice, easy_equal, easy_equal2)]

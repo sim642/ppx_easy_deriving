@@ -10,6 +10,14 @@ sig
   val easy_equal2: t -> t -> bool
 end
 
+module type Lattice_derived =
+sig
+  type t [@@deriving lattice, easy_equal, easy_equal2]
+end
+
+module Lattice_derived_test1 (L: Lattice): Lattice_derived = L
+module Lattice_derived_test2 (L: Lattice_derived): Lattice = L
+
 module Unit: Lattice =
 struct
   type t = unit [@@deriving lattice, easy_equal, easy_equal2]
