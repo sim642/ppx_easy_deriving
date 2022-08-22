@@ -148,8 +148,14 @@ struct
 
   let impl_generator = Deriving.Generator.V2.make_noarg generate_impl
   let intf_generator = Deriving.Generator.V2.make_noarg generate_intf
+  let extension ~loc ~path:_ ct =
+    let quoter = Ppx_deriving.create_quoter () in
+    let expr = expr ~loc ~quoter ct in
+    Ppx_deriving.sanitize ~quoter expr
+
   let register () =
     Deriving.add Arg.name
       ~sig_type_decl:intf_generator
       ~str_type_decl:impl_generator
+      ~extension
 end

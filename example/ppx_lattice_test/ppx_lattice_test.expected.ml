@@ -54,6 +54,28 @@ module Unit : Lattice =
           [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
+let _ =
+  ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in fun () -> true)
+  [@ocaml.warning "-A"])
+let _ =
+  ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in fun () -> ())
+  [@ocaml.warning "-A"])
+let _ =
+  ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
+      fun () -> fun () -> ())
+  [@ocaml.warning "-A"])
+let _ =
+  ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
+      fun () -> fun () -> true)
+  [@ocaml.warning "-A"])
+let _ =
+  ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
+      fun () -> fun () -> true)
+  [@ocaml.warning "-A"])
+let _ =
+  ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
+      fun () -> fun () -> true)
+  [@ocaml.warning "-A"])
 module Direct(L1:Lattice) : Lattice =
   struct
     type t = L1.t[@@deriving (lattice, easy_equal, easy_equal2)]

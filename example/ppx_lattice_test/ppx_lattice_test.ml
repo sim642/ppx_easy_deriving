@@ -23,6 +23,13 @@ struct
   type t = unit [@@deriving lattice, easy_equal, easy_equal2]
 end
 
+let _ = [%is_bot: unit]
+let _ = [%bot: unit]
+let _ = [%join: unit]
+let _ = [%leq: unit]
+let _ = [%easy_equal: unit]
+let _ = [%easy_equal2: unit]
+
 module Direct (L1: Lattice): Lattice =
 struct
   type t = L1.t [@@deriving lattice, easy_equal, easy_equal2]
