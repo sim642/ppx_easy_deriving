@@ -5,13 +5,7 @@ module PatExp = PatExp
 module Util = Util
 module Simple = Simple
 
-include Intf
-
-
-module type S =
-sig
-  val register: unit -> Deriving.t
-end
+include Deriver_intf
 
 module Make (Arg: Intf.S): S =
 struct
