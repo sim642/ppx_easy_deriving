@@ -11,7 +11,7 @@ struct
     [%expr fun a b -> [%e leq] ([%e f] a) ([%e f] b)]
 end
 
-module LeqDeriver = Make (Simple.Product.Reduce (LeqArg))
+module LeqDeriver = Deriver (Simple.Product.Reduce (LeqArg))
 let leq_deriving = LeqDeriver.register ()
 
 
@@ -25,7 +25,7 @@ struct
     [%expr fun a b -> [%e f'] ([%e join] ([%e f] a) ([%e f] b))]
 end
 
-module JoinDeriver = Make (Simple.Product.Reduce (JoinArg))
+module JoinDeriver = Deriver (Simple.Product.Reduce (JoinArg))
 let join_deriving = JoinDeriver.register ()
 
 
@@ -39,7 +39,7 @@ struct
     [%expr fun () -> [%e f'] ([%e bot] ())]
 end
 
-module BotDeriver = Make (Simple.Product.Reduce (BotArg))
+module BotDeriver = Deriver (Simple.Product.Reduce (BotArg))
 let bot_deriving = BotDeriver.register ()
 
 
@@ -53,7 +53,7 @@ struct
     [%expr fun a -> [%e is_bot] ([%e f] a)]
 end
 
-module IsBotDeriver = Make (Simple.Product.Reduce (IsBotArg))
+module IsBotDeriver = Deriver (Simple.Product.Reduce (IsBotArg))
 let is_bot_deriving = IsBotDeriver.register ()
 
 

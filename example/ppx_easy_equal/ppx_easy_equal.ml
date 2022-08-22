@@ -44,7 +44,7 @@ struct
     |> (fun cases -> [%expr fun x y -> [%e pexp_match ~loc [%expr x, y] (cases @ [case ~lhs:[%pat? _, _] ~guard:None ~rhs:[%expr false]])]])
 end
 
-module EasyEqualDeriver = Make (ProductVariant.Make (EasyEqualArg))
+module EasyEqualDeriver = Deriver (ProductVariant.Make (EasyEqualArg))
 let _ = EasyEqualDeriver.register ()
 
 
@@ -66,5 +66,5 @@ struct
     [%expr fun a b -> [%e leq] ([%e f] a) ([%e f] b)]
 end
 
-module EasyEqual2Deriver = Make (Simple.Variant.Reduce (EasyEqual2Arg))
+module EasyEqual2Deriver = Deriver (Simple.Variant.Reduce (EasyEqual2Arg))
 let _ = EasyEqual2Deriver.register ()
