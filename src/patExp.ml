@@ -11,7 +11,10 @@ type t =
 let create_record ~prefix ls =
   Record (List.mapi (fun i l -> (l, prefix ^ string_of_int i)) ls)
 let create_tuple ~prefix n =
-  Tuple (List.init n (fun i -> prefix ^ string_of_int i))
+  match n with
+  | 0 -> Unit
+  | 1 -> Base (prefix ^ "0")
+  | n -> Tuple (List.init n (fun i -> prefix ^ string_of_int i))
 (* let create_constructor ~prefix l a =
   let a' = match a with
     |

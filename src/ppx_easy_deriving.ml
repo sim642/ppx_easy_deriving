@@ -2,8 +2,10 @@ open Ppxlib
 open Ast_builder.Default
 
 module PatExp = PatExp
-module Convert = Convert
 module Util = Util
+module Simple = Simple
+
+include Intf
 
 
 module type S =
@@ -13,11 +15,16 @@ end
 
 module Make (Arg: Intf.S): S =
 struct
+  let unit ~loc = Arg.tuple ~loc []
+
   let rec expr ~loc ~quoter ct =
     let expr = expr ~quoter in
     match ct with
+    (* TODO: convert unit to empty product *)
+    (* | [%type: unit] ->
+      Arg.unit ~loc *)
     | [%type: unit] ->
-      Arg.unit ~loc
+      unit ~loc
     | {ptyp_desc = Ptyp_constr ({txt = lid; loc}, args); _} ->
       let ident = pexp_ident ~loc {loc; txt = Ppx_deriving.mangle_lid (`Prefix Arg.name) lid} in
       let ident = Ppx_deriving.quote ~quoter ident in
@@ -42,7 +49,7 @@ struct
     |> List.map (fun {prf_desc; _} ->
         match prf_desc with
         | Rtag ({txt = label; loc}, true, []) ->
-          ((fun ~prefix:_ -> PatExp.PolyConstructor (label, None)), (fun ~prefix:_ -> PatExp.Unit), Arg.unit ~loc, [])
+          ((fun ~prefix:_ -> PatExp.PolyConstructor (label, None)), (fun ~prefix:_ -> PatExp.Unit), unit ~loc, [])
         | Rtag ({txt = label; loc}, false, [ct]) ->
           ((fun ~prefix -> PatExp.PolyConstructor (label, Some (PatExp.Base prefix))), (fun ~prefix -> PatExp.Base prefix), expr ~loc ~quoter ct, [expr ~loc ~quoter ct])
         | _ ->
@@ -55,7 +62,7 @@ struct
     |> List.map (fun {pcd_name = {txt = label; loc}; pcd_args; pcd_res; _} ->
         match pcd_res, pcd_args with
         | None, Pcstr_tuple [] ->
-          ((fun ~prefix:_ -> PatExp.Constructor (Lident label, None)), (fun ~prefix:_ -> PatExp.Unit), Arg.unit ~loc, [])
+          ((fun ~prefix:_ -> PatExp.Constructor (Lident label, None)), (fun ~prefix:_ -> PatExp.Unit), unit ~loc, [])
         | None, Pcstr_tuple cts ->
           ((fun ~prefix -> PatExp.Constructor (Lident label, Some (PatExp.create_tuple ~prefix (List.length cts)))), PatExp.create_tuple (List.length cts), expr_tuple ~loc ~quoter cts, (cts
           |> List.map (fun pld_type ->
@@ -140,4 +147,39 @@ struct
   let register () =
     Deriving.add Arg.name
       ~str_type_decl:impl_generator
+end
+
+module Product =
+struct
+  include Product
+
+  module Make (P: S): Intf.S =
+  struct
+    include P
+
+    let record ~loc les =
+      let ls = List.map fst les in
+      let es = List.map snd les in
+      let pe_create ~prefix = PatExp.create_record ~prefix ls in
+      P.product ~loc ~pe_create es
+
+    let tuple ~loc es =
+      let n = List.length es in
+      let pe_create ~prefix = PatExp.create_tuple ~prefix n in
+      P.product ~loc ~pe_create es
+
+    let variant ~loc _ = Ast_builder.Default.pexp_extension ~loc (Location.error_extensionf ~loc "Product.Make no variant")
+  end
+end
+
+module ProductVariant =
+struct
+  include ProductVariant
+
+  module Make (PV: S): Intf.S =
+  struct
+    include Product.Make (PV)
+
+    let variant = PV.variant
+  end
 end

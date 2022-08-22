@@ -1,7 +1,7 @@
 open Ppxlib
 open Ppx_easy_deriving
 
-module LeqArg: Convert.Arg2 =
+module LeqArg: Simple.Product.S =
 struct
   let name = "leq"
   let typ ~loc t = [%type: [%t t] -> [%t t] -> bool]
@@ -11,11 +11,11 @@ struct
     [%expr fun a b -> [%e leq] ([%e f] a) ([%e f] b)]
 end
 
-module LeqDeriver = Make (Convert.MakeArg2 (LeqArg))
+module LeqDeriver = Make (Simple.Product.Reduce (LeqArg))
 let leq_deriving = LeqDeriver.register ()
 
 
-module JoinArg: Convert.Arg2 =
+module JoinArg: Simple.Product.S =
 struct
   let name = "join"
   let typ ~loc t = [%type: [%t t] -> [%t t] -> [%t t]]
@@ -25,11 +25,11 @@ struct
     [%expr fun a b -> [%e f'] ([%e join] ([%e f] a) ([%e f] b))]
 end
 
-module JoinDeriver = Make (Convert.MakeArg2 (JoinArg))
+module JoinDeriver = Make (Simple.Product.Reduce (JoinArg))
 let join_deriving = JoinDeriver.register ()
 
 
-module BotArg: Convert.Arg2 =
+module BotArg: Simple.Product.S =
 struct
   let name = "bot"
   let typ ~loc t = [%type: unit -> [%t t]]
@@ -39,11 +39,11 @@ struct
     [%expr fun () -> [%e f'] ([%e bot] ())]
 end
 
-module BotDeriver = Make (Convert.MakeArg2 (BotArg))
+module BotDeriver = Make (Simple.Product.Reduce (BotArg))
 let bot_deriving = BotDeriver.register ()
 
 
-module IsBotArg: Convert.Arg2 =
+module IsBotArg: Simple.Product.S =
 struct
   let name = "is_bot"
   let typ ~loc t = [%type: [%t t] -> bool]
@@ -53,7 +53,7 @@ struct
     [%expr fun a -> [%e is_bot] ([%e f] a)]
 end
 
-module IsBotDeriver = Make (Convert.MakeArg2 (IsBotArg))
+module IsBotDeriver = Make (Simple.Product.Reduce (IsBotArg))
 let is_bot_deriving = IsBotDeriver.register ()
 
 
