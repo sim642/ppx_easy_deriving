@@ -1,15 +1,12 @@
 open Ppxlib
 open Ppx_easy_deriving
 
-module LeqArg: Product.Reduce2.S =
+module LeqArg: Product.Reduce.Conjunctive.S =
 struct
   let name = "leq"
-  let typ ~loc _ = [%type: bool]
-  let unit ~loc = [%expr true]
-  let both ~loc e1 e2 = [%expr [%e e1] && [%e e2]]
 end
 
-module LeqDeriver = Deriver (Product.Reduce2.Make (LeqArg))
+module LeqDeriver = Deriver (Product.Reduce2.Make (Product.Reduce.Conjunctive.Make (LeqArg)))
 let leq_deriving = LeqDeriver.register ()
 
 
@@ -32,15 +29,12 @@ module BotDeriver = Deriver (Product.Create.Make (BotArg))
 let bot_deriving = BotDeriver.register ()
 
 
-module IsBotArg: Product.Reduce1.S =
+module IsBotArg: Product.Reduce.Conjunctive.S =
 struct
   let name = "is_bot"
-  let typ ~loc _ = [%type: bool]
-  let unit ~loc = [%expr true]
-  let both ~loc e1 e2 = [%expr [%e e1] && [%e e2]]
 end
 
-module IsBotDeriver = Deriver (Product.Reduce1.Make (IsBotArg))
+module IsBotDeriver = Deriver (Product.Reduce1.Make (Product.Reduce.Conjunctive.Make (IsBotArg)))
 let is_bot_deriving = IsBotDeriver.register ()
 
 

@@ -6,7 +6,7 @@ sig
   val product: loc:location -> pe_create:(prefix:string -> PatExp.t) -> expression list -> expression
 end
 
-module Reduce1 =
+module Reduce =
 struct
   module type S =
   sig
@@ -14,16 +14,24 @@ struct
     val unit: loc:location -> expression
     val both: loc:location -> expression -> expression -> expression
   end
+
+  module Conjunctive =
+  struct
+    module type S =
+    sig
+      val name: string
+    end
+  end
+end
+
+module Reduce1 =
+struct
+  module type S = Reduce.S
 end
 
 module Reduce2 =
 struct
-  module type S =
-  sig
-    include Intf.Base
-    val unit: loc:location -> expression
-    val both: loc:location -> expression -> expression -> expression
-  end
+  module type S = Reduce.S
 end
 
 module Create =
@@ -56,6 +64,18 @@ sig
   module type S = S
 
   module Make (P: S): Intf.S
+
+  module Reduce :
+  sig
+    module type S = Reduce.S
+
+    module Conjunctive :
+    sig
+      module type S = Reduce.Conjunctive.S
+
+      module Make (C: S): Reduce.S
+    end
+  end
 
   module Reduce1 :
   sig

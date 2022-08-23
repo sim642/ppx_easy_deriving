@@ -20,6 +20,24 @@ struct
   let variant ~loc _ = Ast_builder.Default.pexp_extension ~loc (Location.error_extensionf ~loc "Product.Make no variant")
 end
 
+module Reduce =
+struct
+  include Reduce
+
+  module Conjunctive =
+  struct
+    include Conjunctive
+
+    module Make (C: S): Reduce.S =
+    struct
+      let name = C.name
+      let typ ~loc _ = [%type: bool]
+      let unit ~loc = [%expr true]
+      let both ~loc e1 e2 = [%expr [%e e1] && [%e e2]]
+    end
+  end
+end
+
 module Reduce1 =
 struct
   include Reduce1
