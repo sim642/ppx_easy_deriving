@@ -2,20 +2,20 @@ open Ppxlib
 open Ast_builder.Default
 
 type t =
-  | Record of (longident * string) list
-  | Tuple of string list
+  | Record of (longident * t) list
+  | Tuple of t list
   | Constructor of longident * t option
   | Unit
   | PolyConstructor of string * t option
   | Base of string
   | Inherit of longident * string
 let create_record ~prefix ls =
-  Record (List.mapi (fun i l -> (l, prefix ^ string_of_int i)) ls)
+  Record (List.mapi (fun i l -> (l, Base (prefix ^ string_of_int i))) ls)
 let create_tuple ~prefix n =
   match n with
   | 0 -> Unit
   | 1 -> Base (prefix ^ "0")
-  | n -> Tuple (List.init n (fun i -> prefix ^ string_of_int i))
+  | n -> Tuple (List.init n (fun i -> Base (prefix ^ string_of_int i)))
 (* let create_constructor ~prefix l a =
   let a' = match a with
     |
@@ -23,12 +23,10 @@ let create_tuple ~prefix n =
 let rec to_pat ~loc = function
   | Record xs ->
     ppat_record ~loc (List.map (fun (l, x) ->
-        (Located.mk ~loc l, ppat_var ~loc (Located.mk ~loc x))
+        (Located.mk ~loc l, to_pat ~loc x)
       ) xs) Closed
   | Tuple xs ->
-    ppat_tuple ~loc (List.map (fun x ->
-        ppat_var ~loc (Located.mk ~loc x)
-      ) xs)
+    ppat_tuple ~loc (List.map (to_pat ~loc) xs)
   | Constructor (l, a) ->
     ppat_construct ~loc (Located.mk ~loc l) (Option.map (to_pat ~loc) a)
   | Unit ->
@@ -39,22 +37,22 @@ let rec to_pat ~loc = function
     ppat_var ~loc (Located.mk ~loc s)
   | Inherit (t, a) ->
     ppat_alias ~loc (ppat_type ~loc (Located.mk ~loc t)) (Located.mk ~loc a)
-let to_pats ~loc = function
+let rec to_pats ~loc = function
   | Record xs ->
-    List.map (fun (_, x) -> ppat_var ~loc (Located.mk ~loc x)) xs
+    List.flatten (List.map (fun (_, x) -> to_pats ~loc x) xs)
   | Tuple xs ->
-    List.map (fun x -> ppat_var ~loc (Located.mk ~loc x)) xs
+    List.flatten (List.map (to_pats ~loc) xs)
   | Unit ->
     []
   | Base s ->
     [ppat_var ~loc (Located.mk ~loc s)]
   | Constructor _ | PolyConstructor _ | Inherit _ ->
     failwith "to_pats: TODO"
-let to_exps ~loc = function
+let rec to_exps ~loc = function
   | Record xs ->
-    List.map (fun (_, x) -> pexp_ident ~loc {loc; txt = Lident x}) xs
+    List.flatten (List.map (fun (_, x) -> to_exps ~loc x) xs)
   | Tuple xs ->
-    List.map (fun x -> pexp_ident ~loc {loc; txt = Lident x}) xs
+    List.flatten (List.map (to_exps ~loc) xs)
   | Unit ->
     []
   | Base s ->
@@ -66,12 +64,10 @@ let to_exps ~loc = function
 let rec to_exp ~loc = function
   | Record xs ->
     pexp_record ~loc (List.map (fun (l, x) ->
-        (Located.mk ~loc l, pexp_ident ~loc {loc; txt = Lident x})
+        (Located.mk ~loc l, to_exp ~loc x)
       ) xs) None
   | Tuple xs ->
-    pexp_tuple ~loc (List.map (fun x ->
-        pexp_ident ~loc {loc; txt = Lident x}
-      ) xs)
+    pexp_tuple ~loc (List.map (to_exp ~loc) xs)
   | Constructor (l, a) ->
     pexp_construct ~loc (Located.mk ~loc l) (Option.map (to_exp ~loc) a)
   | Unit ->
