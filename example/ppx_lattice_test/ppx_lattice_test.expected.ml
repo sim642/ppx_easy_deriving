@@ -508,19 +508,19 @@ module Variant(L1:Lattice)(L2:Lattice)(L3:Lattice)(L4:Lattice)(L5:Lattice) =
                                  | (_, _) -> false)) b1 b2
                        | (_, _) -> false)
                     ((function
-                      | C4 a0 ->
-                          Either.Right (Either.Right (Either.Right a0))
+                      | C1 -> Either.Left ()
+                      | C2 (a0, a1) -> Either.Right (Either.Left (a0, a1))
                       | C3 { f1 = a0; f2 = a1 } ->
                           Either.Right (Either.Right (Either.Left (a0, a1)))
-                      | C2 (a0, a1) -> Either.Right (Either.Left (a0, a1))
-                      | C1 -> Either.Left ()) a)
+                      | C4 a0 ->
+                          Either.Right (Either.Right (Either.Right a0))) a)
                     ((function
-                      | C4 a0 ->
-                          Either.Right (Either.Right (Either.Right a0))
+                      | C1 -> Either.Left ()
+                      | C2 (a0, a1) -> Either.Right (Either.Left (a0, a1))
                       | C3 { f1 = a0; f2 = a1 } ->
                           Either.Right (Either.Right (Either.Left (a0, a1)))
-                      | C2 (a0, a1) -> Either.Right (Either.Left (a0, a1))
-                      | C1 -> Either.Left ()) b))
+                      | C4 a0 ->
+                          Either.Right (Either.Right (Either.Right a0))) b))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end
@@ -577,24 +577,38 @@ module PolyVariant(L1:Lattice)(L2:Lattice)(L5:Lattice) =
                                  | (_, _) -> false)) b1 b2
                        | (_, _) -> false)
                     ((function
-                      | `C4 a -> Either.Right (Either.Right a)
+                      | `C1 -> Either.Left ()
                       | `C2 a -> Either.Right (Either.Left a)
-                      | `C1 -> Either.Left ()) a)
+                      | `C4 a -> Either.Right (Either.Right a)) a)
                     ((function
-                      | `C4 a -> Either.Right (Either.Right a)
+                      | `C1 -> Either.Left ()
                       | `C2 a -> Either.Right (Either.Left a)
-                      | `C1 -> Either.Left ()) b))
+                      | `C4 a -> Either.Right (Either.Right a)) b))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end
 module PolyVariantInherit(L1:Lattice)(L2:Lattice)(L5:Lattice) =
   struct
     module PV = (((PolyVariant)(L1))(L2))(L5)
-    type t = [ | PV.t | `C5 ][@@deriving (easy_equal, easy_equal2)]
+    type u = PV.t[@@deriving (easy_equal, easy_equal2)]
+    include
+      struct
+        let rec (easy_equal_u : u -> u -> bool) =
+          let __0 = PV.easy_equal in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in __0)
+            [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+        let rec (easy_equal2_u : u -> u -> bool) =
+          let __0 = PV.easy_equal2 in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in __0)
+            [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+      end[@@ocaml.doc "@inline"][@@merlin.hide ]
+    type t = [ | PV.t | `C5  | u][@@deriving (easy_equal, easy_equal2)]
     include
       struct
         let rec (easy_equal : t -> t -> bool) =
-          let __1 = PV.easy_equal
+          let __3 = easy_equal_u
+          and __2 = easy_equal_u
+          and __1 = PV.easy_equal
           and __0 = PV.easy_equal in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun x ->
@@ -602,10 +616,13 @@ module PolyVariantInherit(L1:Lattice)(L2:Lattice)(L5:Lattice) =
                   match (x, y) with
                   | ((#PV.t as a), (#PV.t as b)) -> __0 a b
                   | (`C5, `C5) -> true
+                  | ((#u as a), (#u as b)) -> __2 a b
                   | (_, _) -> false)
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (easy_equal2 : t -> t -> bool) =
-          let __1 = PV.easy_equal2
+          let __3 = easy_equal2_u
+          and __2 = easy_equal2_u
+          and __1 = PV.easy_equal2
           and __0 = PV.easy_equal2 in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun a ->
@@ -615,14 +632,23 @@ module PolyVariantInherit(L1:Lattice)(L2:Lattice)(L5:Lattice) =
                        match (a1, a2) with
                        | (Either.Left a1, Either.Left a2) -> __1 a1 a2
                        | (Either.Right b1, Either.Right b2) ->
-                           ((fun () -> fun () -> true)) b1 b2
+                           ((fun a1 ->
+                               fun a2 ->
+                                 match (a1, a2) with
+                                 | (Either.Left a1, Either.Left a2) ->
+                                     ((fun () -> fun () -> true)) a1 a2
+                                 | (Either.Right b1, Either.Right b2) ->
+                                     __3 b1 b2
+                                 | (_, _) -> false)) b1 b2
                        | (_, _) -> false)
                     ((function
-                      | `C5 -> Either.Right ()
-                      | #PV.t as a -> Either.Left a) a)
+                      | #PV.t as a -> Either.Left a
+                      | `C5 -> Either.Right (Either.Left ())
+                      | #u as a -> Either.Right (Either.Right a)) a)
                     ((function
-                      | `C5 -> Either.Right ()
-                      | #PV.t as a -> Either.Left a) b))
+                      | #PV.t as a -> Either.Left a
+                      | `C5 -> Either.Right (Either.Left ())
+                      | #u as a -> Either.Right (Either.Right a)) b))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end

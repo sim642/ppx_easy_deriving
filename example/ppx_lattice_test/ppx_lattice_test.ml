@@ -92,8 +92,10 @@ end
 module PolyVariantInherit (L1: Lattice) (L2: Lattice) (L5: Lattice) =
 struct
   module PV = PolyVariant (L1) (L2) (L5)
+  type u = PV.t [@@deriving easy_equal, easy_equal2]
   type t = [
     | PV.t
     | `C5
+    | u (* actually same as PV.t, so this case should be last and unreachable *)
   ] [@@deriving easy_equal, easy_equal2]
 end

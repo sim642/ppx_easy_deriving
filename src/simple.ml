@@ -134,7 +134,7 @@ struct
                 :: acc
             ) (List.rev ces) []
         in
-        pexp_function ~loc cases
+        pexp_function ~loc (List.rev cases)
       in
       let f' =
         let cases =
