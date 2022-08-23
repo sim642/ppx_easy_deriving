@@ -1,1 +1,1 @@
-include Deriver_intf.Deriver
+include Deriver_intf.Deriver (** @inline *)

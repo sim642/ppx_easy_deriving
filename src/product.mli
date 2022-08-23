@@ -1,1 +1,1 @@
-include Product_intf.Product
+include Product_intf.Product (** @inline *)

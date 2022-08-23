@@ -1,4 +1,4 @@
-include Intf
+include Intf (** @inline *)
 
 module Deriver = Deriver.Make
 

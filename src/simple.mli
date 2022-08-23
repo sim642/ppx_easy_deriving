@@ -1,1 +1,1 @@
-include Simple_intf.Simple
+include Simple_intf.Simple (** @inline *)
