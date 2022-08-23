@@ -18,34 +18,13 @@ struct
       in
       let f =
         let pe = PatExp.create_record ~prefix:"f" ls in
-        let body =
-          PatExp.to_exps ~loc pe
-          |> List.rev
-          |> (function
-            | (last::others) -> List.fold_left (fun acc field ->
-              [%expr ([%e field], [%e acc])]
-            ) last others
-            | [] -> assert false
-          )
-        in
-        [%expr fun [%p PatExp.to_pat ~loc pe] -> [%e body]]
+        let pe' = PatExp.create_nested_tuple ~prefix:"f" (List.length ls) in
+        [%expr fun [%p PatExp.to_pat ~loc pe] -> [%e PatExp.to_exp ~loc pe']]
       in
       let f' =
         let pe = PatExp.create_record ~prefix:"f'" ls in
-        let pat =
-          PatExp.to_pats ~loc pe
-          |> List.rev
-          |> (function
-            | (last::others) -> List.fold_left (fun acc field ->
-              [%pat? ([%p field], [%p acc])]
-            ) last others
-            | [] -> assert false
-          )
-        in
-        let body =
-          PatExp.to_exp ~loc pe
-        in
-        [%expr fun [%p pat] -> [%e body]]
+        let pe' = PatExp.create_nested_tuple ~prefix:"f'" (List.length ls) in
+        [%expr fun [%p PatExp.to_pat ~loc pe'] -> [%e PatExp.to_exp ~loc pe]]
       in
       P.apply_iso ~loc body f f'
 
@@ -57,34 +36,13 @@ struct
       in
       let f =
         let pe = PatExp.create_tuple ~prefix:"f" n in
-        let body =
-          PatExp.to_exps ~loc pe
-          |> List.rev
-          |> (function
-            | (last::others) -> List.fold_left (fun acc field ->
-              [%expr ([%e field], [%e acc])]
-            ) last others
-            | [] -> Ast_builder.Default.pexp_extension ~loc (Location.error_extensionf ~loc "Simple.Product.Reduce empty tuple")
-          )
-        in
-        [%expr fun [%p PatExp.to_pat ~loc pe] -> [%e body]]
+        let pe' = PatExp.create_nested_tuple ~prefix:"f" n in
+        [%expr fun [%p PatExp.to_pat ~loc pe] -> [%e PatExp.to_exp ~loc pe']]
       in
       let f' =
         let pe = PatExp.create_tuple ~prefix:"f'" n in
-        let pat =
-          PatExp.to_pats ~loc pe
-          |> List.rev
-          |> (function
-            | (last::others) -> List.fold_left (fun acc field ->
-              [%pat? ([%p field], [%p acc])]
-            ) last others
-            | [] -> Ast_builder.Default.ppat_extension ~loc (Location.error_extensionf ~loc "Simple.Product.Reduce empty tuple")
-          )
-        in
-        let body =
-          PatExp.to_exp ~loc pe
-        in
-        [%expr fun [%p pat] -> [%e body]]
+        let pe' = PatExp.create_nested_tuple ~prefix:"f'" n in
+        [%expr fun [%p PatExp.to_pat ~loc pe'] -> [%e PatExp.to_exp ~loc pe]]
       in
       match es with
       (* | [] | [_] -> assert false *)

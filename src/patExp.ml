@@ -16,6 +16,18 @@ let create_tuple ~prefix n =
   | 0 -> Unit
   | 1 -> Base (prefix ^ "0")
   | n -> Tuple (List.init n (fun i -> Base (prefix ^ string_of_int i)))
+let create_nested_tuple ~prefix n =
+  match n with
+  | 0 -> Unit
+  | n ->
+    List.init n (fun i -> Base (prefix ^ string_of_int i))
+    |> List.rev
+    |> (function
+      | (last::others) -> List.fold_left (fun acc field ->
+        Tuple [field; acc]
+      ) last others
+      | [] -> assert false
+    )
 (* let create_constructor ~prefix l a =
   let a' = match a with
     |
@@ -37,17 +49,6 @@ let rec to_pat ~loc = function
     ppat_var ~loc (Located.mk ~loc s)
   | Inherit (t, a) ->
     ppat_alias ~loc (ppat_type ~loc (Located.mk ~loc t)) (Located.mk ~loc a)
-let rec to_pats ~loc = function
-  | Record xs ->
-    List.flatten (List.map (fun (_, x) -> to_pats ~loc x) xs)
-  | Tuple xs ->
-    List.flatten (List.map (to_pats ~loc) xs)
-  | Unit ->
-    []
-  | Base s ->
-    [ppat_var ~loc (Located.mk ~loc s)]
-  | Constructor _ | PolyConstructor _ | Inherit _ ->
-    failwith "to_pats: TODO"
 let rec to_exps ~loc = function
   | Record xs ->
     List.flatten (List.map (fun (_, x) -> to_exps ~loc x) xs)
