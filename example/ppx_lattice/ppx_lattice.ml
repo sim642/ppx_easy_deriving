@@ -1,17 +1,15 @@
 open Ppxlib
 open Ppx_easy_deriving
 
-module LeqArg: Simple.Product.S =
+module LeqArg: Product.Reduce2.S =
 struct
   let name = "leq"
-  let typ ~loc t = [%type: [%t t] -> [%t t] -> bool]
-  let unit ~loc = [%expr fun () () -> true]
-  let both ~loc e1 e2 = [%expr fun (a1, b1) (a2, b2) -> [%e e1] a1 a2 && [%e e2] b1 b2]
-  let apply_iso ~loc leq f _ =
-    [%expr fun a b -> [%e leq] ([%e f] a) ([%e f] b)]
+  let typ ~loc _ = [%type: bool]
+  let unit ~loc = [%expr true]
+  let both ~loc e1 e2 = [%expr [%e e1] && [%e e2]]
 end
 
-module LeqDeriver = Deriver (Simple.Product.Reduce (LeqArg))
+module LeqDeriver = Deriver (Product.Reduce2.Make (LeqArg))
 let leq_deriving = LeqDeriver.register ()
 
 
@@ -43,17 +41,15 @@ module BotDeriver = Deriver (Simple.Product.Reduce (BotArg))
 let bot_deriving = BotDeriver.register ()
 
 
-module IsBotArg: Simple.Product.S =
+module IsBotArg: Product.Reduce1.S =
 struct
   let name = "is_bot"
-  let typ ~loc t = [%type: [%t t] -> bool]
-  let unit ~loc = [%expr fun () -> true]
-  let both ~loc e1 e2 = [%expr fun (a, b) -> [%e e1] a && [%e e2] b]
-  let apply_iso ~loc is_bot f _ =
-    [%expr fun a -> [%e is_bot] ([%e f] a)]
+  let typ ~loc _ = [%type: bool]
+  let unit ~loc = [%expr true]
+  let both ~loc e1 e2 = [%expr [%e e1] && [%e e2]]
 end
 
-module IsBotDeriver = Deriver (Simple.Product.Reduce (IsBotArg))
+module IsBotDeriver = Deriver (Product.Reduce1.Make (IsBotArg))
 let is_bot_deriving = IsBotDeriver.register ()
 
 

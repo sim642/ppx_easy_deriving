@@ -6,6 +6,26 @@ sig
   val product: loc:location -> pe_create:(prefix:string -> PatExp.t) -> expression list -> expression
 end
 
+module Reduce1 =
+struct
+  module type S =
+  sig
+    include Intf.Base
+    val unit: loc:location -> expression
+    val both: loc:location -> expression -> expression -> expression
+  end
+end
+
+module Reduce2 =
+struct
+  module type S =
+  sig
+    include Intf.Base
+    val unit: loc:location -> expression
+    val both: loc:location -> expression -> expression -> expression
+  end
+end
+
 module Variant =
 struct
   module type S =
@@ -20,6 +40,20 @@ sig
   module type S = S
 
   module Make (P: S): Intf.S
+
+  module Reduce1 :
+  sig
+    module type S = Reduce1.S
+
+    module Make (R1: S): Intf.S
+  end
+
+  module Reduce2 :
+  sig
+    module type S = Reduce2.S
+
+    module Make (R2: S): Intf.S
+  end
 
   module Variant :
   sig

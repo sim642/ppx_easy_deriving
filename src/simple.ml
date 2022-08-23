@@ -3,7 +3,7 @@ include Simple_intf
 
 module Product =
 struct
-  include Product
+  include Simple_intf.Product
 
   module Reduce (P: S) =
   struct
