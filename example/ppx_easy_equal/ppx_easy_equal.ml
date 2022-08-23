@@ -1,7 +1,7 @@
 open Ppxlib
 open Ppx_easy_deriving
 
-module EasyEqualArg: ProductVariant.S =
+module EasyEqualArg: Product.Variant.S =
 struct
   let name = "easy_equal"
   let typ ~loc t = [%type: [%t t] -> [%t t] -> bool]
@@ -44,7 +44,7 @@ struct
     |> (fun cases -> [%expr fun x y -> [%e pexp_match ~loc [%expr x, y] (cases @ [case ~lhs:[%pat? _, _] ~guard:None ~rhs:[%expr false]])]])
 end
 
-module EasyEqualDeriver = Deriver (ProductVariant.Make (EasyEqualArg))
+module EasyEqualDeriver = Deriver (Product.Variant.Make (EasyEqualArg))
 let _ = EasyEqualDeriver.register ()
 
 
