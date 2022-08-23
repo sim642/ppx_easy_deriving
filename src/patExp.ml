@@ -8,6 +8,7 @@ type t =
   | Unit
   | PolyConstructor of string * t option
   | Base of string
+  | Inherit of longident * string
 let create_record ~prefix ls =
   Record (List.mapi (fun i l -> (l, prefix ^ string_of_int i)) ls)
 let create_tuple ~prefix n =
@@ -36,6 +37,8 @@ let rec to_pat ~loc = function
     ppat_variant ~loc l (Option.map (to_pat ~loc) a)
   | Base s ->
     ppat_var ~loc (Located.mk ~loc s)
+  | Inherit (t, a) ->
+    ppat_alias ~loc (ppat_type ~loc (Located.mk ~loc t)) (Located.mk ~loc a)
 let to_pats ~loc = function
   | Record xs ->
     List.map (fun (_, x) -> ppat_var ~loc (Located.mk ~loc x)) xs
@@ -45,7 +48,7 @@ let to_pats ~loc = function
     []
   | Base s ->
     [ppat_var ~loc (Located.mk ~loc s)]
-  | Constructor _ | PolyConstructor _ ->
+  | Constructor _ | PolyConstructor _ | Inherit _ ->
     failwith "to_pats: TODO"
 let to_exps ~loc = function
   | Record xs ->
@@ -58,6 +61,8 @@ let to_exps ~loc = function
     [pexp_ident ~loc {loc; txt = Lident s}]
   | Constructor _ | PolyConstructor _ ->
     failwith "to_exps: TODO"
+  | Inherit (_, a) ->
+    [pexp_ident ~loc {loc; txt = Lident a}]
 let rec to_exp ~loc = function
   | Record xs ->
     pexp_record ~loc (List.map (fun (l, x) ->
@@ -75,3 +80,5 @@ let rec to_exp ~loc = function
     pexp_variant ~loc l (Option.map (to_exp ~loc) a)
   | Base s ->
     pexp_ident ~loc {loc; txt = Lident s}
+  | Inherit (_, a) ->
+    pexp_ident ~loc {loc; txt = Lident a}

@@ -46,6 +46,8 @@ struct
           ((fun ~prefix:_ -> PatExp.PolyConstructor (label, None)), (fun ~prefix:_ -> PatExp.Unit), unit ~loc, [])
         | Rtag ({txt = label; loc}, false, [ct]) ->
           ((fun ~prefix -> PatExp.PolyConstructor (label, Some (PatExp.Base prefix))), (fun ~prefix -> PatExp.Base prefix), expr ~loc ~quoter ct, [expr ~loc ~quoter ct])
+        | Rinherit ({ptyp_desc = Ptyp_constr ({txt = lid; loc}, _); _} as ct) ->
+          ((fun ~prefix -> PatExp.Inherit (lid, prefix)), (fun ~prefix -> PatExp.Inherit (lid, prefix)), expr ~loc ~quoter ct, [expr ~loc ~quoter ct])
         | _ ->
           Location.raise_errorf ~loc "other variant"
       )

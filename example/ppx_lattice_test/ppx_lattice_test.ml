@@ -88,3 +88,12 @@ struct
     | `C4 of L5.t
   ] [@@deriving easy_equal, easy_equal2]
 end
+
+module PolyVariantInherit (L1: Lattice) (L2: Lattice) (L5: Lattice) =
+struct
+  module PV = PolyVariant (L1) (L2) (L5)
+  type t = [
+    | PV.t
+    | `C5
+  ] [@@deriving easy_equal, easy_equal2]
+end
