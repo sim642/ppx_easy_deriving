@@ -27,17 +27,13 @@ module JoinDeriver = Deriver (Simple.Product.Reduce (JoinArg))
 let join_deriving = JoinDeriver.register ()
 
 
-module BotArg: Simple.Product.S =
+module BotArg: Product.Create.S =
 struct
   let name = "bot"
-  let typ ~loc t = [%type: unit -> [%t t]]
-  let unit ~loc = [%expr fun () -> ()]
-  let both ~loc e1 e2 = [%expr fun () -> ([%e e1] (), [%e e2] ())]
-  let apply_iso ~loc bot _ f' =
-    [%expr fun () -> [%e f'] ([%e bot] ())]
+  let typ ~loc _ = [%type: unit]
 end
 
-module BotDeriver = Deriver (Simple.Product.Reduce (BotArg))
+module BotDeriver = Deriver (Product.Create.Make (BotArg))
 let bot_deriving = BotDeriver.register ()
 
 

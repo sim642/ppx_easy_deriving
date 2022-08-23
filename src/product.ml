@@ -60,6 +60,26 @@ struct
   end
 end
 
+module Create =
+struct
+  include Create
+
+  module Make (C: S): Intf.S =
+  struct
+    module P: Simple.Product.S =
+    struct
+      let name = C.name
+      let typ ~loc t = [%type: [%t C.typ ~loc t] -> [%t t]]
+      let unit ~loc = [%expr fun _ -> ()]
+      let both ~loc e1 e2 = [%expr fun a -> ([%e e1] a, [%e e2] a)]
+      let apply_iso ~loc e _ f' =
+        [%expr fun a -> [%e f'] ([%e e] a)]
+    end
+
+    include Simple.Product.Reduce (P)
+  end
+end
+
 module Variant =
 struct
   include Variant

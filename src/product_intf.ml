@@ -26,6 +26,14 @@ struct
   end
 end
 
+module Create =
+struct
+  module type S =
+  sig
+    include Intf.Base
+  end
+end
+
 module Variant =
 struct
   module type S =
@@ -53,6 +61,13 @@ sig
     module type S = Reduce2.S
 
     module Make (R2: S): Intf.S
+  end
+
+  module Create :
+  sig
+    module type S = Create.S
+
+    module Make (C: S): Intf.S
   end
 
   module Variant :

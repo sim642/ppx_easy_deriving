@@ -38,7 +38,7 @@ module Unit : Lattice =
           [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (bot : unit -> t) =
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun () -> ())
+              fun _ -> ())
           [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (is_bot : t -> bool) =
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
@@ -58,7 +58,7 @@ let _ =
   ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in fun () -> true)
   [@ocaml.warning "-A"])
 let _ =
-  ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in fun () -> ())
+  ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in fun _ -> ())
   [@ocaml.warning "-A"])
 let _ =
   ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
@@ -128,7 +128,7 @@ module Tuple2(L1:Lattice)(L2:Lattice) : Lattice =
           let __1 = L2.bot
           and __0 = L1.bot in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun () -> ((__0 ()), (__1 ())))
+              fun a -> ((__0 a), (__1 a)))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (is_bot : t -> bool) =
           let __1 = L2.is_bot
@@ -193,10 +193,9 @@ module Tuple3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
           and __1 = L2.bot
           and __0 = L1.bot in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun () ->
+              fun a ->
                 (fun (f'0, (f'1, f'2)) -> (f'0, f'1, f'2))
-                  ((fun () ->
-                      ((__0 ()), ((fun () -> ((__1 ()), (__2 ()))) ()))) ()))
+                  ((fun a -> ((__0 a), ((fun a -> ((__1 a), (__2 a))) a))) a))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (is_bot : t -> bool) =
           let __2 = L3.is_bot
@@ -259,7 +258,7 @@ module Record1(L1:Lattice) : Lattice =
         let rec (bot : unit -> t) =
           let __0 = L1.bot in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun () -> (fun f'0 -> { f1 = f'0 }) (__0 ()))
+              fun a -> (fun f'0 -> { f1 = f'0 }) (__0 a))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (is_bot : t -> bool) =
           let __0 = L1.is_bot in
@@ -313,9 +312,9 @@ module Record2(L1:Lattice)(L2:Lattice) : Lattice =
           let __1 = L2.bot
           and __0 = L1.bot in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun () ->
+              fun a ->
                 (fun (f'0, f'1) -> { f1 = f'0; f2 = f'1 })
-                  ((fun () -> ((__0 ()), (__1 ()))) ()))
+                  ((fun a -> ((__0 a), (__1 a))) a))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (is_bot : t -> bool) =
           let __1 = L2.is_bot
@@ -392,10 +391,9 @@ module Record3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
           and __1 = L2.bot
           and __0 = L1.bot in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun () ->
+              fun a ->
                 (fun (f'0, (f'1, f'2)) -> { f1 = f'0; f2 = f'1; f3 = f'2 })
-                  ((fun () ->
-                      ((__0 ()), ((fun () -> ((__1 ()), (__2 ()))) ()))) ()))
+                  ((fun a -> ((__0 a), ((fun a -> ((__1 a), (__2 a))) a))) a))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (is_bot : t -> bool) =
           let __2 = L3.is_bot
