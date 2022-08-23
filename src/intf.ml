@@ -1,8 +1,13 @@
 open Ppxlib
 
-module type Base =
+module type Name =
 sig
   val name: string
+end
+
+module type Base =
+sig
+  include Name
   val typ: loc:location -> core_type -> core_type
 end
 

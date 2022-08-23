@@ -17,10 +17,7 @@ struct
 
   module Conjunctive =
   struct
-    module type S =
-    sig
-      val name: string
-    end
+    module type S = Intf.Name
   end
 end
 
@@ -44,10 +41,7 @@ end
 
 module Map2 =
 struct
-  module type S =
-  sig
-    val name: string
-  end
+  module type S = Intf.Name
 end
 
 module Variant =
