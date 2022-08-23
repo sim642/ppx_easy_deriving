@@ -76,19 +76,10 @@ struct
           List.fold_right (fun (c, c2, _, _) acc ->
               let pe = c ~prefix:"a" in
               let pe2 = c2 ~prefix:"a" in
-              let i =
-                if List.length acc = List.length ces - 1 then
-                  PatExp.to_exp ~loc pe2
-                else
-                  [%expr Either.Left [%e PatExp.to_exp ~loc pe2]]
-              in
-              let rhs = List.fold_right (fun _ acc' ->
-                  [%expr Either.Right [%e acc']]
-                ) acc i
-              in
+              let pe2' = PatExp.create_nested_variant ~len:(List.length ces) ~i:(List.length acc) pe2 in
               case ~lhs:(PatExp.to_pat ~loc pe)
                 ~guard:None
-                ~rhs
+                ~rhs:(PatExp.to_exp ~loc pe2')
                 :: acc
             ) (List.rev ces) []
         in
@@ -99,17 +90,8 @@ struct
           List.fold_right (fun (c, c2, _, _) acc ->
               let pe = c ~prefix:"a" in
               let pe2 = c2 ~prefix:"a" in
-              let i =
-                if List.length acc = List.length ces - 1 then
-                  PatExp.to_pat ~loc pe2
-                else
-                  [%pat? Either.Left [%p PatExp.to_pat ~loc pe2]]
-              in
-              let lhs = List.fold_right (fun _ acc' ->
-                  [%pat? Either.Right [%p acc']]
-                ) acc i
-              in
-              case ~lhs
+              let pe2' = PatExp.create_nested_variant ~len:(List.length ces) ~i:(List.length acc) pe2 in
+              case ~lhs:(PatExp.to_pat ~loc pe2')
                 ~guard:None
                 ~rhs:(PatExp.to_exp ~loc pe)
                 :: acc

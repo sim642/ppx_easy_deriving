@@ -28,6 +28,18 @@ let create_nested_tuple ~prefix n =
       ) last others
       | [] -> assert false
     )
+let create_nested_variant ~len ~i base =
+  let init =
+    if i = len - 1 then
+      base
+    else
+      Constructor (Longident.parse "Either.Left", Some base)
+  in
+  let rhs = List.fold_right (fun _ acc' ->
+      Constructor (Longident.parse "Either.Right", Some acc')
+    ) (List.init i (fun _ -> ())) init
+  in
+  rhs
 (* let create_constructor ~prefix l a =
   let a' = match a with
     |
