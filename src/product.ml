@@ -80,6 +80,26 @@ struct
   end
 end
 
+module Map2 =
+struct
+  include Map2
+
+  module Make (M2: S): Intf.S =
+  struct
+    module P: Simple.Product.S =
+    struct
+      let name = M2.name
+      let typ ~loc t = [%type: [%t t] -> [%t t] -> [%t t]]
+      let unit ~loc = [%expr fun () () -> ()]
+      let both ~loc e1 e2 = [%expr fun (a1, b1) (a2, b2) -> ([%e e1] a1 a2, [%e e2] b1 b2)]
+      let apply_iso ~loc e f f' =
+        [%expr fun a b -> [%e f'] ([%e e] ([%e f] a) ([%e f] b))]
+    end
+
+    include Simple.Product.Reduce (P)
+  end
+end
+
 module Variant =
 struct
   include Variant

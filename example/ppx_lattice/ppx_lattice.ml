@@ -13,17 +13,12 @@ module LeqDeriver = Deriver (Product.Reduce2.Make (LeqArg))
 let leq_deriving = LeqDeriver.register ()
 
 
-module JoinArg: Simple.Product.S =
+module JoinArg: Product.Map2.S =
 struct
   let name = "join"
-  let typ ~loc t = [%type: [%t t] -> [%t t] -> [%t t]]
-  let unit ~loc = [%expr fun () () -> ()]
-  let both ~loc e1 e2 = [%expr fun (a1, b1) (a2, b2) -> ([%e e1] a1 a2, [%e e2] b1 b2)]
-  let apply_iso ~loc join f f' =
-    [%expr fun a b -> [%e f'] ([%e join] ([%e f] a) ([%e f] b))]
 end
 
-module JoinDeriver = Deriver (Simple.Product.Reduce (JoinArg))
+module JoinDeriver = Deriver (Product.Map2.Make (JoinArg))
 let join_deriving = JoinDeriver.register ()
 
 

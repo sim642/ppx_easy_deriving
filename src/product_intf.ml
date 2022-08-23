@@ -34,6 +34,14 @@ struct
   end
 end
 
+module Map2 =
+struct
+  module type S =
+  sig
+    val name: string
+  end
+end
+
 module Variant =
 struct
   module type S =
@@ -68,6 +76,13 @@ sig
     module type S = Create.S
 
     module Make (C: S): Intf.S
+  end
+
+  module Map2 :
+  sig
+    module type S = Map2.S
+
+    module Make (M2: S): Intf.S
   end
 
   module Variant :
