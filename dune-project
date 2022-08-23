@@ -8,7 +8,7 @@
 (package
  (name ppx_easy_deriving)
  (depends
-  ppxlib
+  (ppxlib (>= 0.25.0))
   ppx_deriving)
  (depopts
   (ppx_type_directed_value :with-test)

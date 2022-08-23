@@ -6,7 +6,7 @@ homepage: "https://github.com/sim642/ppx_easy_deriving"
 bug-reports: "https://github.com/sim642/ppx_easy_deriving/issues"
 depends: [
   "dune" {>= "2.8"}
-  "ppxlib"
+  "ppxlib" {>= "0.25.0"}
   "ppx_deriving"
   "odoc" {with-doc}
 ]
