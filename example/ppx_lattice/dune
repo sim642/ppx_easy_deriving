@@ -2,4 +2,5 @@
  (name ppx_lattice)
  (kind ppx_deriver)
  (libraries ppxlib ppx_easy_deriving)
+ (ppx_runtime_libraries ppx_easy_deriving.runtime)
  (preprocess (pps ppxlib.metaquot)))

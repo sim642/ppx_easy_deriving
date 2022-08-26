@@ -9,7 +9,8 @@
  (name ppx_easy_deriving)
  (depends
   (ppxlib (>= 0.25.0))
-  ppx_deriving))
+  ppx_deriving
+  either))
 
 (package
  (name ppx_easy_deriving-bench)

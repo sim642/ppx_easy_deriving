@@ -1,0 +1,4 @@
+(library
+ (name runtime)
+ (public_name ppx_easy_deriving.runtime)
+ (libraries either))
