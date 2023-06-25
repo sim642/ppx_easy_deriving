@@ -5,28 +5,34 @@ include Deriver_intf
 
 module Make (Arg: Intf.S): S =
 struct
+  let attr = Attribute.declare (Printf.sprintf "deriving.%s.%s" Arg.name Arg.name) Attribute.Context.core_type Ast_pattern.(single_expr_payload __) (fun expr -> expr)
+
   let unit ~loc = Arg.tuple ~loc []
 
   let rec expr ~loc ~quoter ct =
-    match ct with
-    | [%type: unit] ->
-      unit ~loc
-    | {ptyp_desc = Ptyp_constr ({txt = lid; loc}, args); _} ->
-      let ident = pexp_ident ~loc {loc; txt = Ppx_deriving.mangle_lid (`Prefix Arg.name) lid} in
-      let ident = Ppx_deriving.quote ~quoter ident in
-      let apply_args = List.map (fun ct ->
-          (Nolabel, expr ~loc ~quoter ct)
-        ) args
-      in
-      pexp_apply ~loc ident apply_args
-    | {ptyp_desc = Ptyp_tuple elems; _} ->
-      expr_tuple ~loc ~quoter elems
-    | {ptyp_desc = Ptyp_variant (rows, Closed, None); _} ->
-      expr_poly_variant ~loc ~quoter rows
-    | {ptyp_desc = Ptyp_var name; _} ->
-      evar ~loc ("poly_" ^ name)
-    | _ ->
-      pexp_extension ~loc (Location.error_extensionf ~loc "unsupported core type")
+    match Attribute.get attr ct with
+    | Some expr ->
+      Ppx_deriving.quote ~quoter expr
+    | None ->
+      match ct with
+      | [%type: unit] ->
+        unit ~loc
+      | {ptyp_desc = Ptyp_constr ({txt = lid; loc}, args); _} ->
+        let ident = pexp_ident ~loc {loc; txt = Ppx_deriving.mangle_lid (`Prefix Arg.name) lid} in
+        let ident = Ppx_deriving.quote ~quoter ident in
+        let apply_args = List.map (fun ct ->
+            (Nolabel, expr ~loc ~quoter ct)
+          ) args
+        in
+        pexp_apply ~loc ident apply_args
+      | {ptyp_desc = Ptyp_tuple elems; _} ->
+        expr_tuple ~loc ~quoter elems
+      | {ptyp_desc = Ptyp_variant (rows, Closed, None); _} ->
+        expr_poly_variant ~loc ~quoter rows
+      | {ptyp_desc = Ptyp_var name; _} ->
+        evar ~loc ("poly_" ^ name)
+      | _ ->
+        pexp_extension ~loc (Location.error_extensionf ~loc "unsupported core type")
 
   and expr_poly_variant ~loc ~quoter rows =
     let ces = List.map (fun {prf_desc; _} ->

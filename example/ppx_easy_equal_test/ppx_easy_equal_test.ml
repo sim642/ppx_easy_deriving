@@ -26,6 +26,11 @@ struct
   type t = E1.t [@@deriving easy_equal, easy_equal2]
 end
 
+module Attr: Easy_equal =
+struct
+  type t = int [@easy_equal (=)] [@easy_equal2 (=)] [@@deriving easy_equal, easy_equal2]
+end
+
 module Tuple2 (E1: Easy_equal) (E2: Easy_equal): Easy_equal =
 struct
   type t = E1.t * E2.t [@@deriving easy_equal, easy_equal2]

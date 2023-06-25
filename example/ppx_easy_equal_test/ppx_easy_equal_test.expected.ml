@@ -48,6 +48,23 @@ module Direct(E1:Easy_equal) : Easy_equal =
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
+module Attr : Easy_equal =
+  struct
+    type t = ((int)[@easy_equal (=)][@easy_equal2 (=)])[@@deriving
+                                                         (easy_equal,
+                                                           easy_equal2)]
+    include
+      struct
+        let rec (easy_equal : t -> t -> bool) =
+          let __0 = (=) in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in __0)
+            [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+        let rec (easy_equal2 : t -> t -> bool) =
+          let __0 = (=) in
+          ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in __0)
+            [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
+      end[@@ocaml.doc "@inline"][@@merlin.hide ]
+  end 
 module Tuple2(E1:Easy_equal)(E2:Easy_equal) : Easy_equal =
   struct
     type t = (E1.t * E2.t)[@@deriving (easy_equal, easy_equal2)]
