@@ -18,7 +18,7 @@ struct
       | [%type: unit] ->
         unit ~loc
       | {ptyp_desc = Ptyp_constr ({txt = lid; loc}, args); _} ->
-        let ident = pexp_ident ~loc {loc; txt = Ppx_deriving.mangle_lid (`Prefix Arg.name) lid} in
+        let ident = pexp_ident ~loc {loc; txt = Expansion_helpers.mangle_lid (Prefix Arg.name) lid} in
         let ident = Expansion_helpers.Quoter.quote quoter ident in
         let apply_args = List.map (fun ct ->
             (Nolabel, expr ~loc ~quoter ct)
@@ -131,7 +131,7 @@ struct
         let expr = Expansion_helpers.Quoter.sanitize quoter expr in
         let expr = Ppx_deriving.poly_fun_of_type_decl td expr in
         let ct = typ ~loc td in
-        let pat = ppat_var ~loc {loc; txt = Ppx_deriving.mangle_type_decl (`Prefix Arg.name) td} in
+        let pat = ppat_var ~loc {loc; txt = Expansion_helpers.mangle_type_decl (Prefix Arg.name) td} in
         let pat = ppat_constraint ~loc pat ct in
         Ast_helper.Vb.mk ~loc ~attrs:[Ppx_deriving.attr_warning [%expr "-39"]] pat expr
       ) type_declarations
@@ -142,7 +142,7 @@ struct
     let loc = Expansion_context.Deriver.derived_item_loc ctxt in
     List.map (fun td ->
         let ct = typ ~loc td in
-        let val_ = Ast_helper.Val.mk ~loc {loc; txt = Ppx_deriving.mangle_type_decl (`Prefix Arg.name) td} ct in
+        let val_ = Ast_helper.Val.mk ~loc {loc; txt = Expansion_helpers.mangle_type_decl (Prefix Arg.name) td} ct in
         Ast_helper.Sig.value ~loc val_
       ) type_declarations
 
