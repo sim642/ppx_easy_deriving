@@ -35,10 +35,9 @@ jobs:
         uses: ocaml/setup-ocaml@v2
         with:
           ocaml-compiler: ${{ matrix.ocaml-compiler }}
-          opam-local-packages: ppx_easy_deriving.opam
 
       - name: Install dependencies
-        run: opam install ppx_easy_deriving --deps-only --with-test
+        run: opam install . --deps-only --with-test
 
       - name: Build
         run: opam exec -- dune build
