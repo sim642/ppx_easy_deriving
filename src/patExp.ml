@@ -10,17 +10,17 @@ type t =
   | Base of string
   | Inherit of longident * string
 let create_record ~prefix ls =
-  Record (List.mapi (fun i l -> (l, Base (prefix ^ string_of_int i))) ls)
+  Record (List.mapi (fun i l -> (l, Base (prefix ^ string_of_int (i + 1)))) ls)
 let create_tuple ~prefix n =
   match n with
   | 0 -> Unit
-  | 1 -> Base (prefix ^ "0")
-  | n -> Tuple (List.init n (fun i -> Base (prefix ^ string_of_int i)))
+  | 1 -> Base (prefix ^ "1")
+  | n -> Tuple (List.init n (fun i -> Base (prefix ^ string_of_int (i + 1))))
 let create_nested_tuple ~prefix n =
   match n with
   | 0 -> Unit
   | n ->
-    List.init n (fun i -> Base (prefix ^ string_of_int i))
+    List.init n (fun i -> Base (prefix ^ string_of_int (i + 1)))
     |> List.rev
     |> (function
       | (last::others) -> List.fold_left (fun acc field ->
