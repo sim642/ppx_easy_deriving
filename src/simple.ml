@@ -68,8 +68,8 @@ struct
       let f =
         let (_, cases) =
           List.fold_left (fun (i, acc) (c, c2, _, _) ->
-              let pe = c ~prefix:"a" in
-              let pe2 = c2 ~prefix:"a" in
+              let pe = c ~prefix:"f" in
+              let pe2 = c2 ~prefix:"f" in
               let pe2' = PatExp.create_nested_variant ~len:n ~i pe2 in
               let acc' =
                 case ~lhs:(PatExp.to_pat ~loc pe)
@@ -85,8 +85,8 @@ struct
       let f' =
         let (_, cases) =
           List.fold_left (fun (i, acc) (c, c2, _, _) ->
-              let pe = c ~prefix:"a" in
-              let pe2 = c2 ~prefix:"a" in
+              let pe = c ~prefix:"f'" in
+              let pe2 = c2 ~prefix:"f'" in
               let pe2' = PatExp.create_nested_variant ~len:n ~i pe2 in
               let acc' =
                 case ~lhs:(PatExp.to_pat ~loc pe2')

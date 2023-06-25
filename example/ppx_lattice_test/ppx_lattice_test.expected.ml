@@ -451,18 +451,18 @@ module Variant(L1:Lattice)(L2:Lattice)(L3:Lattice)(L4:Lattice)(L5:Lattice) =
                        | (_, _) -> false)
                     ((function
                       | C1 -> Either.Left ()
-                      | C2 (a0, a1) -> Either.Right (Either.Left (a0, a1))
-                      | C3 { f1 = a0; f2 = a1 } ->
-                          Either.Right (Either.Right (Either.Left (a0, a1)))
-                      | C4 a0 ->
-                          Either.Right (Either.Right (Either.Right a0))) a)
+                      | C2 (f0, f1) -> Either.Right (Either.Left (f0, f1))
+                      | C3 { f1 = f0; f2 = f1 } ->
+                          Either.Right (Either.Right (Either.Left (f0, f1)))
+                      | C4 f0 ->
+                          Either.Right (Either.Right (Either.Right f0))) a)
                     ((function
                       | C1 -> Either.Left ()
-                      | C2 (a0, a1) -> Either.Right (Either.Left (a0, a1))
-                      | C3 { f1 = a0; f2 = a1 } ->
-                          Either.Right (Either.Right (Either.Left (a0, a1)))
-                      | C4 a0 ->
-                          Either.Right (Either.Right (Either.Right a0))) b))
+                      | C2 (f0, f1) -> Either.Right (Either.Left (f0, f1))
+                      | C3 { f1 = f0; f2 = f1 } ->
+                          Either.Right (Either.Right (Either.Left (f0, f1)))
+                      | C4 f0 ->
+                          Either.Right (Either.Right (Either.Right f0))) b))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end
@@ -520,12 +520,12 @@ module PolyVariant(L1:Lattice)(L2:Lattice)(L5:Lattice) =
                        | (_, _) -> false)
                     ((function
                       | `C1 -> Either.Left ()
-                      | `C2 a -> Either.Right (Either.Left a)
-                      | `C4 a -> Either.Right (Either.Right a)) a)
+                      | `C2 f -> Either.Right (Either.Left f)
+                      | `C4 f -> Either.Right (Either.Right f)) a)
                     ((function
                       | `C1 -> Either.Left ()
-                      | `C2 a -> Either.Right (Either.Left a)
-                      | `C4 a -> Either.Right (Either.Right a)) b))
+                      | `C2 f -> Either.Right (Either.Left f)
+                      | `C4 f -> Either.Right (Either.Right f)) b))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end
@@ -584,13 +584,13 @@ module PolyVariantInherit(L1:Lattice)(L2:Lattice)(L5:Lattice) =
                                  | (_, _) -> false)) b1 b2
                        | (_, _) -> false)
                     ((function
-                      | #PV.t as a -> Either.Left a
+                      | #PV.t as f -> Either.Left f
                       | `C5 -> Either.Right (Either.Left ())
-                      | #u as a -> Either.Right (Either.Right a)) a)
+                      | #u as f -> Either.Right (Either.Right f)) a)
                     ((function
-                      | #PV.t as a -> Either.Left a
+                      | #PV.t as f -> Either.Left f
                       | `C5 -> Either.Right (Either.Left ())
-                      | #u as a -> Either.Right (Either.Right a)) b))
+                      | #u as f -> Either.Right (Either.Right f)) b))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end
