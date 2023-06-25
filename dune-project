@@ -8,6 +8,7 @@
 (package
  (name ppx_easy_deriving)
  (depends
+  (ocaml (>= 4.08))
   (ppxlib (>= 0.30.0))
   ppx_deriving
   either))
