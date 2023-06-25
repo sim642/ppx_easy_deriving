@@ -4,13 +4,13 @@
 (test
  (name ppx_lattice_test)
  (modules ppx_lattice_test)
- (preprocess (pps ppx_lattice ppx_easy_equal)))
+ (preprocess (pps ppx_lattice)))
 
 ; check preprocessing
 (executable
  (name pp)
  (modules pp)
- (libraries ppxlib ppx_lattice ppx_easy_equal))
+ (libraries ppxlib ppx_lattice))
 
 (rule
  (targets ppx_lattice_test.actual.ml)
