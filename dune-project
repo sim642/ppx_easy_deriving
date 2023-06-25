@@ -8,7 +8,7 @@
 (package
  (name ppx_easy_deriving)
  (depends
-  (ppxlib (>= 0.29.0))
+  (ppxlib (>= 0.30.0))
   ppx_deriving
   either))
 

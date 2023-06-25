@@ -29,9 +29,9 @@ module Direct(E1:Easy_equal) : Easy_equal =
     include
       struct
         let rec (easy_equal : t -> t -> bool) =
-          let rec __0 = E1.easy_equal in __0[@@ocaml.warning "-39"]
+          let __0 = E1.easy_equal in __0[@@ocaml.warning "-39"]
         let rec (easy_equal2 : t -> t -> bool) =
-          let rec __0 = E1.easy_equal2 in __0[@@ocaml.warning "-39"]
+          let __0 = E1.easy_equal2 in __0[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
 module Attr : Easy_equal =
@@ -41,9 +41,9 @@ module Attr : Easy_equal =
                                                            easy_equal2)]
     include
       struct
-        let rec (easy_equal : t -> t -> bool) = let rec __0 = (=) in __0
-          [@@ocaml.warning "-39"]
-        let rec (easy_equal2 : t -> t -> bool) = let rec __0 = (=) in __0
+        let rec (easy_equal : t -> t -> bool) = let __0 = (=) in __0[@@ocaml.warning
+                                                                    "-39"]
+        let rec (easy_equal2 : t -> t -> bool) = let __0 = (=) in __0
           [@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
@@ -53,12 +53,12 @@ module Tuple2(E1:Easy_equal)(E2:Easy_equal) : Easy_equal =
     include
       struct
         let rec (easy_equal : t -> t -> bool) =
-          let rec __1 = E2.easy_equal
+          let __1 = E2.easy_equal
           and __0 = E1.easy_equal in
           fun (l1, l2) -> fun (r1, r2) -> (__0 l1 r1) && (__1 l2 r2)[@@ocaml.warning
                                                                     "-39"]
         let rec (easy_equal2 : t -> t -> bool) =
-          let rec __1 = E2.easy_equal2
+          let __1 = E2.easy_equal2
           and __0 = E1.easy_equal2 in
           fun (l1, l2) -> fun (r1, r2) -> (__0 l1 r1) && (__1 l2 r2)[@@ocaml.warning
                                                                     "-39"]
@@ -70,14 +70,14 @@ module Tuple3(E1:Easy_equal)(E2:Easy_equal)(E3:Easy_equal) : Easy_equal =
     include
       struct
         let rec (easy_equal : t -> t -> bool) =
-          let rec __2 = E3.easy_equal
+          let __2 = E3.easy_equal
           and __1 = E2.easy_equal
           and __0 = E1.easy_equal in
           fun (l1, l2, l3) ->
             fun (r1, r2, r3) -> (__0 l1 r1) && ((__1 l2 r2) && (__2 l3 r3))
           [@@ocaml.warning "-39"]
         let rec (easy_equal2 : t -> t -> bool) =
-          let rec __2 = E3.easy_equal2
+          let __2 = E3.easy_equal2
           and __1 = E2.easy_equal2
           and __0 = E1.easy_equal2 in
           fun l ->
@@ -99,11 +99,11 @@ module Record1(E1:Easy_equal) : Easy_equal =
     include
       struct
         let rec (easy_equal : t -> t -> bool) =
-          let rec __0 = E1.easy_equal in
+          let __0 = E1.easy_equal in
           fun { f1 = l1 } -> fun { f1 = r1 } -> __0 l1 r1[@@ocaml.warning
                                                            "-39"]
         let rec (easy_equal2 : t -> t -> bool) =
-          let rec __0 = E1.easy_equal2 in
+          let __0 = E1.easy_equal2 in
           fun l -> fun r -> __0 ((fun { f1 } -> f1) l) ((fun { f1 } -> f1) r)
           [@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
@@ -116,13 +116,13 @@ module Record2(E1:Easy_equal)(E2:Easy_equal) : Easy_equal =
     include
       struct
         let rec (easy_equal : t -> t -> bool) =
-          let rec __1 = E2.easy_equal
+          let __1 = E2.easy_equal
           and __0 = E1.easy_equal in
           fun { f1 = l1; f2 = l2 } ->
             fun { f1 = r1; f2 = r2 } -> (__0 l1 r1) && (__1 l2 r2)[@@ocaml.warning
                                                                     "-39"]
         let rec (easy_equal2 : t -> t -> bool) =
-          let rec __1 = E2.easy_equal2
+          let __1 = E2.easy_equal2
           and __0 = E1.easy_equal2 in
           fun l ->
             fun r ->
@@ -140,7 +140,7 @@ module Record3(E1:Easy_equal)(E2:Easy_equal)(E3:Easy_equal) : Easy_equal =
     include
       struct
         let rec (easy_equal : t -> t -> bool) =
-          let rec __2 = E3.easy_equal
+          let __2 = E3.easy_equal
           and __1 = E2.easy_equal
           and __0 = E1.easy_equal in
           fun { f1 = l1; f2 = l2; f3 = l3 } ->
@@ -148,7 +148,7 @@ module Record3(E1:Easy_equal)(E2:Easy_equal)(E3:Easy_equal) : Easy_equal =
               (__0 l1 r1) && ((__1 l2 r2) && (__2 l3 r3))[@@ocaml.warning
                                                            "-39"]
         let rec (easy_equal2 : t -> t -> bool) =
-          let rec __2 = E3.easy_equal2
+          let __2 = E3.easy_equal2
           and __1 = E2.easy_equal2
           and __0 = E1.easy_equal2 in
           fun l ->
@@ -175,7 +175,7 @@ module Variant(E1:Easy_equal)(E2:Easy_equal)(E3:Easy_equal)(E4:Easy_equal)(E5:Ea
     include
       struct
         let rec (easy_equal : t -> t -> bool) =
-          let rec __9 = E5.easy_equal
+          let __9 = E5.easy_equal
           and __8 = E5.easy_equal
           and __7 = E4.easy_equal
           and __6 = E3.easy_equal
@@ -195,7 +195,7 @@ module Variant(E1:Easy_equal)(E2:Easy_equal)(E3:Easy_equal)(E4:Easy_equal)(E5:Ea
               | (C4 l1, C4 r1) -> __8 l1 r1
               | (_, _) -> false[@@ocaml.warning "-39"]
         let rec (easy_equal2 : t -> t -> bool) =
-          let rec __9 = E5.easy_equal2
+          let __9 = E5.easy_equal2
           and __8 = E5.easy_equal2
           and __7 = E4.easy_equal2
           and __6 = E3.easy_equal2
@@ -257,7 +257,7 @@ module PolyVariant(E1:Easy_equal)(E2:Easy_equal)(E5:Easy_equal) =
     include
       struct
         let rec (easy_equal : t -> t -> bool) =
-          let rec __2 = E5.easy_equal
+          let __2 = E5.easy_equal
           and __1 = E2.easy_equal
           and __0 = E1.easy_equal in
           fun l ->
@@ -270,7 +270,7 @@ module PolyVariant(E1:Easy_equal)(E2:Easy_equal)(E5:Easy_equal) =
               | (`C4 l, `C4 r) -> __2 l r
               | (_, _) -> false[@@ocaml.warning "-39"]
         let rec (easy_equal2 : t -> t -> bool) =
-          let rec __2 = E5.easy_equal2
+          let __2 = E5.easy_equal2
           and __1 = E2.easy_equal2
           and __0 = E1.easy_equal2 in
           fun l ->
@@ -309,16 +309,16 @@ module PolyVariantInherit(E1:Easy_equal)(E2:Easy_equal)(E5:Easy_equal) =
     include
       struct
         let rec (easy_equal_u : u -> u -> bool) =
-          let rec __0 = PV.easy_equal in __0[@@ocaml.warning "-39"]
+          let __0 = PV.easy_equal in __0[@@ocaml.warning "-39"]
         let rec (easy_equal2_u : u -> u -> bool) =
-          let rec __0 = PV.easy_equal2 in __0[@@ocaml.warning "-39"]
+          let __0 = PV.easy_equal2 in __0[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
     [@@@warning "-redundant-case"]
     type t = [ | PV.t | `C5  | u][@@deriving (easy_equal, easy_equal2)]
     include
       struct
         let rec (easy_equal : t -> t -> bool) =
-          let rec __1 = easy_equal_u
+          let __1 = easy_equal_u
           and __0 = PV.easy_equal in
           fun l ->
             fun r ->
@@ -328,7 +328,7 @@ module PolyVariantInherit(E1:Easy_equal)(E2:Easy_equal)(E5:Easy_equal) =
               | ((#u as l), (#u as r)) -> __1 l r
               | (_, _) -> false[@@ocaml.warning "-39"]
         let rec (easy_equal2 : t -> t -> bool) =
-          let rec __1 = easy_equal2_u
+          let __1 = easy_equal2_u
           and __0 = PV.easy_equal2 in
           fun l ->
             fun r ->

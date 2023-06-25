@@ -44,16 +44,16 @@ module Direct(L1:Lattice) : Lattice =
     type t = L1.t[@@deriving lattice]
     include
       struct
-        let rec (leq : t -> t -> bool) = let rec __0 = L1.leq in __0[@@ocaml.warning
-                                                                    "-39"]
-        let rec (join : t -> t -> t) = let rec __0 = L1.join in __0[@@ocaml.warning
-                                                                    "-39"]
-        let rec (bot : unit -> t) = let rec __0 = L1.bot in __0[@@ocaml.warning
+        let rec (leq : t -> t -> bool) = let __0 = L1.leq in __0[@@ocaml.warning
+                                                                  "-39"]
+        let rec (join : t -> t -> t) = let __0 = L1.join in __0[@@ocaml.warning
                                                                  "-39"]
-        let rec (is_bot : t -> bool) = let rec __0 = L1.is_bot in __0
-          [@@ocaml.warning "-39"]
-        let rec (relift : t -> t) = let rec __0 = L1.relift in __0[@@ocaml.warning
-                                                                    "-39"]
+        let rec (bot : unit -> t) = let __0 = L1.bot in __0[@@ocaml.warning
+                                                             "-39"]
+        let rec (is_bot : t -> bool) = let __0 = L1.is_bot in __0[@@ocaml.warning
+                                                                   "-39"]
+        let rec (relift : t -> t) = let __0 = L1.relift in __0[@@ocaml.warning
+                                                                "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
 module Tuple2(L1:Lattice)(L2:Lattice) : Lattice =
@@ -62,25 +62,25 @@ module Tuple2(L1:Lattice)(L2:Lattice) : Lattice =
     include
       struct
         let rec (leq : t -> t -> bool) =
-          let rec __1 = L2.leq
+          let __1 = L2.leq
           and __0 = L1.leq in
           fun (l1, l2) -> fun (r1, r2) -> (__0 l1 r1) && (__1 l2 r2)[@@ocaml.warning
                                                                     "-39"]
         let rec (join : t -> t -> t) =
-          let rec __1 = L2.join
+          let __1 = L2.join
           and __0 = L1.join in
           fun (l1, l2) -> fun (r1, r2) -> ((__0 l1 r1), (__1 l2 r2))[@@ocaml.warning
                                                                     "-39"]
         let rec (bot : unit -> t) =
-          let rec __1 = L2.bot
+          let __1 = L2.bot
           and __0 = L1.bot in fun x -> ((__0 x), (__1 x))[@@ocaml.warning
                                                            "-39"]
         let rec (is_bot : t -> bool) =
-          let rec __1 = L2.is_bot
+          let __1 = L2.is_bot
           and __0 = L1.is_bot in fun (x1, x2) -> (__0 x1) && (__1 x2)
           [@@ocaml.warning "-39"]
         let rec (relift : t -> t) =
-          let rec __1 = L2.relift
+          let __1 = L2.relift
           and __0 = L1.relift in fun (x1, x2) -> ((__0 x1), (__1 x2))
           [@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
@@ -91,32 +91,32 @@ module Tuple3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
     include
       struct
         let rec (leq : t -> t -> bool) =
-          let rec __2 = L3.leq
+          let __2 = L3.leq
           and __1 = L2.leq
           and __0 = L1.leq in
           fun (l1, l2, l3) ->
             fun (r1, r2, r3) -> (__0 l1 r1) && ((__1 l2 r2) && (__2 l3 r3))
           [@@ocaml.warning "-39"]
         let rec (join : t -> t -> t) =
-          let rec __2 = L3.join
+          let __2 = L3.join
           and __1 = L2.join
           and __0 = L1.join in
           fun (l1, l2, l3) ->
             fun (r1, r2, r3) -> ((__0 l1 r1), (__1 l2 r2), (__2 l3 r3))
           [@@ocaml.warning "-39"]
         let rec (bot : unit -> t) =
-          let rec __2 = L3.bot
+          let __2 = L3.bot
           and __1 = L2.bot
           and __0 = L1.bot in fun x -> ((__0 x), (__1 x), (__2 x))[@@ocaml.warning
                                                                     "-39"]
         let rec (is_bot : t -> bool) =
-          let rec __2 = L3.is_bot
+          let __2 = L3.is_bot
           and __1 = L2.is_bot
           and __0 = L1.is_bot in
           fun (x1, x2, x3) -> (__0 x1) && ((__1 x2) && (__2 x3))[@@ocaml.warning
                                                                   "-39"]
         let rec (relift : t -> t) =
-          let rec __2 = L3.relift
+          let __2 = L3.relift
           and __1 = L2.relift
           and __0 = L1.relift in
           fun (x1, x2, x3) -> ((__0 x1), (__1 x2), (__2 x3))[@@ocaml.warning
@@ -130,21 +130,20 @@ module Record1(L1:Lattice) : Lattice =
     include
       struct
         let rec (leq : t -> t -> bool) =
-          let rec __0 = L1.leq in
-          fun { f1 = l1 } -> fun { f1 = r1 } -> __0 l1 r1[@@ocaml.warning
-                                                           "-39"]
+          let __0 = L1.leq in fun { f1 = l1 } -> fun { f1 = r1 } -> __0 l1 r1
+          [@@ocaml.warning "-39"]
         let rec (join : t -> t -> t) =
-          let rec __0 = L1.join in
+          let __0 = L1.join in
           fun { f1 = l1 } -> fun { f1 = r1 } -> { f1 = (__0 l1 r1) }[@@ocaml.warning
                                                                     "-39"]
         let rec (bot : unit -> t) =
-          let rec __0 = L1.bot in fun x -> { f1 = (__0 x) }[@@ocaml.warning
-                                                             "-39"]
+          let __0 = L1.bot in fun x -> { f1 = (__0 x) }[@@ocaml.warning
+                                                         "-39"]
         let rec (is_bot : t -> bool) =
-          let rec __0 = L1.is_bot in fun { f1 = x1 } -> __0 x1[@@ocaml.warning
-                                                                "-39"]
+          let __0 = L1.is_bot in fun { f1 = x1 } -> __0 x1[@@ocaml.warning
+                                                            "-39"]
         let rec (relift : t -> t) =
-          let rec __0 = L1.relift in fun { f1 = x1 } -> { f1 = (__0 x1) }
+          let __0 = L1.relift in fun { f1 = x1 } -> { f1 = (__0 x1) }
           [@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
@@ -156,28 +155,28 @@ module Record2(L1:Lattice)(L2:Lattice) : Lattice =
     include
       struct
         let rec (leq : t -> t -> bool) =
-          let rec __1 = L2.leq
+          let __1 = L2.leq
           and __0 = L1.leq in
           fun { f1 = l1; f2 = l2 } ->
             fun { f1 = r1; f2 = r2 } -> (__0 l1 r1) && (__1 l2 r2)[@@ocaml.warning
                                                                     "-39"]
         let rec (join : t -> t -> t) =
-          let rec __1 = L2.join
+          let __1 = L2.join
           and __0 = L1.join in
           fun { f1 = l1; f2 = l2 } ->
             fun { f1 = r1; f2 = r2 } ->
               { f1 = (__0 l1 r1); f2 = (__1 l2 r2) }[@@ocaml.warning "-39"]
         let rec (bot : unit -> t) =
-          let rec __1 = L2.bot
+          let __1 = L2.bot
           and __0 = L1.bot in fun x -> { f1 = (__0 x); f2 = (__1 x) }
           [@@ocaml.warning "-39"]
         let rec (is_bot : t -> bool) =
-          let rec __1 = L2.is_bot
+          let __1 = L2.is_bot
           and __0 = L1.is_bot in
           fun { f1 = x1; f2 = x2 } -> (__0 x1) && (__1 x2)[@@ocaml.warning
                                                             "-39"]
         let rec (relift : t -> t) =
-          let rec __1 = L2.relift
+          let __1 = L2.relift
           and __0 = L1.relift in
           fun { f1 = x1; f2 = x2 } -> { f1 = (__0 x1); f2 = (__1 x2) }
           [@@ocaml.warning "-39"]
@@ -192,7 +191,7 @@ module Record3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
     include
       struct
         let rec (leq : t -> t -> bool) =
-          let rec __2 = L3.leq
+          let __2 = L3.leq
           and __1 = L2.leq
           and __0 = L1.leq in
           fun { f1 = l1; f2 = l2; f3 = l3 } ->
@@ -200,7 +199,7 @@ module Record3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
               (__0 l1 r1) && ((__1 l2 r2) && (__2 l3 r3))[@@ocaml.warning
                                                            "-39"]
         let rec (join : t -> t -> t) =
-          let rec __2 = L3.join
+          let __2 = L3.join
           and __1 = L2.join
           and __0 = L1.join in
           fun { f1 = l1; f2 = l2; f3 = l3 } ->
@@ -208,19 +207,19 @@ module Record3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
               { f1 = (__0 l1 r1); f2 = (__1 l2 r2); f3 = (__2 l3 r3) }
           [@@ocaml.warning "-39"]
         let rec (bot : unit -> t) =
-          let rec __2 = L3.bot
+          let __2 = L3.bot
           and __1 = L2.bot
           and __0 = L1.bot in
           fun x -> { f1 = (__0 x); f2 = (__1 x); f3 = (__2 x) }[@@ocaml.warning
                                                                  "-39"]
         let rec (is_bot : t -> bool) =
-          let rec __2 = L3.is_bot
+          let __2 = L3.is_bot
           and __1 = L2.is_bot
           and __0 = L1.is_bot in
           fun { f1 = x1; f2 = x2; f3 = x3 } ->
             (__0 x1) && ((__1 x2) && (__2 x3))[@@ocaml.warning "-39"]
         let rec (relift : t -> t) =
-          let rec __2 = L3.relift
+          let __2 = L3.relift
           and __1 = L2.relift
           and __0 = L1.relift in
           fun { f1 = x1; f2 = x2; f3 = x3 } ->
