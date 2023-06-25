@@ -12,14 +12,14 @@ struct
   let rec expr ~loc ~quoter ct =
     match Attribute.get attr ct with
     | Some expr ->
-      Ppx_deriving.quote ~quoter expr
+      Expansion_helpers.Quoter.quote quoter expr
     | None ->
       match ct with
       | [%type: unit] ->
         unit ~loc
       | {ptyp_desc = Ptyp_constr ({txt = lid; loc}, args); _} ->
         let ident = pexp_ident ~loc {loc; txt = Ppx_deriving.mangle_lid (`Prefix Arg.name) lid} in
-        let ident = Ppx_deriving.quote ~quoter ident in
+        let ident = Expansion_helpers.Quoter.quote quoter ident in
         let apply_args = List.map (fun ct ->
             (Nolabel, expr ~loc ~quoter ct)
           ) args
@@ -126,9 +126,9 @@ struct
   let generate_impl ~ctxt (_rec_flag, type_declarations) =
     let loc = Expansion_context.Deriver.derived_item_loc ctxt in
     let vbs = List.map (fun td ->
-        let quoter = Ppx_deriving.create_quoter () in
+        let quoter = Expansion_helpers.Quoter.create () in
         let expr = expr_declaration ~loc ~quoter td in
-        let expr = Ppx_deriving.sanitize ~quoter expr in
+        let expr = Expansion_helpers.Quoter.sanitize quoter expr in
         let expr = Ppx_deriving.poly_fun_of_type_decl td expr in
         let ct = typ ~loc td in
         let pat = ppat_var ~loc {loc; txt = Ppx_deriving.mangle_type_decl (`Prefix Arg.name) td} in
@@ -149,9 +149,9 @@ struct
   let impl_generator = Deriving.Generator.V2.make_noarg generate_impl
   let intf_generator = Deriving.Generator.V2.make_noarg generate_intf
   let extension ~loc ~path:_ ct =
-    let quoter = Ppx_deriving.create_quoter () in
+    let quoter = Expansion_helpers.Quoter.create () in
     let expr = expr ~loc ~quoter ct in
-    Ppx_deriving.sanitize ~quoter expr
+    Expansion_helpers.Quoter.sanitize quoter expr
 
   let register () =
     Deriving.add Arg.name

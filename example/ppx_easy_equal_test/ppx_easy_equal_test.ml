@@ -88,6 +88,8 @@ module PolyVariantInherit (E1: Easy_equal) (E2: Easy_equal) (E5: Easy_equal) =
 struct
   module PV = PolyVariant (E1) (E2) (E5)
   type u = PV.t [@@deriving easy_equal, easy_equal2]
+
+  [@@@warning "-redundant-case"]
   type t = [
     | PV.t
     | `C5

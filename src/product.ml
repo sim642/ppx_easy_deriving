@@ -111,18 +111,16 @@ struct
     let typ ~loc t = [%type: [%t C.typ ~loc t] -> [%t t]]
 
     let tuple ~loc es =
-      let body =
-        match es with
-        | [] -> [%expr ()]
-        | [e] -> [%expr [%e e] x]
-        | _ :: _ ->
-          let elems = List.map (fun e ->
-              [%expr [%e e] x]
-            ) es
-          in
-          pexp_tuple ~loc elems
-      in
-      [%expr fun x -> [%e body]]
+      match es with
+      | [] -> [%expr fun _ -> ()]
+      | [e] -> e
+      | _ :: _ ->
+        let elems = List.map (fun e ->
+            [%expr [%e e] x]
+          ) es
+        in
+        let body = pexp_tuple ~loc elems in
+        [%expr fun x -> [%e body]]
 
     let record ~loc les =
       let fields = List.map (fun (l, e) ->
