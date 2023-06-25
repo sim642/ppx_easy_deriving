@@ -6,15 +6,15 @@ module Make (P: S): Intf.S =
 struct
   include P
 
+  let tuple ~loc es =
+    let n = List.length es in
+    let pe_create ~prefix = PatExp.create_tuple ~prefix n in
+    P.product ~loc ~pe_create es
+
   let record ~loc les =
     let ls = List.map fst les in
     let es = List.map snd les in
     let pe_create ~prefix = PatExp.create_record ~prefix ls in
-    P.product ~loc ~pe_create es
-
-  let tuple ~loc es =
-    let n = List.length es in
-    let pe_create ~prefix = PatExp.create_tuple ~prefix n in
     P.product ~loc ~pe_create es
 
   let variant ~loc _ = Ast_builder.Default.pexp_extension ~loc (Location.error_extensionf ~loc "Product.Make no variant")
@@ -128,14 +128,6 @@ struct
       let apply_iso ~loc e _ f' =
         [%expr fun a -> [%e f'] ([%e e] a)] *)
 
-      let record ~loc les =
-        let body =
-          Ast_builder.Default.pexp_record ~loc (List.map (fun (l, e) ->
-              (Ast_builder.Default.Located.mk ~loc l, [%expr [%e e] a])
-            ) les) None
-        in
-        [%expr fun a -> [%e body]]
-
       let tuple ~loc es =
         let body =
           match es with
@@ -145,6 +137,14 @@ struct
             Ast_builder.Default.pexp_tuple ~loc @@ List.map (fun e ->
                 [%expr [%e e] a]
               ) es
+        in
+        [%expr fun a -> [%e body]]
+
+      let record ~loc les =
+        let body =
+          Ast_builder.Default.pexp_record ~loc (List.map (fun (l, e) ->
+              (Ast_builder.Default.Located.mk ~loc l, [%expr [%e e] a])
+            ) les) None
         in
         [%expr fun a -> [%e body]]
 
@@ -172,6 +172,27 @@ struct
       let apply_iso ~loc e f f' =
         [%expr fun a b -> [%e f'] ([%e e] ([%e f] a) ([%e f] b))] *)
 
+      let tuple ~loc es =
+        let n = List.length es in
+        let pea = PatExp.create_tuple ~prefix:"a" n in
+        let peb = PatExp.create_tuple ~prefix:"b" n in
+        let pa = PatExp.to_pat ~loc pea in
+        let pb = PatExp.to_pat ~loc peb in
+        let esa = PatExp.to_exps ~loc pea in
+        let esb = PatExp.to_exps ~loc peb in
+        let comps = List.map2 (fun e (ea, eb) ->
+            [%expr [%e e] [%e ea] [%e eb]]
+          ) es (List.combine esa esb)
+        in
+        let body =
+          match comps with
+          | [] -> [%expr ()]
+          | [comp] -> [%expr [%e comp]]
+          | _ :: _ ->
+            Ast_builder.Default.pexp_tuple ~loc comps
+        in
+        [%expr fun [%p pa] [%p pb] -> [%e body]]
+
       let record ~loc les =
         (* let body =
           Ast_builder.Default.pexp_record ~loc (List.map (fun (l, e) ->
@@ -193,27 +214,6 @@ struct
         let body = Ast_builder.Default.pexp_record ~loc (List.map (fun (l, e) ->
             (Ast_builder.Default.Located.mk ~loc l, e)
           ) (List.combine ls fields)) None
-        in
-        [%expr fun [%p pa] [%p pb] -> [%e body]]
-
-      let tuple ~loc es =
-        let n = List.length es in
-        let pea = PatExp.create_tuple ~prefix:"a" n in
-        let peb = PatExp.create_tuple ~prefix:"b" n in
-        let pa = PatExp.to_pat ~loc pea in
-        let pb = PatExp.to_pat ~loc peb in
-        let esa = PatExp.to_exps ~loc pea in
-        let esb = PatExp.to_exps ~loc peb in
-        let comps = List.map2 (fun e (ea, eb) ->
-            [%expr [%e e] [%e ea] [%e eb]]
-          ) es (List.combine esa esb)
-        in
-        let body =
-          match comps with
-          | [] -> [%expr ()]
-          | [comp] -> [%expr [%e comp]]
-          | _ :: _ ->
-            Ast_builder.Default.pexp_tuple ~loc comps
         in
         [%expr fun [%p pa] [%p pb] -> [%e body]]
 

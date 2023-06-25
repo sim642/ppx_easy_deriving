@@ -9,25 +9,6 @@ struct
   struct
     include P
 
-    let record ~loc les =
-      let ls = List.map fst les in
-      let es = List.map snd les in
-      let body =
-        es
-        |> Util.reduce ~unit:(P.unit ~loc) ~both:(P.both ~loc)
-      in
-      let f =
-        let pe = PatExp.create_record ~prefix:"f" ls in
-        let pe' = PatExp.create_nested_tuple ~prefix:"f" (List.length ls) in
-        [%expr fun [%p PatExp.to_pat ~loc pe] -> [%e PatExp.to_exp ~loc pe']]
-      in
-      let f' =
-        let pe = PatExp.create_record ~prefix:"f'" ls in
-        let pe' = PatExp.create_nested_tuple ~prefix:"f'" (List.length ls) in
-        [%expr fun [%p PatExp.to_pat ~loc pe'] -> [%e PatExp.to_exp ~loc pe]]
-      in
-      P.apply_iso ~loc body ~f ~f'
-
     let tuple ~loc es =
       let n = List.length es in
       let body =
@@ -50,6 +31,25 @@ struct
       | [e] -> e
       | [_; _] -> body (* avoid trivial iso *)
       | _ :: _ :: _ :: _ -> P.apply_iso ~loc body ~f ~f'
+
+    let record ~loc les =
+      let ls = List.map fst les in
+      let es = List.map snd les in
+      let body =
+        es
+        |> Util.reduce ~unit:(P.unit ~loc) ~both:(P.both ~loc)
+      in
+      let f =
+        let pe = PatExp.create_record ~prefix:"f" ls in
+        let pe' = PatExp.create_nested_tuple ~prefix:"f" (List.length ls) in
+        [%expr fun [%p PatExp.to_pat ~loc pe] -> [%e PatExp.to_exp ~loc pe']]
+      in
+      let f' =
+        let pe = PatExp.create_record ~prefix:"f'" ls in
+        let pe' = PatExp.create_nested_tuple ~prefix:"f'" (List.length ls) in
+        [%expr fun [%p PatExp.to_pat ~loc pe'] -> [%e PatExp.to_exp ~loc pe]]
+      in
+      P.apply_iso ~loc body ~f ~f'
 
     let variant ~loc _ = Ast_builder.Default.pexp_extension ~loc (Location.error_extensionf ~loc "Simple.Product.Reduce no variant")
   end
