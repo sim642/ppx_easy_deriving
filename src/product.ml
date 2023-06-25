@@ -137,6 +137,52 @@ struct
   end
 end
 
+module Map1 =
+struct
+  include Map1
+
+  module Make (M1: S): Intf.S =
+  struct
+    let name = M1.name
+    let typ ~loc t = [%type: [%t t] -> [%t t]]
+
+    let tuple ~loc es =
+      let n = List.length es in
+      let pe = PatExp.create_tuple ~prefix:"x" n in
+      let elems =
+        List.map2 (fun e x ->
+            [%expr [%e e] [%e x]]
+          ) es (PatExp.to_exps ~loc pe)
+      in
+      let body =
+        match elems with
+        | [] -> [%expr ()]
+        | [elem] -> elem
+        | _ :: _ -> pexp_tuple ~loc elems
+      in
+      [%expr fun [%p PatExp.to_pat ~loc pe] -> [%e body]]
+
+    let record ~loc les =
+      let ls = List.map fst les in
+      let pe = PatExp.create_record ~prefix:"x" ls in
+      let es = List.map snd les in
+      let elems =
+        List.map2 (fun e x ->
+            [%expr [%e e] [%e x]]
+          ) es (PatExp.to_exps ~loc pe)
+      in
+      let fields = List.map2 (fun l elem ->
+          (Located.mk ~loc l, elem)
+        ) ls elems
+      in
+      let body = pexp_record ~loc fields None in
+      [%expr fun [%p PatExp.to_pat ~loc pe] -> [%e body]]
+
+    let variant ~loc _ =
+      Ast_builder.Default.pexp_extension ~loc (Location.error_extensionf ~loc "Product.Map1.Make: no variant")
+  end
+end
+
 module Map2 =
 struct
   include Map2

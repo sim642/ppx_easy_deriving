@@ -5,6 +5,7 @@ sig
   val join: t -> t -> t
   val bot: unit -> t
   val is_bot: t -> bool
+  val relift: t -> t
 
   val easy_equal: t -> t -> bool
   val easy_equal2: t -> t -> bool

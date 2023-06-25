@@ -38,7 +38,17 @@ module IsBotDeriver = Deriver (Product.Reduce1.Make (Product.Reduce.Conjunctive.
 let is_bot_deriving = IsBotDeriver.register ()
 
 
+module ReliftArg: Product.Map1.S =
+struct
+  let name = "relift"
+end
+
+module ReliftDeriver = Deriver (Product.Map1.Make (ReliftArg))
+let relift_deriving = ReliftDeriver.register ()
+
+
 let _ = Ppxlib.Deriving.add_alias "lattice" [
+    relift_deriving;
     is_bot_deriving;
     bot_deriving;
     join_deriving;

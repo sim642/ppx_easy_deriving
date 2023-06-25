@@ -39,6 +39,11 @@ struct
   end
 end
 
+module Map1 =
+struct
+  module type S = Intf.Name
+end
+
 module Map2 =
 struct
   module type S = Intf.Name
@@ -90,6 +95,13 @@ sig
     module type S = Create.S
 
     module Make (C: S): Intf.S
+  end
+
+  module Map1 :
+  sig
+    module type S = Map1.S
+
+    module Make (M1: S): Intf.S
   end
 
   module Map2 :
