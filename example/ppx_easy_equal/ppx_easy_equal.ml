@@ -62,7 +62,7 @@ struct
       | Either.Right b1, Either.Right b2 -> [%e e2] b1 b2
       | _, _ -> false
     ]
-  let apply_iso ~loc leq f _ =
+  let apply_iso ~loc leq ~f ~f':_ =
     [%expr fun a b -> [%e leq] ([%e f] a) ([%e f] b)]
 end
 

@@ -26,7 +26,7 @@ struct
         let pe' = PatExp.create_nested_tuple ~prefix:"f'" (List.length ls) in
         [%expr fun [%p PatExp.to_pat ~loc pe'] -> [%e PatExp.to_exp ~loc pe]]
       in
-      P.apply_iso ~loc body f f'
+      P.apply_iso ~loc body ~f ~f'
 
     let tuple ~loc es =
       let n = List.length es in
@@ -49,7 +49,7 @@ struct
       | [] -> P.unit ~loc
       | [e] -> e
       | [_; _] -> body (* avoid trivial iso *)
-      | _ :: _ :: _ :: _ -> P.apply_iso ~loc body f f'
+      | _ :: _ :: _ :: _ -> P.apply_iso ~loc body ~f ~f'
 
     let variant ~loc _ = Ast_builder.Default.pexp_extension ~loc (Location.error_extensionf ~loc "Simple.Product.Reduce no variant")
   end
@@ -99,6 +99,6 @@ struct
         in
         pexp_function ~loc cases
       in
-      V.apply_iso ~loc body f f'
+      V.apply_iso ~loc body ~f ~f'
   end
 end

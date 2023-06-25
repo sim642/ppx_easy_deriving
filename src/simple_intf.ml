@@ -3,7 +3,7 @@ open Ppxlib
 module type Base =
 sig
   include Intf.Base
-  val apply_iso: loc:location -> expression -> expression -> expression -> expression
+  val apply_iso: loc:location -> expression -> f:expression -> f':expression -> expression
 end
 
 module Product =
