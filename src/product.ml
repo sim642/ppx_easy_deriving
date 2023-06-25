@@ -21,7 +21,7 @@ struct
     P.product ~loc ~pe_create es
 
   let variant ~loc _ =
-    Ast_builder.Default.pexp_extension ~loc (Location.error_extensionf ~loc "Product.Make: no variant")
+    pexp_extension ~loc (Location.error_extensionf ~loc "Product.Make: no variant")
 end
 
 module Reduce =
@@ -133,7 +133,7 @@ struct
       [%expr fun x -> [%e body]]
 
     let variant ~loc _ =
-      Ast_builder.Default.pexp_extension ~loc (Location.error_extensionf ~loc "Product.Create.Make: no variant")
+      pexp_extension ~loc (Location.error_extensionf ~loc "Product.Create.Make: no variant")
   end
 end
 
@@ -179,7 +179,7 @@ struct
       [%expr fun [%p PatExp.to_pat ~loc pe] -> [%e body]]
 
     let variant ~loc _ =
-      Ast_builder.Default.pexp_extension ~loc (Location.error_extensionf ~loc "Product.Map1.Make: no variant")
+      pexp_extension ~loc (Location.error_extensionf ~loc "Product.Map1.Make: no variant")
   end
 end
 
@@ -235,7 +235,7 @@ struct
       [%expr fun [%p pl] [%p pr] -> [%e body]]
 
     let variant ~loc _ =
-      Ast_builder.Default.pexp_extension ~loc (Location.error_extensionf ~loc "Product.Map2.Make: no variant")
+      pexp_extension ~loc (Location.error_extensionf ~loc "Product.Map2.Make: no variant")
   end
 end
 

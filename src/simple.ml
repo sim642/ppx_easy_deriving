@@ -49,7 +49,7 @@ struct
       P.apply_iso ~loc body ~f ~f'
 
     let variant ~loc _ =
-      Ast_builder.Default.pexp_extension ~loc (Location.error_extensionf ~loc "Simple.Product.Reduce: no variant")
+      pexp_extension ~loc (Location.error_extensionf ~loc "Simple.Product.Reduce: no variant")
   end
 end
 

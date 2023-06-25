@@ -516,10 +516,7 @@ module PolyVariant(L1:Lattice)(L2:Lattice)(L5:Lattice) =
     include
       struct
         let rec (easy_equal : t -> t -> bool) =
-          let __5 = L5.easy_equal
-          and __4 = L5.easy_equal
-          and __3 = L2.easy_equal
-          and __2 = L1.easy_equal
+          let __2 = L5.easy_equal
           and __1 = L2.easy_equal
           and __0 = L1.easy_equal in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
@@ -530,14 +527,11 @@ module PolyVariant(L1:Lattice)(L2:Lattice)(L5:Lattice) =
                   | (`C2 a, `C2 b) ->
                       ((fun (a0, a1) ->
                           fun (b0, b1) -> (__0 a0 b0) && (__1 a1 b1))) a b
-                  | (`C4 a, `C4 b) -> __4 a b
+                  | (`C4 a, `C4 b) -> __2 a b
                   | (_, _) -> false)
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (easy_equal2 : t -> t -> bool) =
-          let __5 = L5.easy_equal2
-          and __4 = L5.easy_equal2
-          and __3 = L2.easy_equal2
-          and __2 = L1.easy_equal2
+          let __2 = L5.easy_equal2
           and __1 = L2.easy_equal2
           and __0 = L1.easy_equal2 in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
@@ -555,9 +549,9 @@ module PolyVariant(L1:Lattice)(L2:Lattice)(L5:Lattice) =
                                  | (Either.Left a1, Either.Left a2) ->
                                      ((fun (a1, b1) ->
                                          fun (a2, b2) ->
-                                           (__2 a1 a2) && (__3 b1 b2))) a1 a2
+                                           (__0 a1 a2) && (__1 b1 b2))) a1 a2
                                  | (Either.Right b1, Either.Right b2) ->
-                                     __5 b1 b2
+                                     __2 b1 b2
                                  | (_, _) -> false)) b1 b2
                        | (_, _) -> false)
                     ((function
@@ -590,9 +584,7 @@ module PolyVariantInherit(L1:Lattice)(L2:Lattice)(L5:Lattice) =
     include
       struct
         let rec (easy_equal : t -> t -> bool) =
-          let __3 = easy_equal_u
-          and __2 = easy_equal_u
-          and __1 = PV.easy_equal
+          let __1 = easy_equal_u
           and __0 = PV.easy_equal in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun x ->
@@ -600,13 +592,11 @@ module PolyVariantInherit(L1:Lattice)(L2:Lattice)(L5:Lattice) =
                   match (x, y) with
                   | ((#PV.t as a), (#PV.t as b)) -> __0 a b
                   | (`C5, `C5) -> true
-                  | ((#u as a), (#u as b)) -> __2 a b
+                  | ((#u as a), (#u as b)) -> __1 a b
                   | (_, _) -> false)
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (easy_equal2 : t -> t -> bool) =
-          let __3 = easy_equal2_u
-          and __2 = easy_equal2_u
-          and __1 = PV.easy_equal2
+          let __1 = easy_equal2_u
           and __0 = PV.easy_equal2 in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
               fun a ->
@@ -614,7 +604,7 @@ module PolyVariantInherit(L1:Lattice)(L2:Lattice)(L5:Lattice) =
                   (fun a1 ->
                      fun a2 ->
                        match (a1, a2) with
-                       | (Either.Left a1, Either.Left a2) -> __1 a1 a2
+                       | (Either.Left a1, Either.Left a2) -> __0 a1 a2
                        | (Either.Right b1, Either.Right b2) ->
                            ((fun a1 ->
                                fun a2 ->
@@ -622,7 +612,7 @@ module PolyVariantInherit(L1:Lattice)(L2:Lattice)(L5:Lattice) =
                                  | (Either.Left a1, Either.Left a2) ->
                                      ((fun () -> fun () -> true)) a1 a2
                                  | (Either.Right b1, Either.Right b2) ->
-                                     __3 b1 b2
+                                     __1 b1 b2
                                  | (_, _) -> false)) b1 b2
                        | (_, _) -> false)
                     ((function
