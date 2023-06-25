@@ -156,13 +156,13 @@ module Tuple2(L1:Lattice)(L2:Lattice) : Lattice =
           let __1 = L2.easy_equal
           and __0 = L1.easy_equal in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun (a1, a2) -> fun (b1, b2) -> (__0 a1 b1) && (__1 a2 b2))
+              fun (l1, l2) -> fun (r1, r2) -> (__0 l1 r1) && (__1 l2 r2))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (easy_equal2 : t -> t -> bool) =
           let __1 = L2.easy_equal2
           and __0 = L1.easy_equal2 in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun (a1, b1) -> fun (a2, b2) -> (__0 a1 a2) && (__1 b1 b2))
+              fun (l1, l2) -> fun (r1, r2) -> (__0 l1 r1) && (__1 l2 r2))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
@@ -215,24 +215,24 @@ module Tuple3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
           and __1 = L2.easy_equal
           and __0 = L1.easy_equal in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun (a1, a2, a3) ->
-                fun (b1, b2, b3) ->
-                  (__0 a1 b1) && ((__1 a2 b2) && (__2 a3 b3)))
+              fun (l1, l2, l3) ->
+                fun (r1, r2, r3) ->
+                  (__0 l1 r1) && ((__1 l2 r2) && (__2 l3 r3)))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (easy_equal2 : t -> t -> bool) =
           let __2 = L3.easy_equal2
           and __1 = L2.easy_equal2
           and __0 = L1.easy_equal2 in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun a ->
-                fun b ->
-                  (fun (a1, b1) ->
-                     fun (a2, b2) ->
-                       (__0 a1 a2) &&
-                         ((fun (a1, b1) ->
-                             fun (a2, b2) -> (__1 a1 a2) && (__2 b1 b2)) b1
-                            b2)) ((fun (f1, f2, f3) -> (f1, (f2, f3))) a)
-                    ((fun (f1, f2, f3) -> (f1, (f2, f3))) b))
+              fun l ->
+                fun r ->
+                  (fun (l1, l2) ->
+                     fun (r1, r2) ->
+                       (__0 l1 r1) &&
+                         ((fun (l1, l2) ->
+                             fun (r1, r2) -> (__1 l1 r1) && (__2 l2 r2)) l2
+                            r2)) ((fun (f1, f2, f3) -> (f1, (f2, f3))) l)
+                    ((fun (f1, f2, f3) -> (f1, (f2, f3))) r))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
@@ -270,13 +270,13 @@ module Record1(L1:Lattice) : Lattice =
         let rec (easy_equal : t -> t -> bool) =
           let __0 = L1.easy_equal in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun { f1 = a1 } -> fun { f1 = b1 } -> __0 a1 b1)
+              fun { f1 = l1 } -> fun { f1 = r1 } -> __0 l1 r1)
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (easy_equal2 : t -> t -> bool) =
           let __0 = L1.easy_equal2 in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun a ->
-                fun b -> __0 ((fun { f1 } -> f1) a) ((fun { f1 } -> f1) b))
+              fun l ->
+                fun r -> __0 ((fun { f1 } -> f1) l) ((fun { f1 } -> f1) r))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
@@ -324,18 +324,18 @@ module Record2(L1:Lattice)(L2:Lattice) : Lattice =
           let __1 = L2.easy_equal
           and __0 = L1.easy_equal in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun { f1 = a1; f2 = a2 } ->
-                fun { f1 = b1; f2 = b2 } -> (__0 a1 b1) && (__1 a2 b2))
+              fun { f1 = l1; f2 = l2 } ->
+                fun { f1 = r1; f2 = r2 } -> (__0 l1 r1) && (__1 l2 r2))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (easy_equal2 : t -> t -> bool) =
           let __1 = L2.easy_equal2
           and __0 = L1.easy_equal2 in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun a ->
-                fun b ->
-                  (fun (a1, b1) -> fun (a2, b2) -> (__0 a1 a2) && (__1 b1 b2))
-                    ((fun { f1; f2 } -> (f1, f2)) a)
-                    ((fun { f1; f2 } -> (f1, f2)) b))
+              fun l ->
+                fun r ->
+                  (fun (l1, l2) -> fun (r1, r2) -> (__0 l1 r1) && (__1 l2 r2))
+                    ((fun { f1; f2 } -> (f1, f2)) l)
+                    ((fun { f1; f2 } -> (f1, f2)) r))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
@@ -393,24 +393,24 @@ module Record3(L1:Lattice)(L2:Lattice)(L3:Lattice) : Lattice =
           and __1 = L2.easy_equal
           and __0 = L1.easy_equal in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun { f1 = a1; f2 = a2; f3 = a3 } ->
-                fun { f1 = b1; f2 = b2; f3 = b3 } ->
-                  (__0 a1 b1) && ((__1 a2 b2) && (__2 a3 b3)))
+              fun { f1 = l1; f2 = l2; f3 = l3 } ->
+                fun { f1 = r1; f2 = r2; f3 = r3 } ->
+                  (__0 l1 r1) && ((__1 l2 r2) && (__2 l3 r3)))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (easy_equal2 : t -> t -> bool) =
           let __2 = L3.easy_equal2
           and __1 = L2.easy_equal2
           and __0 = L1.easy_equal2 in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun a ->
-                fun b ->
-                  (fun (a1, b1) ->
-                     fun (a2, b2) ->
-                       (__0 a1 a2) &&
-                         ((fun (a1, b1) ->
-                             fun (a2, b2) -> (__1 a1 a2) && (__2 b1 b2)) b1
-                            b2)) ((fun { f1; f2; f3 } -> (f1, (f2, f3))) a)
-                    ((fun { f1; f2; f3 } -> (f1, (f2, f3))) b))
+              fun l ->
+                fun r ->
+                  (fun (l1, l2) ->
+                     fun (r1, r2) ->
+                       (__0 l1 r1) &&
+                         ((fun (l1, l2) ->
+                             fun (r1, r2) -> (__1 l1 r1) && (__2 l2 r2)) l2
+                            r2)) ((fun { f1; f2; f3 } -> (f1, (f2, f3))) l)
+                    ((fun { f1; f2; f3 } -> (f1, (f2, f3))) r))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end 
@@ -437,14 +437,14 @@ module Variant(L1:Lattice)(L2:Lattice)(L3:Lattice)(L4:Lattice)(L5:Lattice) =
           and __1 = L2.easy_equal
           and __0 = L1.easy_equal in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun x ->
-                fun y ->
-                  match (x, y) with
+              fun l ->
+                fun r ->
+                  match (l, r) with
                   | (C1, C1) -> true
-                  | (C2 (a1, a2), C2 (b1, b2)) -> (__0 a1 b1) && (__1 a2 b2)
-                  | (C3 { f1 = a1; f2 = a2 }, C3 { f1 = b1; f2 = b2 }) ->
-                      (__4 a1 b1) && (__5 a2 b2)
-                  | (C4 a1, C4 b1) -> __8 a1 b1
+                  | (C2 (l1, l2), C2 (r1, r2)) -> (__0 l1 r1) && (__1 l2 r2)
+                  | (C3 { f1 = l1; f2 = l2 }, C3 { f1 = r1; f2 = r2 }) ->
+                      (__4 l1 r1) && (__5 l2 r2)
+                  | (C4 l1, C4 r1) -> __8 l1 r1
                   | (_, _) -> false)
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (easy_equal2 : t -> t -> bool) =
@@ -459,35 +459,35 @@ module Variant(L1:Lattice)(L2:Lattice)(L3:Lattice)(L4:Lattice)(L5:Lattice) =
           and __1 = L2.easy_equal2
           and __0 = L1.easy_equal2 in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun a ->
-                fun b ->
-                  (fun a1 ->
-                     fun a2 ->
-                       match (a1, a2) with
-                       | (Either.Left a1, Either.Left a2) ->
-                           ((fun () -> fun () -> true)) a1 a2
-                       | (Either.Right b1, Either.Right b2) ->
-                           ((fun a1 ->
-                               fun a2 ->
-                                 match (a1, a2) with
-                                 | (Either.Left a1, Either.Left a2) ->
-                                     ((fun (a1, b1) ->
-                                         fun (a2, b2) ->
-                                           (__2 a1 a2) && (__3 b1 b2))) a1 a2
-                                 | (Either.Right b1, Either.Right b2) ->
-                                     ((fun a1 ->
-                                         fun a2 ->
-                                           match (a1, a2) with
-                                           | (Either.Left a1, Either.Left a2)
+              fun l ->
+                fun r ->
+                  (fun l ->
+                     fun r ->
+                       match (l, r) with
+                       | (Either.Left l, Either.Left r) ->
+                           ((fun () -> fun () -> true)) l r
+                       | (Either.Right l, Either.Right r) ->
+                           ((fun l ->
+                               fun r ->
+                                 match (l, r) with
+                                 | (Either.Left l, Either.Left r) ->
+                                     ((fun (l1, l2) ->
+                                         fun (r1, r2) ->
+                                           (__2 l1 r1) && (__3 l2 r2))) l r
+                                 | (Either.Right l, Either.Right r) ->
+                                     ((fun l ->
+                                         fun r ->
+                                           match (l, r) with
+                                           | (Either.Left l, Either.Left r)
                                                ->
-                                               ((fun (a1, b1) ->
-                                                   fun (a2, b2) ->
-                                                     (__6 a1 a2) &&
-                                                       (__7 b1 b2))) a1 a2
-                                           | (Either.Right b1, Either.Right
-                                              b2) -> __9 b1 b2
-                                           | (_, _) -> false)) b1 b2
-                                 | (_, _) -> false)) b1 b2
+                                               ((fun (l1, l2) ->
+                                                   fun (r1, r2) ->
+                                                     (__6 l1 r1) &&
+                                                       (__7 l2 r2))) l r
+                                           | (Either.Right l, Either.Right r)
+                                               -> __9 l r
+                                           | (_, _) -> false)) l r
+                                 | (_, _) -> false)) l r
                        | (_, _) -> false)
                     ((function
                       | C1 -> Either.Left ()
@@ -495,14 +495,14 @@ module Variant(L1:Lattice)(L2:Lattice)(L3:Lattice)(L4:Lattice)(L5:Lattice) =
                       | C3 { f1; f2 } ->
                           Either.Right (Either.Right (Either.Left (f1, f2)))
                       | C4 f1 ->
-                          Either.Right (Either.Right (Either.Right f1))) a)
+                          Either.Right (Either.Right (Either.Right f1))) l)
                     ((function
                       | C1 -> Either.Left ()
                       | C2 (f1, f2) -> Either.Right (Either.Left (f1, f2))
                       | C3 { f1; f2 } ->
                           Either.Right (Either.Right (Either.Left (f1, f2)))
                       | C4 f1 ->
-                          Either.Right (Either.Right (Either.Right f1))) b))
+                          Either.Right (Either.Right (Either.Right f1))) r))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end
@@ -518,14 +518,14 @@ module PolyVariant(L1:Lattice)(L2:Lattice)(L5:Lattice) =
           and __1 = L2.easy_equal
           and __0 = L1.easy_equal in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun x ->
-                fun y ->
-                  match (x, y) with
+              fun l ->
+                fun r ->
+                  match (l, r) with
                   | (`C1, `C1) -> true
-                  | (`C2 a, `C2 b) ->
-                      ((fun (a1, a2) ->
-                          fun (b1, b2) -> (__0 a1 b1) && (__1 a2 b2))) a b
-                  | (`C4 a, `C4 b) -> __2 a b
+                  | (`C2 l, `C2 r) ->
+                      ((fun (l1, l2) ->
+                          fun (r1, r2) -> (__0 l1 r1) && (__1 l2 r2))) l r
+                  | (`C4 l, `C4 r) -> __2 l r
                   | (_, _) -> false)
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (easy_equal2 : t -> t -> bool) =
@@ -533,33 +533,33 @@ module PolyVariant(L1:Lattice)(L2:Lattice)(L5:Lattice) =
           and __1 = L2.easy_equal2
           and __0 = L1.easy_equal2 in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun a ->
-                fun b ->
-                  (fun a1 ->
-                     fun a2 ->
-                       match (a1, a2) with
-                       | (Either.Left a1, Either.Left a2) ->
-                           ((fun () -> fun () -> true)) a1 a2
-                       | (Either.Right b1, Either.Right b2) ->
-                           ((fun a1 ->
-                               fun a2 ->
-                                 match (a1, a2) with
-                                 | (Either.Left a1, Either.Left a2) ->
-                                     ((fun (a1, b1) ->
-                                         fun (a2, b2) ->
-                                           (__0 a1 a2) && (__1 b1 b2))) a1 a2
-                                 | (Either.Right b1, Either.Right b2) ->
-                                     __2 b1 b2
-                                 | (_, _) -> false)) b1 b2
+              fun l ->
+                fun r ->
+                  (fun l ->
+                     fun r ->
+                       match (l, r) with
+                       | (Either.Left l, Either.Left r) ->
+                           ((fun () -> fun () -> true)) l r
+                       | (Either.Right l, Either.Right r) ->
+                           ((fun l ->
+                               fun r ->
+                                 match (l, r) with
+                                 | (Either.Left l, Either.Left r) ->
+                                     ((fun (l1, l2) ->
+                                         fun (r1, r2) ->
+                                           (__0 l1 r1) && (__1 l2 r2))) l r
+                                 | (Either.Right l, Either.Right r) ->
+                                     __2 l r
+                                 | (_, _) -> false)) l r
                        | (_, _) -> false)
                     ((function
                       | `C1 -> Either.Left ()
                       | `C2 f -> Either.Right (Either.Left f)
-                      | `C4 f -> Either.Right (Either.Right f)) a)
+                      | `C4 f -> Either.Right (Either.Right f)) l)
                     ((function
                       | `C1 -> Either.Left ()
                       | `C2 f -> Either.Right (Either.Left f)
-                      | `C4 f -> Either.Right (Either.Right f)) b))
+                      | `C4 f -> Either.Right (Either.Right f)) r))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end
@@ -585,42 +585,42 @@ module PolyVariantInherit(L1:Lattice)(L2:Lattice)(L5:Lattice) =
           let __1 = easy_equal_u
           and __0 = PV.easy_equal in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun x ->
-                fun y ->
-                  match (x, y) with
-                  | ((#PV.t as a), (#PV.t as b)) -> __0 a b
+              fun l ->
+                fun r ->
+                  match (l, r) with
+                  | ((#PV.t as l), (#PV.t as r)) -> __0 l r
                   | (`C5, `C5) -> true
-                  | ((#u as a), (#u as b)) -> __1 a b
+                  | ((#u as l), (#u as r)) -> __1 l r
                   | (_, _) -> false)
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
         let rec (easy_equal2 : t -> t -> bool) =
           let __1 = easy_equal2_u
           and __0 = PV.easy_equal2 in
           ((let open! ((Ppx_deriving_runtime)[@ocaml.warning "-A"]) in
-              fun a ->
-                fun b ->
-                  (fun a1 ->
-                     fun a2 ->
-                       match (a1, a2) with
-                       | (Either.Left a1, Either.Left a2) -> __0 a1 a2
-                       | (Either.Right b1, Either.Right b2) ->
-                           ((fun a1 ->
-                               fun a2 ->
-                                 match (a1, a2) with
-                                 | (Either.Left a1, Either.Left a2) ->
-                                     ((fun () -> fun () -> true)) a1 a2
-                                 | (Either.Right b1, Either.Right b2) ->
-                                     __1 b1 b2
-                                 | (_, _) -> false)) b1 b2
+              fun l ->
+                fun r ->
+                  (fun l ->
+                     fun r ->
+                       match (l, r) with
+                       | (Either.Left l, Either.Left r) -> __0 l r
+                       | (Either.Right l, Either.Right r) ->
+                           ((fun l ->
+                               fun r ->
+                                 match (l, r) with
+                                 | (Either.Left l, Either.Left r) ->
+                                     ((fun () -> fun () -> true)) l r
+                                 | (Either.Right l, Either.Right r) ->
+                                     __1 l r
+                                 | (_, _) -> false)) l r
                        | (_, _) -> false)
                     ((function
                       | #PV.t as f -> Either.Left f
                       | `C5 -> Either.Right (Either.Left ())
-                      | #u as f -> Either.Right (Either.Right f)) a)
+                      | #u as f -> Either.Right (Either.Right f)) l)
                     ((function
                       | #PV.t as f -> Either.Left f
                       | `C5 -> Either.Right (Either.Left ())
-                      | #u as f -> Either.Right (Either.Right f)) b))
+                      | #u as f -> Either.Right (Either.Right f)) r))
             [@ocaml.warning "-A"])[@@ocaml.warning "-39"]
       end[@@ocaml.doc "@inline"][@@merlin.hide ]
   end

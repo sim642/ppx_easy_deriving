@@ -1,47 +1,53 @@
 open Ppxlib
+open Ast_builder.Default
 open Ppx_easy_deriving
 
 module EasyEqualArg: Product.Variant.S =
 struct
   let name = "easy_equal"
   let typ ~loc t = [%type: [%t t] -> [%t t] -> bool]
-  (* let unit ~loc = [%expr fun () () -> true] *)
 
-  let product_body ~loc es pea peb =
-    let esa = PatExp.to_exps ~loc pea in
-    let esb = PatExp.to_exps ~loc peb in
-    let body = List.map2 (fun e (ea, eb) ->
-        [%expr [%e e] [%e ea] [%e eb]]
-      ) es (List.combine esa esb)
+  let product_body ~loc es pel per =
+    let body =
+      let esl = PatExp.to_exps ~loc pel in
+      let esr = PatExp.to_exps ~loc per in
+      Util.map3 (fun e l r ->
+          [%expr [%e e] [%e l] [%e r]]
+        ) es esl esr
     in
     Util.reduce ~unit:[%expr true] ~both:(fun acc x ->
         [%expr [%e acc] && [%e x]]
       ) body
 
   let product ~loc ~pe_create es =
-    let pea = pe_create ~prefix:"a" in
-    let peb = pe_create ~prefix:"b" in
-    let pa = PatExp.to_pat ~loc pea in
-    let pb = PatExp.to_pat ~loc peb in
-    let body = product_body ~loc es pea peb in
-    [%expr fun [%p pa] [%p pb] -> [%e body]]
+    let pel = pe_create ~prefix:"l" in
+    let per = pe_create ~prefix:"r" in
+    let body = product_body ~loc es pel per in
+    let pl = PatExp.to_pat ~loc pel in
+    let pr = PatExp.to_pat ~loc per in
+    [%expr fun [%p pl] [%p pr] -> [%e body]]
 
   let variant ~loc ces =
-    let open Ast_builder.Default in
-    ces
-    |> List.map (fun (c, c2, _es, es2) ->
-        let pea = c ~prefix:"a" in
-        let peb = c ~prefix:"b" in
-        let pea2 = c2 ~prefix:"a" in
-        let peb2 = c2 ~prefix:"b" in
-        let pa = PatExp.to_pat ~loc pea in
-        let pb = PatExp.to_pat ~loc peb in
-        let body = product_body ~loc es2 pea2 peb2 in
+    let cases = List.map (fun (c, c2, _es, es2) ->
+        let pel = c ~prefix:"l" in
+        let per = c ~prefix:"r" in
+        let pel2 = c2 ~prefix:"l" in
+        let per2 = c2 ~prefix:"r" in
+        let body = product_body ~loc es2 pel2 per2 in
+        let pa = PatExp.to_pat ~loc pel in
+        let pb = PatExp.to_pat ~loc per in
         case ~lhs:[%pat? [%p pa], [%p pb]]
           ~guard:None
           ~rhs:body
-      )
-    |> (fun cases -> [%expr fun x y -> [%e pexp_match ~loc [%expr x, y] (cases @ [case ~lhs:[%pat? _, _] ~guard:None ~rhs:[%expr false]])]])
+      ) ces
+    in
+    let fallback =
+      case ~lhs:[%pat? _, _]
+        ~guard:None
+        ~rhs:[%expr false]
+    in
+    let body = pexp_match ~loc [%expr l, r] (cases @ [fallback]) in
+    [%expr fun l r -> [%e body]]
 end
 
 module EasyEqualDeriver = Deriver (Product.Variant.Make (EasyEqualArg))
@@ -53,17 +59,17 @@ struct
   let name = "easy_equal2"
   let typ ~loc t = [%type: [%t t] -> [%t t] -> bool]
   let unit ~loc = [%expr fun () () -> true]
-  let both ~loc e1 e2 = [%expr fun (a1, b1) (a2, b2) -> [%e e1] a1 a2 && [%e e2] b1 b2]
+  let both ~loc e1 e2 = [%expr fun (l1, l2) (r1, r2) -> [%e e1] l1 r1 && [%e e2] l2 r2]
   let empty ~loc = [%expr fun _ _ -> true]
   let either ~loc e1 e2 =
-    [%expr fun a1 a2 ->
-      match a1, a2 with
-      | Either.Left a1, Either.Left a2 -> [%e e1] a1 a2
-      | Either.Right b1, Either.Right b2 -> [%e e2] b1 b2
+    [%expr fun l r ->
+      match l, r with
+      | Either.Left l, Either.Left r -> [%e e1] l r
+      | Either.Right l, Either.Right r -> [%e e2] l r
       | _, _ -> false
     ]
-  let apply_iso ~loc leq ~f ~f':_ =
-    [%expr fun a b -> [%e leq] ([%e f] a) ([%e f] b)]
+  let apply_iso ~loc easy_equal2 ~f ~f':_ =
+    [%expr fun l r -> [%e easy_equal2] ([%e f] l) ([%e f] r)]
 end
 
 module EasyEqual2Deriver = Deriver (Simple.Variant.Reduce (EasyEqual2Arg))
