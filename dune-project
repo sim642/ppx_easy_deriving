@@ -4,6 +4,7 @@
 (source (github sim642/ppx_easy_deriving))
 (authors "Simmo Saan <simmo.saan@gmail.com>")
 (maintainers "Simmo Saan <simmo.saan@gmail.com>")
+(license MIT)
 
 (package
  (name ppx_easy_deriving)

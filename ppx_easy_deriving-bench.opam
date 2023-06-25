@@ -2,6 +2,7 @@
 opam-version: "2.0"
 maintainer: ["Simmo Saan <simmo.saan@gmail.com>"]
 authors: ["Simmo Saan <simmo.saan@gmail.com>"]
+license: "MIT"
 homepage: "https://github.com/sim642/ppx_easy_deriving"
 bug-reports: "https://github.com/sim642/ppx_easy_deriving/issues"
 depends: [
