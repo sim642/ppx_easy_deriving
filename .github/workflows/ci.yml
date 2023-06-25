@@ -37,7 +37,11 @@ jobs:
           ocaml-compiler: ${{ matrix.ocaml-compiler }}
 
       - name: Install dependencies
-        run: opam install . --deps-only --with-test
+        run: opam install ppx_easy_deriving --deps-only --with-test
+
+      - name: Install bench dependencies
+        if: ${{ matrix.ocaml-compiler >= '4.08.0' }}
+        run: opam install ppx_easy_deriving-bench --deps-only --with-test
 
       - name: Build
         run: opam exec -- dune build
