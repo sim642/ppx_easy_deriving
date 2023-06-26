@@ -26,5 +26,6 @@
  (depends
   (ppx_easy_deriving (= :version))
   (ppx_type_directed_value :with-test)
+  (refl :with-test)
   (benchmark :with-test)
   (ppx_compare :with-test)))

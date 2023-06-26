@@ -134,19 +134,20 @@ let _ = EasyEqualDeriver.register ()
 ```
 
 #### Performance
-These two easy derivers are benchmarked against [ppx_deriving.eq](https://github.com/ocaml-ppx/ppx_deriving#plugins-eq-and-ord), [ppx_compare](https://github.com/janestreet/ppx_compare) and [ppx_type_directed_value](https://github.com/janestreet/ppx_type_directed_value).
+These two easy derivers are benchmarked against [ppx_deriving.eq](https://github.com/ocaml-ppx/ppx_deriving#plugins-eq-and-ord), [ppx_compare](https://github.com/janestreet/ppx_compare), [ppx_type_directed_value](https://github.com/janestreet/ppx_type_directed_value) and [refl](https://github.com/thierry-martinez/refl).
 The benchmark involves an equality check on a 60-field record where only the last fields differ.
 
 The table shows the product version (ppx_easy_deriving) being on par with ppx_deriving and ppx_compare.
-The simple version (ppx_easy_deriving2) is notably slower but still faster than ppx_type_directed_value (ppx_type_directed_equal).
+The simple version (ppx_easy_deriving2) is notably slower but still faster than ppx_type_directed_value (ppx_type_directed_equal) and refl.
 
-|                         |       Rate | ppx_type_directed_equal | ppx_easy_deriving2 | ppx_compare | ppx_easy_deriving | ppx_deriving |
-| -----------------------:| ----------:| -----------------------:| ------------------:| -----------:| -----------------:| ------------:|
-| ppx_type_directed_equal |  2685607/s |                      -- |               -59% |        -88% |              -88% |         -89% |
-|      ppx_easy_deriving2 |  6541739/s |                    144% |                 -- |        -72% |              -72% |         -72% |
-|             ppx_compare | 23152303/s |                    762% |               254% |          -- |               -1% |          -2% |
-|       ppx_easy_deriving | 23284066/s |                    767% |               256% |          1% |                -- |          -1% |
-|            ppx_deriving | 23520705/s |                    776% |               260% |          2% |                1% |           -- |
+|                         |       Rate |  refl | ppx_type_directed_equal | ppx_easy_deriving2 | ppx_deriving | ppx_compare | ppx_easy_deriving |
+| -----------------------:| ----------:| -----:| -----------------------:| ------------------:| ------------:| -----------:| -----------------:|
+|                    refl |   605433/s |    -- |                    -73% |               -91% |         -97% |        -97% |              -97% |
+| ppx_type_directed_equal |  2245269/s |  271% |                      -- |               -65% |         -90% |        -90% |              -90% |
+|      ppx_easy_deriving2 |  6412029/s |  959% |                    186% |                 -- |         -71% |        -72% |              -72% |
+|            ppx_deriving | 22347280/s | 3591% |                    895% |               249% |           -- |         -1% |               -1% |
+|             ppx_compare | 22595512/s | 3632% |                    906% |               252% |           1% |          -- |               -0% |
+|       ppx_easy_deriving | 22639836/s | 3639% |                    908% |               253% |           1% |          0% |                -- |
 
 See the full benchmark in [`example/ppx_easy_equal_bench/`](./example/ppx_easy_equal_bench/).
 

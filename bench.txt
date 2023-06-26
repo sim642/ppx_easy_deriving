@@ -1,89 +1,101 @@
 *** Run benchmarks for path "pair.fst"
 
-Throughputs for "ppx_deriving", "ppx_easy_deriving", "ppx_easy_deriving2", "ppx_type_directed_equal", "ppx_compare" each running for at least 1 CPU second:
-           ppx_deriving:  1.19 WALL ( 1.19 usr +  0.00 sys =  1.19 CPU) @ 1247855027.55/s (n=1488362862)
-      ppx_easy_deriving:  1.01 WALL ( 1.01 usr +  0.00 sys =  1.01 CPU) @ 1248450997.65/s (n=1258021623)
-     ppx_easy_deriving2:  1.04 WALL ( 1.04 usr +  0.00 sys =  1.04 CPU) @ 1520809938.09/s (n=1576406187)
-ppx_type_directed_equal:  1.06 WALL ( 1.07 usr +  0.00 sys =  1.07 CPU) @ 111469682.05/s (n=118769943)
-            ppx_compare:  1.11 WALL ( 1.11 usr +  0.00 sys =  1.11 CPU) @ 1177867626.63/s (n=1310098580)
-                                Rate ppx_type_directed_equal ppx_compare ppx_deriving ppx_easy_deriving ppx_easy_deriving2
-ppx_type_directed_equal  111469682/s                      --        -91%         -91%              -91%               -93%
-            ppx_compare 1177867627/s                    957%          --          -6%               -6%               -23%
-           ppx_deriving 1247855028/s                   1019%          6%           --               -0%               -18%
-      ppx_easy_deriving 1248450998/s                   1020%          6%           0%                --               -18%
-     ppx_easy_deriving2 1520809938/s                   1264%         29%          22%               22%                 --
+Throughputs for "ppx_deriving", "ppx_easy_deriving", "ppx_easy_deriving2", "ppx_type_directed_equal", "refl", "ppx_compare" each running for at least 1 CPU second:
+           ppx_deriving:  1.07 WALL ( 1.07 usr +  0.00 sys =  1.07 CPU) @ 1184948564.23/s (n=1265193281)
+      ppx_easy_deriving:  1.03 WALL ( 1.03 usr +  0.00 sys =  1.03 CPU) @ 1193316224.71/s (n=1231495184)
+     ppx_easy_deriving2:  1.07 WALL ( 1.07 usr +  0.00 sys =  1.07 CPU) @ 1186474499.50/s (n=1265943375)
+ppx_type_directed_equal:  1.03 WALL ( 1.03 usr +  0.00 sys =  1.03 CPU) @ 96171822.62/s (n=98970615)
+                   refl:  1.04 WALL ( 1.04 usr +  0.00 sys =  1.04 CPU) @ 22593588.84/s (n=23500134)
+            ppx_compare:  1.07 WALL ( 1.06 usr +  0.00 sys =  1.06 CPU) @ 1169422287.15/s (n=1243513375)
+                                Rate  refl ppx_type_directed_equal ppx_compare ppx_deriving ppx_easy_deriving2 ppx_easy_deriving
+                   refl   22593589/s    --                    -77%        -98%         -98%               -98%              -98%
+ppx_type_directed_equal   96171823/s  326%                      --        -92%         -92%               -92%              -92%
+            ppx_compare 1169422287/s 5076%                   1116%          --          -1%                -1%               -2%
+           ppx_deriving 1184948564/s 5145%                   1132%          1%           --                -0%               -1%
+     ppx_easy_deriving2 1186474499/s 5151%                   1134%          1%           0%                 --               -1%
+      ppx_easy_deriving 1193316225/s 5182%                   1141%          2%           1%                 1%                --
 **********************************************************************
 *** Run benchmarks for path "pair.snd"
 
-Throughputs for "ppx_deriving", "ppx_easy_deriving", "ppx_easy_deriving2", "ppx_type_directed_equal", "ppx_compare" each running for at least 1 CPU second:
-           ppx_deriving:  1.06 WALL ( 1.06 usr +  0.00 sys =  1.06 CPU) @ 496704205.07/s (n=524666665)
-      ppx_easy_deriving:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 495452769.25/s (n=519131448)
-     ppx_easy_deriving2:  1.04 WALL ( 1.04 usr +  0.00 sys =  1.04 CPU) @ 453747500.85/s (n=472648353)
-ppx_type_directed_equal:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 87965765.60/s (n=92466534)
-            ppx_compare:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 498777085.48/s (n=524576829)
-                               Rate ppx_type_directed_equal ppx_easy_deriving2 ppx_easy_deriving ppx_deriving ppx_compare
-ppx_type_directed_equal  87965766/s                      --               -81%              -82%         -82%        -82%
-     ppx_easy_deriving2 453747501/s                    416%                 --               -8%          -9%         -9%
-      ppx_easy_deriving 495452769/s                    463%                 9%                --          -0%         -1%
-           ppx_deriving 496704205/s                    465%                 9%                0%           --         -0%
-            ppx_compare 498777085/s                    467%                10%                1%           0%          --
+Throughputs for "ppx_deriving", "ppx_easy_deriving", "ppx_easy_deriving2", "ppx_type_directed_equal", "refl", "ppx_compare" each running for at least 1 CPU second:
+           ppx_deriving:  1.06 WALL ( 1.06 usr +  0.00 sys =  1.06 CPU) @ 541924296.23/s (n=574403987)
+      ppx_easy_deriving:  1.02 WALL ( 1.02 usr +  0.00 sys =  1.02 CPU) @ 491995461.48/s (n=500069599)
+     ppx_easy_deriving2:  1.04 WALL ( 1.04 usr +  0.00 sys =  1.04 CPU) @ 478535072.65/s (n=497928185)
+ppx_type_directed_equal:  1.07 WALL ( 1.06 usr +  0.00 sys =  1.06 CPU) @ 64594818.31/s (n=68712415)
+                   refl:  1.08 WALL ( 1.08 usr +  0.00 sys =  1.08 CPU) @ 14296677.98/s (n=15472351)
+            ppx_compare:  1.07 WALL ( 1.06 usr +  0.00 sys =  1.06 CPU) @ 469332369.71/s (n=499548457)
+                               Rate  refl ppx_type_directed_equal ppx_compare ppx_easy_deriving2 ppx_easy_deriving ppx_deriving
+                   refl  14296678/s    --                    -78%        -97%               -97%              -97%         -97%
+ppx_type_directed_equal  64594818/s  352%                      --        -86%               -87%              -87%         -88%
+            ppx_compare 469332370/s 3183%                    627%          --                -2%               -5%         -13%
+     ppx_easy_deriving2 478535073/s 3247%                    641%          2%                 --               -3%         -12%
+      ppx_easy_deriving 491995461/s 3341%                    662%          5%                 3%                --          -9%
+           ppx_deriving 541924296/s 3691%                    739%         15%                13%               10%           --
 **********************************************************************
 *** Run benchmarks for path "record.16"
 
-Throughputs for "ppx_deriving", "ppx_easy_deriving", "ppx_easy_deriving2", "ppx_type_directed_equal", "ppx_compare" each running for at least 1 CPU second:
-           ppx_deriving:  1.06 WALL ( 1.06 usr +  0.00 sys =  1.06 CPU) @ 87172849.28/s (n=92134292)
-      ppx_easy_deriving:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 87909224.57/s (n=92015904)
-     ppx_easy_deriving2:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 30605780.04/s (n=32100903)
-ppx_type_directed_equal:  1.06 WALL ( 1.06 usr +  0.00 sys =  1.06 CPU) @ 8819681.77/s (n=9373205)
-            ppx_compare:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 85995076.59/s (n=90721280)
-                              Rate ppx_type_directed_equal ppx_easy_deriving2 ppx_compare ppx_deriving ppx_easy_deriving
-ppx_type_directed_equal  8819682/s                      --               -71%        -90%         -90%              -90%
-     ppx_easy_deriving2 30605780/s                    247%                 --        -64%         -65%              -65%
-            ppx_compare 85995077/s                    875%               181%          --          -1%               -2%
-           ppx_deriving 87172849/s                    888%               185%          1%           --               -1%
-      ppx_easy_deriving 87909225/s                    897%               187%          2%           1%                --
+Throughputs for "ppx_deriving", "ppx_easy_deriving", "ppx_easy_deriving2", "ppx_type_directed_equal", "refl", "ppx_compare" each running for at least 1 CPU second:
+           ppx_deriving:  1.08 WALL ( 1.08 usr +  0.00 sys =  1.08 CPU) @ 86982023.32/s (n=93544730)
+      ppx_easy_deriving:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 85759928.57/s (n=89955047)
+     ppx_easy_deriving2:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 29784123.31/s (n=31255459)
+ppx_type_directed_equal:  1.06 WALL ( 1.06 usr +  0.00 sys =  1.06 CPU) @ 7660466.81/s (n=8101342)
+                   refl:  1.10 WALL ( 1.10 usr +  0.00 sys =  1.10 CPU) @ 2309697.96/s (n=2536702)
+            ppx_compare:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 83761934.70/s (n=88066293)
+                              Rate  refl ppx_type_directed_equal ppx_easy_deriving2 ppx_compare ppx_easy_deriving ppx_deriving
+                   refl  2309698/s    --                    -70%               -92%        -97%              -97%         -97%
+ppx_type_directed_equal  7660467/s  232%                      --               -74%        -91%              -91%         -91%
+     ppx_easy_deriving2 29784123/s 1190%                    289%                 --        -64%              -65%         -66%
+            ppx_compare 83761935/s 3527%                    993%               181%          --               -2%          -4%
+      ppx_easy_deriving 85759929/s 3613%                   1020%               188%          2%                --          -1%
+           ppx_deriving 86982023/s 3666%                   1035%               192%          4%                1%           --
 **********************************************************************
 *** Run benchmarks for path "record.30"
 
-Throughputs for "ppx_deriving", "ppx_easy_deriving", "ppx_easy_deriving2", "ppx_type_directed_equal", "ppx_compare" each running for at least 1 CPU second:
-           ppx_deriving:  1.06 WALL ( 1.06 usr +  0.00 sys =  1.06 CPU) @ 46534384.49/s (n=49101035)
-      ppx_easy_deriving:  1.07 WALL ( 1.07 usr +  0.00 sys =  1.07 CPU) @ 46170119.99/s (n=49459187)
-     ppx_easy_deriving2:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 14791932.01/s (n=15520553)
-ppx_type_directed_equal:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 5089704.76/s (n=5332672)
-            ppx_compare:  1.04 WALL ( 1.04 usr +  0.00 sys =  1.04 CPU) @ 45388330.90/s (n=47341300)
-                              Rate ppx_type_directed_equal ppx_easy_deriving2 ppx_compare ppx_easy_deriving ppx_deriving
-ppx_type_directed_equal  5089705/s                      --               -66%        -89%              -89%         -89%
-     ppx_easy_deriving2 14791932/s                    191%                 --        -67%              -68%         -68%
-            ppx_compare 45388331/s                    792%               207%          --               -2%          -2%
-      ppx_easy_deriving 46170120/s                    807%               212%          2%                --          -1%
-           ppx_deriving 46534384/s                    814%               215%          3%                1%           --
+Throughputs for "ppx_deriving", "ppx_easy_deriving", "ppx_easy_deriving2", "ppx_type_directed_equal", "refl", "ppx_compare" each running for at least 1 CPU second:
+           ppx_deriving:  1.06 WALL ( 1.06 usr +  0.00 sys =  1.06 CPU) @ 44895869.12/s (n=47645786)
+      ppx_easy_deriving:  1.06 WALL ( 1.06 usr +  0.00 sys =  1.06 CPU) @ 45368712.89/s (n=47987395)
+     ppx_easy_deriving2:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 14191397.08/s (n=14940121)
+ppx_type_directed_equal:  1.19 WALL ( 1.18 usr +  0.00 sys =  1.18 CPU) @ 3923748.73/s (n=4649552)
+                   refl:  1.07 WALL ( 1.07 usr +  0.00 sys =  1.07 CPU) @ 1225788.45/s (n=1309310)
+            ppx_compare:  1.04 WALL ( 1.04 usr +  0.00 sys =  1.04 CPU) @ 45583266.55/s (n=47212139)
+                              Rate  refl ppx_type_directed_equal ppx_easy_deriving2 ppx_deriving ppx_easy_deriving ppx_compare
+                   refl  1225788/s    --                    -69%               -91%         -97%              -97%        -97%
+ppx_type_directed_equal  3923749/s  220%                      --               -72%         -91%              -91%        -91%
+     ppx_easy_deriving2 14191397/s 1058%                    262%                 --         -68%              -69%        -69%
+           ppx_deriving 44895869/s 3563%                   1044%               216%           --               -1%         -2%
+      ppx_easy_deriving 45368713/s 3601%                   1056%               220%           1%                --         -0%
+            ppx_compare 45583267/s 3619%                   1062%               221%           2%                0%          --
 **********************************************************************
 *** Run benchmarks for path "record.6"
 
-Throughputs for "ppx_deriving", "ppx_easy_deriving", "ppx_easy_deriving2", "ppx_type_directed_equal", "ppx_compare" each running for at least 1 CPU second:
-           ppx_deriving:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 217007310.12/s (n=227868743)
-      ppx_easy_deriving:  1.08 WALL ( 1.08 usr +  0.00 sys =  1.08 CPU) @ 216913515.89/s (n=233554687)
-     ppx_easy_deriving2:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 115696722.51/s (n=121737017)
-ppx_type_directed_equal:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 30625933.14/s (n=32188652)
-            ppx_compare:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 216436555.03/s (n=227667015)
-                               Rate ppx_type_directed_equal ppx_easy_deriving2 ppx_compare ppx_easy_deriving ppx_deriving
-ppx_type_directed_equal  30625933/s                      --               -74%        -86%              -86%         -86%
-     ppx_easy_deriving2 115696723/s                    278%                 --        -47%              -47%         -47%
-            ppx_compare 216436555/s                    607%                87%          --               -0%          -0%
-      ppx_easy_deriving 216913516/s                    608%                87%          0%                --          -0%
-           ppx_deriving 217007310/s                    609%                88%          0%                0%           --
+Throughputs for "ppx_deriving", "ppx_easy_deriving", "ppx_easy_deriving2", "ppx_type_directed_equal", "refl", "ppx_compare" each running for at least 1 CPU second:
+           ppx_deriving:  1.08 WALL ( 1.08 usr +  0.00 sys =  1.08 CPU) @ 205217797.67/s (n=220797112)
+      ppx_easy_deriving:  1.07 WALL ( 1.07 usr +  0.00 sys =  1.07 CPU) @ 208099671.59/s (n=222160134)
+     ppx_easy_deriving2:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 109443052.78/s (n=115210045)
+ppx_type_directed_equal:  1.06 WALL ( 1.06 usr +  0.00 sys =  1.06 CPU) @ 24952842.67/s (n=26388754)
+                   refl:  1.09 WALL ( 1.08 usr +  0.00 sys =  1.08 CPU) @ 5546669.76/s (n=6017044)
+            ppx_compare:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 210449201.28/s (n=220415865)
+                               Rate  refl ppx_type_directed_equal ppx_easy_deriving2 ppx_deriving ppx_easy_deriving ppx_compare
+                   refl   5546670/s    --                    -78%               -95%         -97%              -97%        -97%
+ppx_type_directed_equal  24952843/s  350%                      --               -77%         -88%              -88%        -88%
+     ppx_easy_deriving2 109443053/s 1873%                    339%                 --         -47%              -47%        -48%
+           ppx_deriving 205217798/s 3600%                    722%                88%           --               -1%         -2%
+      ppx_easy_deriving 208099672/s 3652%                    734%                90%           1%                --         -1%
+            ppx_compare 210449201/s 3694%                    743%                92%           3%                1%          --
 **********************************************************************
 *** Run benchmarks for path "record.60"
 
-Throughputs for "ppx_deriving", "ppx_easy_deriving", "ppx_easy_deriving2", "ppx_type_directed_equal", "ppx_compare" each running for at least 1 CPU second:
-           ppx_deriving:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 23520704.92/s (n=24627260)
-      ppx_easy_deriving:  1.00 WALL ( 1.00 usr +  0.00 sys =  1.00 CPU) @ 23284065.67/s (n=23396388)
-     ppx_easy_deriving2:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 6541739.12/s (n=6880333)
-ppx_type_directed_equal:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 2685606.64/s (n=2809115)
-            ppx_compare:  1.06 WALL ( 1.06 usr +  0.00 sys =  1.06 CPU) @ 23152302.71/s (n=24490992)
-                              Rate ppx_type_directed_equal ppx_easy_deriving2 ppx_compare ppx_easy_deriving ppx_deriving
-ppx_type_directed_equal  2685607/s                      --               -59%        -88%              -88%         -89%
-     ppx_easy_deriving2  6541739/s                    144%                 --        -72%              -72%         -72%
-            ppx_compare 23152303/s                    762%               254%          --               -1%          -2%
-      ppx_easy_deriving 23284066/s                    767%               256%          1%                --          -1%
-           ppx_deriving 23520705/s                    776%               260%          2%                1%           --
+Throughputs for "ppx_deriving", "ppx_easy_deriving", "ppx_easy_deriving2", "ppx_type_directed_equal", "refl", "ppx_compare" each running for at least 1 CPU second:
+           ppx_deriving:  1.06 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 22347280.06/s (n=23511551)
+      ppx_easy_deriving:  1.02 WALL ( 1.02 usr +  0.00 sys =  1.02 CPU) @ 22639835.80/s (n=23131324)
+     ppx_easy_deriving2:  1.07 WALL ( 1.06 usr +  0.00 sys =  1.06 CPU) @ 6412028.67/s (n=6804432)
+ppx_type_directed_equal:  1.07 WALL ( 1.06 usr +  0.00 sys =  1.06 CPU) @ 2245268.76/s (n=2388234)
+                   refl:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 605433.49/s (n=635977)
+            ppx_compare:  1.05 WALL ( 1.05 usr +  0.00 sys =  1.05 CPU) @ 22595511.78/s (n=23643582)
+                              Rate  refl ppx_type_directed_equal ppx_easy_deriving2 ppx_deriving ppx_compare ppx_easy_deriving
+                   refl   605433/s    --                    -73%               -91%         -97%        -97%              -97%
+ppx_type_directed_equal  2245269/s  271%                      --               -65%         -90%        -90%              -90%
+     ppx_easy_deriving2  6412029/s  959%                    186%                 --         -71%        -72%              -72%
+           ppx_deriving 22347280/s 3591%                    895%               249%           --         -1%               -1%
+            ppx_compare 22595512/s 3632%                    906%               252%           1%          --               -0%
+      ppx_easy_deriving 22639836/s 3639%                    908%               253%           1%          0%                --

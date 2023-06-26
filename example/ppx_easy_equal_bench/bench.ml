@@ -23,7 +23,8 @@ end
 
 module IntString =
 struct
-  type t = Int.t * String.t [@@deriving eq, easy_equal, easy_equal2, ppx_type_directed_equal]
+  type t = Int.t * String.t [@@deriving eq, easy_equal, easy_equal2, ppx_type_directed_equal, refl]
+  let refl_equal: t -> t -> bool = Refl.equal [%refl: t] []
 end
 
 module IntStringPpxCompare =
@@ -41,6 +42,7 @@ let () =
               ("ppx_easy_deriving", uncurry IntString.easy_equal, args);
               ("ppx_easy_deriving2", uncurry IntString.easy_equal2, args);
               ("ppx_type_directed_equal", uncurry IntString.ppx_type_directed_equal, args);
+              ("refl", uncurry IntString.refl_equal, args);
               ("ppx_compare", uncurry IntStringPpxCompare.equal, args);
             ]
           );
@@ -51,6 +53,7 @@ let () =
               ("ppx_easy_deriving", uncurry IntString.easy_equal, args);
               ("ppx_easy_deriving2", uncurry IntString.easy_equal2, args);
               ("ppx_type_directed_equal", uncurry IntString.ppx_type_directed_equal, args);
+              ("refl", uncurry IntString.refl_equal, args);
               ("ppx_compare", uncurry IntStringPpxCompare.equal, args);
             ]
           );
@@ -69,7 +72,8 @@ module M = struct
     ; g2 : Int.t
     ; g3 : Int.t
     }
-  [@@deriving eq, easy_equal, easy_equal2, ppx_type_directed_equal]
+  [@@deriving eq, easy_equal, easy_equal2, ppx_type_directed_equal, refl]
+  let refl_equal_rec_6: rec_6 -> rec_6 -> bool = Refl.equal [%refl: rec_6] []
 
   type rec_16 =
     { f1 : String.t
@@ -89,7 +93,8 @@ module M = struct
     ; g7 : Int.t
     ; g8 : Int.t
     }
-  [@@deriving eq, easy_equal, easy_equal2, ppx_type_directed_equal]
+  [@@deriving eq, easy_equal, easy_equal2, ppx_type_directed_equal, refl]
+  let refl_equal_rec_16: rec_16 -> rec_16 -> bool = Refl.equal [%refl: rec_16] []
 
   type rec_30 =
     { f1  : String.t
@@ -123,7 +128,8 @@ module M = struct
     ; g14 : Int.t
     ; g15 : Int.t
     }
-  [@@deriving eq, easy_equal, easy_equal2, ppx_type_directed_equal]
+  [@@deriving eq, easy_equal, easy_equal2, ppx_type_directed_equal, refl]
+  let refl_equal_rec_30: rec_30 -> rec_30 -> bool = Refl.equal [%refl: rec_30] []
 
   type rec_60 =
     { f1  : String.t
@@ -187,7 +193,8 @@ module M = struct
     ; g29 : Int.t
     ; g30 : Int.t
     }
-  [@@deriving eq, easy_equal, easy_equal2, ppx_type_directed_equal]
+  [@@deriving eq, easy_equal, easy_equal2, ppx_type_directed_equal, refl]
+  let refl_equal_rec_60: rec_60 -> rec_60 -> bool = Refl.equal [%refl: rec_60] []
 end
 
 module MPpxCompare = struct
@@ -449,6 +456,7 @@ let () =
               ("ppx_easy_deriving", uncurry M.easy_equal_rec_6, args);
               ("ppx_easy_deriving2", uncurry M.easy_equal2_rec_6, args);
               ("ppx_type_directed_equal", uncurry M.ppx_type_directed_equal_rec_6, args);
+              ("refl", uncurry M.refl_equal_rec_6, args);
               ("ppx_compare", uncurry MPpxCompare.equal_rec_6, args);
             ]
           );
@@ -459,6 +467,7 @@ let () =
               ("ppx_easy_deriving", uncurry M.easy_equal_rec_16, args);
               ("ppx_easy_deriving2", uncurry M.easy_equal2_rec_16, args);
               ("ppx_type_directed_equal", uncurry M.ppx_type_directed_equal_rec_16, args);
+              ("refl", uncurry M.refl_equal_rec_16, args);
               ("ppx_compare", uncurry MPpxCompare.equal_rec_16, args);
             ]
           );
@@ -469,6 +478,7 @@ let () =
               ("ppx_easy_deriving", uncurry M.easy_equal_rec_30, args);
               ("ppx_easy_deriving2", uncurry M.easy_equal2_rec_30, args);
               ("ppx_type_directed_equal", uncurry M.ppx_type_directed_equal_rec_30, args);
+              ("refl", uncurry M.refl_equal_rec_30, args);
               ("ppx_compare", uncurry MPpxCompare.equal_rec_30, args);
             ]
           );
@@ -479,6 +489,7 @@ let () =
               ("ppx_easy_deriving", uncurry M.easy_equal_rec_60, args);
               ("ppx_easy_deriving2", uncurry M.easy_equal2_rec_60, args);
               ("ppx_type_directed_equal", uncurry M.ppx_type_directed_equal_rec_60, args);
+              ("refl", uncurry M.refl_equal_rec_60, args);
               ("ppx_compare", uncurry MPpxCompare.equal_rec_60, args);
             ]
           );
