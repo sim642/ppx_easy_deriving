@@ -1,4 +1,5 @@
 (lang dune 2.8)
+(using mdx 0.1)
 
 (name ppx_easy_deriving)
 
@@ -16,7 +17,8 @@
   (ocaml (>= 4.08))
   (ppxlib (>= 0.30.0))
   ppx_deriving
-  either))
+  either
+  (mdx :with-test)))
 
 (package
  (name ppx_easy_deriving-bench)

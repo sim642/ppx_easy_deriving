@@ -13,6 +13,7 @@ depends: [
   "ppxlib" {>= "0.30.0"}
   "ppx_deriving"
   "either"
+  "mdx" {with-test}
   "odoc" {with-doc}
 ]
 build: [
