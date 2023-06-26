@@ -38,20 +38,20 @@ struct
     let ces = List.map (fun {prf_desc; _} ->
         match prf_desc with
         | Rtag ({txt = label; loc}, true, []) ->
-          ((fun ~prefix:_ -> PatExp.PolyConstructor (label, None)),
-           (fun ~prefix:_ -> PatExp.Unit),
+          ((fun ~prefix:_ -> Pat_exp.PolyConstructor (label, None)),
+           (fun ~prefix:_ -> Pat_exp.Unit),
            unit ~loc,
            [])
         | Rtag ({txt = label; loc}, false, [ct]) ->
           let expr = expr ~loc ~quoter ct in
-          ((fun ~prefix -> PatExp.PolyConstructor (label, Some (PatExp.Base prefix))),
-           (fun ~prefix -> PatExp.Base prefix),
+          ((fun ~prefix -> Pat_exp.PolyConstructor (label, Some (Pat_exp.Base prefix))),
+           (fun ~prefix -> Pat_exp.Base prefix),
            expr,
            [expr])
         | Rinherit ({ptyp_desc = Ptyp_constr ({txt = lid; loc}, _); _} as ct) ->
           let expr = expr ~loc ~quoter ct in
-          ((fun ~prefix -> PatExp.Inherit (lid, prefix)),
-           (fun ~prefix -> PatExp.Inherit (lid, prefix)),
+          ((fun ~prefix -> Pat_exp.Inherit (lid, prefix)),
+           (fun ~prefix -> Pat_exp.Inherit (lid, prefix)),
            expr,
            [expr])
         | _ ->
@@ -64,14 +64,14 @@ struct
     let ces = List.map (fun {pcd_name = {txt = label; loc}; pcd_args; pcd_res; _} ->
         match pcd_res, pcd_args with
         | None, Pcstr_tuple [] ->
-          ((fun ~prefix:_ -> PatExp.Constructor (Lident label, None)),
-           (fun ~prefix:_ -> PatExp.Unit),
+          ((fun ~prefix:_ -> Pat_exp.Constructor (Lident label, None)),
+           (fun ~prefix:_ -> Pat_exp.Unit),
            unit ~loc,
            [])
         | None, Pcstr_tuple cts ->
           let n = List.length cts in
-          ((fun ~prefix -> PatExp.Constructor (Lident label, Some (PatExp.create_tuple ~prefix n))),
-           PatExp.create_tuple n,
+          ((fun ~prefix -> Pat_exp.Constructor (Lident label, Some (Pat_exp.create_tuple ~prefix n))),
+           Pat_exp.create_tuple n,
            expr_tuple ~loc ~quoter cts,
            List.map (expr ~loc ~quoter) cts)
         | None, Pcstr_record lds ->
@@ -83,8 +83,8 @@ struct
               pld_type
             ) lds
           in
-          ((fun ~prefix -> PatExp.Constructor (Lident label, Some (PatExp.create_record ~prefix ls))),
-           PatExp.create_tuple (List.length ls), (* TODO: can do with record? *)
+          ((fun ~prefix -> Pat_exp.Constructor (Lident label, Some (Pat_exp.create_record ~prefix ls))),
+           Pat_exp.create_tuple (List.length ls), (* TODO: can do with record? *)
            expr_tuple ~loc ~quoter elems, (* TODO: can do with record? *)
            List.map (expr ~loc ~quoter) elems)
         | _ ->

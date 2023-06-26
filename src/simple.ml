@@ -20,14 +20,14 @@ struct
       | _ :: _ :: _ :: _ ->
         let n = List.length es in
         let f =
-          let pe = PatExp.create_tuple ~prefix:"f" n in
-          let pe' = PatExp.create_nested_tuple ~prefix:"f" n in
-          [%expr fun [%p PatExp.to_pat ~loc pe] -> [%e PatExp.to_exp ~loc pe']]
+          let pe = Pat_exp.create_tuple ~prefix:"f" n in
+          let pe' = Pat_exp.create_nested_tuple ~prefix:"f" n in
+          [%expr fun [%p Pat_exp.to_pat ~loc pe] -> [%e Pat_exp.to_exp ~loc pe']]
         in
         let f' =
-          let pe = PatExp.create_tuple ~prefix:"f'" n in
-          let pe' = PatExp.create_nested_tuple ~prefix:"f'" n in
-          [%expr fun [%p PatExp.to_pat ~loc pe'] -> [%e PatExp.to_exp ~loc pe]]
+          let pe = Pat_exp.create_tuple ~prefix:"f'" n in
+          let pe' = Pat_exp.create_nested_tuple ~prefix:"f'" n in
+          [%expr fun [%p Pat_exp.to_pat ~loc pe'] -> [%e Pat_exp.to_exp ~loc pe]]
         in
         P.apply_iso ~loc body ~f ~f'
 
@@ -37,14 +37,14 @@ struct
       let ls = List.map fst les in
       let n = List.length ls in
       let f =
-        let pe = PatExp.create_record ~prefix:"f" ls in
-        let pe' = PatExp.create_nested_tuple ~prefix:"f" n in
-        [%expr fun [%p PatExp.to_pat ~loc pe] -> [%e PatExp.to_exp ~loc pe']]
+        let pe = Pat_exp.create_record ~prefix:"f" ls in
+        let pe' = Pat_exp.create_nested_tuple ~prefix:"f" n in
+        [%expr fun [%p Pat_exp.to_pat ~loc pe] -> [%e Pat_exp.to_exp ~loc pe']]
       in
       let f' =
-        let pe = PatExp.create_record ~prefix:"f'" ls in
-        let pe' = PatExp.create_nested_tuple ~prefix:"f'" n in
-        [%expr fun [%p PatExp.to_pat ~loc pe'] -> [%e PatExp.to_exp ~loc pe]]
+        let pe = Pat_exp.create_record ~prefix:"f'" ls in
+        let pe' = Pat_exp.create_nested_tuple ~prefix:"f'" n in
+        [%expr fun [%p Pat_exp.to_pat ~loc pe'] -> [%e Pat_exp.to_exp ~loc pe]]
       in
       P.apply_iso ~loc body ~f ~f'
 
@@ -70,11 +70,11 @@ struct
           List.fold_left (fun (i, acc) (c, c2, _, _) ->
               let pe = c ~prefix:"f" in
               let pe2 = c2 ~prefix:"f" in
-              let pe2' = PatExp.create_nested_variant ~len:n ~i pe2 in
+              let pe2' = Pat_exp.create_nested_variant ~len:n ~i pe2 in
               let acc' =
-                case ~lhs:(PatExp.to_pat ~loc pe)
+                case ~lhs:(Pat_exp.to_pat ~loc pe)
                   ~guard:None
-                  ~rhs:(PatExp.to_exp ~loc pe2')
+                  ~rhs:(Pat_exp.to_exp ~loc pe2')
                   :: acc
               in
               (i + 1, acc')
@@ -87,11 +87,11 @@ struct
           List.fold_left (fun (i, acc) (c, c2, _, _) ->
               let pe = c ~prefix:"f'" in
               let pe2 = c2 ~prefix:"f'" in
-              let pe2' = PatExp.create_nested_variant ~len:n ~i pe2 in
+              let pe2' = Pat_exp.create_nested_variant ~len:n ~i pe2 in
               let acc' =
-                case ~lhs:(PatExp.to_pat ~loc pe2')
+                case ~lhs:(Pat_exp.to_pat ~loc pe2')
                   ~guard:None
-                  ~rhs:(PatExp.to_exp ~loc pe)
+                  ~rhs:(Pat_exp.to_exp ~loc pe)
                   :: acc
               in
               (i + 1, acc')

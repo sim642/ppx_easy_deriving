@@ -3,7 +3,7 @@ open Ppxlib
 module type S =
 sig
   include Intf.Base
-  val product: loc:location -> pe_create:(prefix:string -> PatExp.t) -> expression list -> expression
+  val product: loc:location -> pe_create:(prefix:string -> Pat_exp.t) -> expression list -> expression
   (** Compose derived values/functions for product elements into derived value/function for the product.
 
       @param pe_create factory for patterns/expressions of the actual type. *)
@@ -60,7 +60,7 @@ struct
   module type S =
   sig
     include S
-    val variant: loc:location -> ((prefix:string -> PatExp.t) * (prefix:string -> PatExp.t) * expression * expression list) list -> expression
+    val variant: loc:location -> ((prefix:string -> Pat_exp.t) * (prefix:string -> Pat_exp.t) * expression * expression list) list -> expression
   end
 end
 

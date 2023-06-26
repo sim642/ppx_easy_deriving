@@ -9,8 +9,8 @@ struct
 
   let product_body ~loc es pel per =
     let body =
-      let esl = PatExp.to_exps ~loc pel in
-      let esr = PatExp.to_exps ~loc per in
+      let esl = Pat_exp.to_exps ~loc pel in
+      let esr = Pat_exp.to_exps ~loc per in
       Util.map3 (fun e l r ->
           [%expr [%e e] [%e l] [%e r]]
         ) es esl esr
@@ -23,8 +23,8 @@ struct
     let pel = pe_create ~prefix:"l" in
     let per = pe_create ~prefix:"r" in
     let body = product_body ~loc es pel per in
-    let pl = PatExp.to_pat ~loc pel in
-    let pr = PatExp.to_pat ~loc per in
+    let pl = Pat_exp.to_pat ~loc pel in
+    let pr = Pat_exp.to_pat ~loc per in
     [%expr fun [%p pl] [%p pr] -> [%e body]]
 
   let variant ~loc ces =
@@ -34,8 +34,8 @@ struct
         let pel2 = c2 ~prefix:"l" in
         let per2 = c2 ~prefix:"r" in
         let body = product_body ~loc es2 pel2 per2 in
-        let pa = PatExp.to_pat ~loc pel in
-        let pb = PatExp.to_pat ~loc per in
+        let pa = Pat_exp.to_pat ~loc pel in
+        let pb = Pat_exp.to_pat ~loc per in
         case ~lhs:[%pat? [%p pa], [%p pb]]
           ~guard:None
           ~rhs:body

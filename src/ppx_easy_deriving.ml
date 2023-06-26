@@ -18,5 +18,5 @@ module Product = Product
 
 (** {1 Utilities} *)
 
-module PatExp = PatExp
+module Pat_exp = Pat_exp
 module Util = Util

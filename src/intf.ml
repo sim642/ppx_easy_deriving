@@ -57,7 +57,7 @@ struct
   sig
     include Tuple.S
     include Record.S
-    val variant: loc:location -> ((prefix:string -> PatExp.t) * (prefix:string -> PatExp.t) * expression * expression list) list -> expression
+    val variant: loc:location -> ((prefix:string -> Pat_exp.t) * (prefix:string -> Pat_exp.t) * expression * expression list) list -> expression
     (** Compose derived values/functions for (polymorphic) variant constructors into derived value/function for (polymorphic) variant. *)
   end
 end

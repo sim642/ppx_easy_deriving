@@ -11,12 +11,12 @@ struct
 
   let tuple ~loc es =
     let n = List.length es in
-    let pe_create = PatExp.create_tuple n in
+    let pe_create = Pat_exp.create_tuple n in
     P.product ~loc ~pe_create es
 
   let record ~loc les =
     let ls = List.map fst les in
-    let pe_create = PatExp.create_record ls in
+    let pe_create = Pat_exp.create_record ls in
     let es = List.map snd les in
     P.product ~loc ~pe_create es
 
@@ -58,11 +58,11 @@ struct
         let body =
           let es = List.map2 (fun e x ->
               [%expr [%e e] [%e x]]
-            ) es (PatExp.to_exps ~loc pe)
+            ) es (Pat_exp.to_exps ~loc pe)
           in
           Util.reduce ~unit:(R1.unit ~loc) ~both:(R1.both ~loc) es
         in
-        [%expr fun [%p PatExp.to_pat ~loc pe] -> [%e body]]
+        [%expr fun [%p Pat_exp.to_pat ~loc pe] -> [%e body]]
     end
 
     include Make (P)
@@ -84,16 +84,16 @@ struct
         let pel = pe_create ~prefix:"l" in
         let per = pe_create ~prefix:"r" in
         let body =
-          let esl = PatExp.to_exps ~loc pel in
-          let esr = PatExp.to_exps ~loc per in
+          let esl = Pat_exp.to_exps ~loc pel in
+          let esr = Pat_exp.to_exps ~loc per in
           let es = Util.map3 (fun e l r ->
               [%expr [%e e] [%e l] [%e r]]
             ) es esl esr
           in
           Util.reduce ~unit:(R2.unit ~loc) ~both:(R2.both ~loc) es
         in
-        let pl = PatExp.to_pat ~loc pel in
-        let pr = PatExp.to_pat ~loc per in
+        let pl = Pat_exp.to_pat ~loc pel in
+        let pr = Pat_exp.to_pat ~loc per in
         [%expr fun [%p pl] [%p pr] -> [%e body]]
     end
 
@@ -146,11 +146,11 @@ struct
 
     let tuple ~loc es =
       let n = List.length es in
-      let pe = PatExp.create_tuple ~prefix:"x" n in
+      let pe = Pat_exp.create_tuple ~prefix:"x" n in
       let elems =
         List.map2 (fun e x ->
             [%expr [%e e] [%e x]]
-          ) es (PatExp.to_exps ~loc pe)
+          ) es (Pat_exp.to_exps ~loc pe)
       in
       let body =
         match elems with
@@ -158,23 +158,23 @@ struct
         | [elem] -> elem
         | _ :: _ -> pexp_tuple ~loc elems
       in
-      [%expr fun [%p PatExp.to_pat ~loc pe] -> [%e body]]
+      [%expr fun [%p Pat_exp.to_pat ~loc pe] -> [%e body]]
 
     let record ~loc les =
       let ls = List.map fst les in
-      let pe = PatExp.create_record ~prefix:"x" ls in
+      let pe = Pat_exp.create_record ~prefix:"x" ls in
       let es = List.map snd les in
       let elems =
         List.map2 (fun e x ->
             [%expr [%e e] [%e x]]
-          ) es (PatExp.to_exps ~loc pe)
+          ) es (Pat_exp.to_exps ~loc pe)
       in
       let fields = List.map2 (fun l elem ->
           (Located.mk ~loc l, elem)
         ) ls elems
       in
       let body = pexp_record ~loc fields None in
-      [%expr fun [%p PatExp.to_pat ~loc pe] -> [%e body]]
+      [%expr fun [%p Pat_exp.to_pat ~loc pe] -> [%e body]]
 
     let variant ~loc _ =
       pexp_extension ~loc (Location.error_extensionf ~loc "Product.Map1.Make: no variant")
@@ -192,11 +192,11 @@ struct
 
     let tuple ~loc es =
       let n = List.length es in
-      let pel = PatExp.create_tuple ~prefix:"l" n in
-      let per = PatExp.create_tuple ~prefix:"r" n in
+      let pel = Pat_exp.create_tuple ~prefix:"l" n in
+      let per = Pat_exp.create_tuple ~prefix:"r" n in
       let elems =
-        let esl = PatExp.to_exps ~loc pel in
-        let esr = PatExp.to_exps ~loc per in
+        let esl = Pat_exp.to_exps ~loc pel in
+        let esr = Pat_exp.to_exps ~loc per in
         Util.map3 (fun e l r ->
             [%expr [%e e] [%e l] [%e r]]
           ) es esl esr
@@ -207,18 +207,18 @@ struct
         | [elem] -> elem
         | _ :: _ -> pexp_tuple ~loc elems
       in
-      let pl = PatExp.to_pat ~loc pel in
-      let pr = PatExp.to_pat ~loc per in
+      let pl = Pat_exp.to_pat ~loc pel in
+      let pr = Pat_exp.to_pat ~loc per in
       [%expr fun [%p pl] [%p pr] -> [%e body]]
 
     let record ~loc les =
       let ls = List.map fst les in
-      let pel = PatExp.create_record ~prefix:"l" ls in
-      let per = PatExp.create_record ~prefix:"r" ls in
+      let pel = Pat_exp.create_record ~prefix:"l" ls in
+      let per = Pat_exp.create_record ~prefix:"r" ls in
       let es = List.map snd les in
       let elems =
-        let esl = PatExp.to_exps ~loc pel in
-        let esr = PatExp.to_exps ~loc per in
+        let esl = Pat_exp.to_exps ~loc pel in
+        let esr = Pat_exp.to_exps ~loc per in
         Util.map3 (fun e l r ->
             [%expr [%e e] [%e l] [%e r]]
           ) es esl esr
@@ -228,8 +228,8 @@ struct
         ) ls elems
       in
       let body = pexp_record ~loc fields None in
-      let pl = PatExp.to_pat ~loc pel in
-      let pr = PatExp.to_pat ~loc per in
+      let pl = Pat_exp.to_pat ~loc pel in
+      let pr = Pat_exp.to_pat ~loc per in
       [%expr fun [%p pl] [%p pr] -> [%e body]]
 
     let variant ~loc _ =
