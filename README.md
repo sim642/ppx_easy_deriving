@@ -15,8 +15,12 @@ opam install ppx_easy_deriving
 ## Examples
 
 ### Equal
+The following shows multiple ways of defining a PPX deriver for a standard `equal` function with various trade-offs.
 
 #### Simple
+The simplest way is to define `equal` (here called `easy_equal2`) for binary product and sum types, i.e. pairs and eithers.
+Using an isomorphism, all algebraic datatypes can be handled using the simple binary constructs and their base cases (unit and empty type).
+This is very similar to the simple derivers of [ppx_type_directed_value](https://github.com/janestreet/ppx_type_directed_value), but with lower runtime overhead.
 
 <!-- $MDX file=example/ppx_easy_equal/ppx_easy_equal.ml,part=easy_equal2 -->
 ```ocaml
@@ -58,6 +62,10 @@ let _ = EasyEqual2Deriver.register ()
 ```
 
 #### Product
+The isomorphisms of simple deriver definitions still incur some runtime overhead.
+A more efficient way to define `equal` (here called `easy_equal`) is to define it for entire products and sums in one go, instead of decomposing them to binary reductions.
+These definitions are more involved, especially `variant` since it also handles inline records in constructor arguments.
+However, the deriver defined this way is as efficient as a dedicated `equal` deriver, e.g. from [ppx_deriving.eq](https://github.com/ocaml-ppx/ppx_deriving#plugins-eq-and-ord) or [ppx_compare](https://github.com/janestreet/ppx_compare).
 
 <!-- $MDX file=example/ppx_easy_equal/ppx_easy_equal.ml,part=easy_equal -->
 ```ocaml
@@ -125,7 +133,47 @@ module EasyEqualDeriver = Deriver.Make (Product.Variant.Make (EasyEqualArg))
 let _ = EasyEqualDeriver.register ()
 ```
 
+#### Performance
+These two easy derivers are benchmarked against [ppx_deriving.eq](https://github.com/ocaml-ppx/ppx_deriving#plugins-eq-and-ord), [ppx_compare](https://github.com/janestreet/ppx_compare) and [ppx_type_directed_value](https://github.com/janestreet/ppx_type_directed_value).
+The benchmark involves an equality check on a 60-field record where only the last fields differ.
+
+The table shows the product version (ppx_easy_deriving) being on par with ppx_deriving and ppx_compare.
+The simple version (ppx_easy_deriving2) is notably slower but still faster than ppx_type_directed_value (ppx_type_directed_equal).
+
+|                         |       Rate | ppx_type_directed_equal | ppx_easy_deriving2 | ppx_compare | ppx_easy_deriving | ppx_deriving |
+| -----------------------:| ----------:| -----------------------:| ------------------:| -----------:| -----------------:| ------------:|
+| ppx_type_directed_equal |  2685607/s |                      -- |               -59% |        -88% |              -88% |         -89% |
+|      ppx_easy_deriving2 |  6541739/s |                    144% |                 -- |        -72% |              -72% |         -72% |
+|             ppx_compare | 23152303/s |                    762% |               254% |          -- |               -1% |          -2% |
+|       ppx_easy_deriving | 23284066/s |                    767% |               256% |          1% |                -- |          -1% |
+|            ppx_deriving | 23520705/s |                    776% |               260% |          2% |                1% |           -- |
+
+See the full benchmark in [`example/ppx_easy_equal_bench/`](./example/ppx_easy_equal_bench/).
+
 ### Lattice
+[`example/ppx_lattice/`](./example/ppx_lattice/) contains examples of additional product deriver helper functors by defining a deriver for product lattices with the following signature:
+<!-- $MDX file=example/ppx_lattice_test/ppx_lattice_test.ml,part=lattice -->
+```ocaml
+module type Lattice =
+sig
+  type t
+
+  (* reduce2-like function *)
+  val leq: t -> t -> bool (* reduce by conjunction *)
+
+  (* map2-like function *)
+  val join: t -> t -> t
+
+  (* create-like function *)
+  val bot: unit -> t
+
+  (* reduce-like function *)
+  val is_bot: t -> bool (* reduce by conjunction *)
+
+  (* map-like function *)
+  val relift: t -> t (* not really a lattice operation *)
+end
+```
 
 ## Other libraries
 

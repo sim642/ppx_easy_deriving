@@ -1,12 +1,24 @@
+(* $MDX part-begin=lattice *)
 module type Lattice =
 sig
   type t
-  val leq: t -> t -> bool
+
+  (* reduce2-like function *)
+  val leq: t -> t -> bool (* reduce by conjunction *)
+
+  (* map2-like function *)
   val join: t -> t -> t
+
+  (* create-like function *)
   val bot: unit -> t
-  val is_bot: t -> bool
-  val relift: t -> t
+
+  (* reduce-like function *)
+  val is_bot: t -> bool (* reduce by conjunction *)
+
+  (* map-like function *)
+  val relift: t -> t (* not really a lattice operation *)
 end
+(* $MDX part-end *)
 
 module type Lattice_derived =
 sig
