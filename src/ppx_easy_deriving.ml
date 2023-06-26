@@ -7,7 +7,7 @@ include Intf (** @inline *)
 
 (** {1 Deriver} *)
 
-module Deriver = Deriver.Make
+module Deriver = Deriver
 
 
 (** {1 Easier constructs} *)

@@ -50,7 +50,7 @@ struct
     [%expr fun l r -> [%e body]]
 end
 
-module EasyEqualDeriver = Deriver (Product.Variant.Make (EasyEqualArg))
+module EasyEqualDeriver = Deriver.Make (Product.Variant.Make (EasyEqualArg))
 let _ = EasyEqualDeriver.register ()
 
 
@@ -72,5 +72,5 @@ struct
     [%expr fun l r -> [%e easy_equal2] ([%e f] l) ([%e f] r)]
 end
 
-module EasyEqual2Deriver = Deriver (Simple.Variant.Reduce (EasyEqual2Arg))
+module EasyEqual2Deriver = Deriver.Make (Simple.Variant.Reduce (EasyEqual2Arg))
 let _ = EasyEqual2Deriver.register ()

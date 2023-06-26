@@ -6,7 +6,7 @@ struct
   let name = "leq"
 end
 
-module LeqDeriver = Deriver (Product.Reduce2.Make (Product.Reduce.Conjunctive.Make (LeqArg)))
+module LeqDeriver = Deriver.Make (Product.Reduce2.Make (Product.Reduce.Conjunctive.Make (LeqArg)))
 let leq_deriving = LeqDeriver.register ()
 
 
@@ -15,7 +15,7 @@ struct
   let name = "join"
 end
 
-module JoinDeriver = Deriver (Product.Map2.Make (JoinArg))
+module JoinDeriver = Deriver.Make (Product.Map2.Make (JoinArg))
 let join_deriving = JoinDeriver.register ()
 
 
@@ -25,7 +25,7 @@ struct
   let typ ~loc _ = [%type: unit]
 end
 
-module BotDeriver = Deriver (Product.Create.Make (BotArg))
+module BotDeriver = Deriver.Make (Product.Create.Make (BotArg))
 let bot_deriving = BotDeriver.register ()
 
 
@@ -34,7 +34,7 @@ struct
   let name = "is_bot"
 end
 
-module IsBotDeriver = Deriver (Product.Reduce1.Make (Product.Reduce.Conjunctive.Make (IsBotArg)))
+module IsBotDeriver = Deriver.Make (Product.Reduce1.Make (Product.Reduce.Conjunctive.Make (IsBotArg)))
 let is_bot_deriving = IsBotDeriver.register ()
 
 
@@ -43,7 +43,7 @@ struct
   let name = "relift"
 end
 
-module ReliftDeriver = Deriver (Product.Map1.Make (ReliftArg))
+module ReliftDeriver = Deriver.Make (Product.Map1.Make (ReliftArg))
 let relift_deriving = ReliftDeriver.register ()
 
 
