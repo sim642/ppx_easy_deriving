@@ -179,4 +179,5 @@ end
 ## Other libraries
 
 * [ppx_type_directed_value](https://github.com/janestreet/ppx_type_directed_value) — has runtime overhead on every call of derived function.
+* [ppx_derive_at_runtime](https://github.com/janestreet/ppx_derive_at_runtime) — also has runtime overhead (TODO: include in benchmarks).
 * [refl](https://github.com/thierry-martinez/refl) — requires runtime representations of types.
